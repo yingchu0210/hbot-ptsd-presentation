@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>高壓氧治療戰鬥型 PTSD — 隨機假治療對照臨床試驗｜醫療會議簡報</title>
+  <style>
+    :root {
+      --primary: #1a3a6b;
+      --primary-light: #2c5aa0;
+      --accent: #e8f0fe;
+      --accent2: #f0f6ff;
+      --green: #34a853;
+      --green-bg: #e6f4ea;
+      --orange: #f9ab00;
+      --orange-bg: #fff8e1;
+      --red: #ea4335;
+      --red-bg: #fce8e6;
+      --purple: #7b1fa2;
+      --purple-bg: #f3e5f5;
+      --teal: #00838f;
+      --teal-bg: #e0f7fa;
+      --text: #1a1a1a;
+      --muted: #5f6368;
+      --border: #dadce0;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.14);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "Segoe UI", system-ui, sans-serif;
+      color: var(--text); line-height: 1.8; background: #f5f7fa;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0d2137 0%, #1a3a6b 40%, #2c5aa0 100%);
+      color: #fff; padding: 60px 24px 50px; text-align: center; position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/b/b4/Hyperbaric-oxygen-chamber-open.jpg') center/cover no-repeat;
+      opacity: 0.12;
+    }
+    .hero-inner { position: relative; max-width: 900px; margin: 0 auto; }
+    .hero .tag { display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); padding: 4px 16px; border-radius: 20px; font-size: 0.85em; margin-bottom: 16px; letter-spacing: 1px; }
+    .hero h1 { font-size: 2.2em; font-weight: 800; margin-bottom: 12px; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .hero .subtitle { font-size: 1.15em; opacity: 0.92; margin-bottom: 20px; }
+    .hero .meta-line { font-size: 0.9em; opacity: 0.78; line-height: 1.6; }
+    .hero .meta-line a { color: #90caf9; }
+    .hero .highlight-stat {
+      display: inline-flex; gap: 32px; margin-top: 28px; flex-wrap: wrap; justify-content: center;
+    }
+    .hero .stat-item { text-align: center; }
+    .hero .stat-num { font-size: 2.4em; font-weight: 800; display: block; line-height: 1.1; }
+    .hero .stat-label { font-size: 0.82em; opacity: 0.8; }
+
+    /* ── Navigation ── */
+    .toc {
+      background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .toc-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 16px;
+      display: flex; overflow-x: auto; gap: 0; scrollbar-width: thin;
+    }
+    .toc a {
+      padding: 12px 14px; font-size: 0.82em; color: var(--muted); text-decoration: none;
+      white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s;
+    }
+    .toc a:hover { color: var(--primary); border-bottom-color: var(--primary-light); background: var(--accent2); }
+
+    /* ── Main ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 60px; }
+
+    /* ── Section ── */
+    section { margin-bottom: 48px; scroll-margin-top: 60px; }
+    .section-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+      padding-bottom: 10px; border-bottom: 2px solid var(--primary);
+    }
+    .section-num {
+      background: var(--primary); color: #fff; width: 36px; height: 36px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.95em; flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.4em; color: var(--primary); }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px;
+      box-shadow: var(--card-shadow); border: 1px solid var(--border);
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: var(--card-shadow-hover); }
+    .card h3 { color: var(--primary-light); font-size: 1.1em; margin-bottom: 12px; }
+    .card h4 { color: var(--text); font-size: 0.98em; margin: 14px 0 8px; }
+    .card p { margin-bottom: 10px; }
+    .card ul, .card ol { padding-left: 22px; margin: 8px 0; }
+    .card li { margin-bottom: 5px; }
+
+    /* ── Grid layouts ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    @media (max-width: 860px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .grid-4 { grid-template-columns: 1fr 1fr; }
+      .grid-5 { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 540px) {
+      .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.5em; }
+      .hero .stat-num { font-size: 1.8em; }
+    }
+
+    /* ── Tables ── */
+    .table-wrap { overflow-x: auto; margin: 12px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92em; }
+    th { background: var(--primary); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; white-space: nowrap; }
+    td { padding: 9px 14px; border-bottom: 1px solid #e8e8e8; vertical-align: top; }
+    tr:nth-child(even) td { background: #f8fafc; }
+    tr:hover td { background: #eef3fb; }
+
+    /* ── Callout boxes ── */
+    .callout { padding: 16px 20px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 0.95em; }
+    .callout-green { background: var(--green-bg); border-left: 4px solid var(--green); }
+    .callout-orange { background: var(--orange-bg); border-left: 4px solid var(--orange); }
+    .callout-red { background: var(--red-bg); border-left: 4px solid var(--red); }
+    .callout-purple { background: var(--purple-bg); border-left: 4px solid var(--purple); }
+    .callout-teal { background: var(--teal-bg); border-left: 4px solid var(--teal); }
+    .callout-blue { background: var(--accent); border-left: 4px solid var(--primary-light); }
+
+    .quote {
+      background: var(--orange-bg); border-left: 4px solid var(--orange);
+      padding: 16px 20px; border-radius: 0 10px 10px 0; margin: 16px 0;
+      font-style: italic; font-size: 1.05em; color: #5d4037;
+    }
+    .quote .attr { font-style: normal; font-size: 0.85em; color: var(--muted); margin-top: 6px; }
+
+    /* ── English annotation ── */
+    .en { font-size: 0.82em; color: var(--muted); font-style: italic; font-weight: normal; }
+
+    /* ── Flowchart ── */
+    .flow {
+      display: flex; align-items: center; justify-content: center; gap: 0;
+      flex-wrap: wrap; margin: 16px 0; text-align: center;
+    }
+    .flow-step {
+      background: var(--accent); border: 2px solid var(--primary-light); border-radius: 12px;
+      padding: 14px 18px; min-width: 120px; font-size: 0.9em;
+    }
+    .flow-step strong { display: block; font-size: 1.2em; color: var(--primary); }
+    .flow-arrow { font-size: 1.6em; color: var(--primary-light); padding: 0 8px; }
+
+    /* ── Comparison ── */
+    .vs-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0; align-items: stretch; }
+    .vs-side { padding: 20px; border-radius: 12px; }
+    .vs-left { background: #e3f2fd; border: 2px solid #1976d2; }
+    .vs-right { background: #fce4ec; border: 2px solid #c62828; }
+    .vs-divider {
+      display: flex; align-items: center; justify-content: center; padding: 0 12px;
+      font-size: 1.4em; font-weight: 800; color: var(--muted);
+    }
+    .vs-side h4 { margin-bottom: 10px; text-align: center; }
+    @media (max-width: 700px) {
+      .vs-grid { grid-template-columns: 1fr; }
+      .vs-divider { padding: 8px 0; }
+    }
+
+    /* ── Mini stat cards ── */
+    .stat-card {
+      background: #fff; border-radius: 10px; padding: 18px; text-align: center;
+      border: 1px solid var(--border); box-shadow: var(--card-shadow);
+    }
+    .stat-card .num { font-size: 2em; font-weight: 800; line-height: 1.1; }
+    .stat-card .label { font-size: 0.82em; color: var(--muted); margin-top: 4px; }
+    .stat-card.green .num { color: var(--green); }
+    .stat-card.red .num { color: var(--red); }
+    .stat-card.blue .num { color: var(--primary-light); }
+    .stat-card.orange .num { color: var(--orange); }
+    .stat-card.purple .num { color: var(--purple); }
+
+    /* ── Image figure ── */
+    .fig { margin: 16px 0; text-align: center; }
+    .fig img {
+      max-width: 100%; height: auto; border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1); border: 1px solid var(--border);
+    }
+    .fig figcaption { font-size: 0.8em; color: var(--muted); margin-top: 8px; line-height: 1.4; }
+    .fig figcaption a { color: #1a73e8; text-decoration: none; }
+
+    /* ── Image gallery ── */
+    .img-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    @media (max-width: 600px) { .img-row { grid-template-columns: 1fr; } }
+
+    /* ── HHP cycle ── */
+    .hhp-cycle {
+      display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .hhp-step {
+      padding: 16px 20px; border-radius: 12px; text-align: center; min-width: 180px;
+      font-size: 0.9em; line-height: 1.5;
+    }
+    .hhp-step.step1 { background: #e3f2fd; border: 2px solid #1976d2; }
+    .hhp-step.step2 { background: #fce4ec; border: 2px solid #c62828; }
+    .hhp-step.step3 { background: var(--green-bg); border: 2px solid var(--green); }
+    .hhp-arrow { font-size: 2em; padding: 0 6px; color: var(--primary); }
+
+    /* ── Steps timeline ── */
+    .timeline { position: relative; padding-left: 40px; margin: 16px 0; }
+    .timeline::before {
+      content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 3px;
+      background: var(--primary-light); border-radius: 2px;
+    }
+    .timeline-item { position: relative; margin-bottom: 20px; }
+    .timeline-item::before {
+      content: attr(data-step); position: absolute; left: -40px; top: 0;
+      width: 30px; height: 30px; border-radius: 50%; background: var(--primary);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85em;
+    }
+
+    /* ── Badge / Tag ── */
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 12px;
+      font-size: 0.78em; font-weight: 600; margin-right: 4px;
+    }
+    .badge-blue { background: var(--accent); color: var(--primary); }
+    .badge-green { background: var(--green-bg); color: #1b7a30; }
+    .badge-orange { background: var(--orange-bg); color: #b8860b; }
+    .badge-red { background: var(--red-bg); color: #b71c1c; }
+    .badge-purple { background: var(--purple-bg); color: #6a1b9a; }
+
+    /* ── Accordion ── */
+    details { margin-bottom: 12px; }
+    details summary {
+      background: #fff; padding: 14px 20px; border-radius: 10px; cursor: pointer;
+      font-weight: 600; color: var(--primary); border: 1px solid var(--border);
+      box-shadow: var(--card-shadow); list-style: none; display: flex; align-items: center; gap: 10px;
+      transition: background 0.2s;
+    }
+    details summary:hover { background: var(--accent2); }
+    details summary::before { content: '▸'; font-size: 1.1em; transition: transform 0.2s; }
+    details[open] summary::before { transform: rotate(90deg); }
+    details summary::-webkit-details-marker { display: none; }
+    details .detail-body {
+      background: #fff; padding: 20px; margin-top: -4px;
+      border: 1px solid var(--border); border-top: none;
+      border-radius: 0 0 10px 10px; box-shadow: var(--card-shadow);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--primary); color: rgba(255,255,255,0.85); padding: 32px 24px;
+      text-align: center; font-size: 0.85em; line-height: 1.7;
+    }
+    .footer a { color: #90caf9; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .footer strong { color: #fff; }
+
+    /* ── Broken image fallback ── */
+    .fig img[data-failed] {
+      display: none;
+    }
+    .fig .img-fallback {
+      display: none; background: #f0f0f0; border: 2px dashed #ccc; border-radius: 8px;
+      padding: 24px; text-align: center; color: var(--muted); font-size: 0.88em;
+    }
+    .fig img[data-failed] + .img-fallback { display: block; }
+
+    /* ── Print ── */
+    @media print {
+      .toc { display: none; }
+      body { background: #fff; }
+      .hero { padding: 30px 16px; }
+      section { break-inside: avoid; }
+      .card { box-shadow: none; border: 1px solid #ccc; }
+      details { display: block; }
+      details[open] summary ~ .detail-body { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════ HERO ════════════════ -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="tag">文獻讀書報告｜醫療會議專題</div>
+    <h1>高壓氧治療戰鬥型 PTSD<br>隨機假治療對照臨床試驗</h1>
+    <p class="subtitle">Doenyas-Barak K, Kutz I, Lang E, et al. &mdash; <em>J Clin Psychiatry</em> 2024; 85(4): 24m15464</p>
+    <p class="meta-line">
+      PMID: <a href="https://pubmed.ncbi.nlm.nih.gov/39566051/" target="_blank">39566051</a>
+      &nbsp;|&nbsp; ClinicalTrials.gov: NCT04518007<br>
+      報告者：陳映竹 &nbsp;|&nbsp; 日期：2026 / 4 / 21
+    </p>
+    <div class="highlight-stat">
+      <div class="stat-item"><span class="stat-num">68%</span><span class="stat-label">HBOT 反應率</span></div>
+      <div class="stat-item"><span class="stat-num">4%</span><span class="stat-label">假治療反應率</span></div>
+      <div class="stat-item"><span class="stat-num">39.2%</span><span class="stat-label">緩解率</span></div>
+      <div class="stat-item"><span class="stat-num">60</span><span class="stat-label">治療次數</span></div>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════ TOC ════════════════ -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#journal">文獻出處</a>
+    <a href="#old-tx">既有治療</a>
+    <a href="#bottleneck">瓶頸與困境</a>
+    <a href="#new-idea">新思路</a>
+    <a href="#design">研究設計</a>
+    <a href="#treatment">治療方案</a>
+    <a href="#results">臨床成效</a>
+    <a href="#brain">腦影像佐證</a>
+    <a href="#safety">安全性</a>
+    <a href="#followup">衍伸研究</a>
+    <a href="#future">未來展望</a>
+    <a href="#qa">Q&A 預備</a>
+    <a href="#refs">參考文獻</a>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ═══════════════ 1. 文獻出處 ═══════════════ -->
+<section id="journal">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>文獻出處</h2>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <h3>The Journal of Clinical Psychiatry <span class="en">臨床精神醫學期刊</span></h3>
+      <div class="grid-3" style="margin-top:12px;">
+        <div class="stat-card blue"><div class="num">3.64</div><div class="label">Impact Factor<br><span class="en">影響因子</span> (2024)</div></div>
+        <div class="stat-card green"><div class="num">8.2</div><div class="label">CiteScore<br><span class="en">引用分數</span></div></div>
+        <div class="stat-card purple"><div class="num">Q1</div><div class="label">SJR Ranking<br><span class="en">期刊排名前 25%</span></div></div>
+      </div>
+      <p style="margin-top:14px;font-size:0.9em;color:var(--muted);">
+        H-Index（h 指數）: 221 &nbsp;|&nbsp; 出版社: Physicians Postgraduate Press &nbsp;|&nbsp; 創刊: 1978 年
+      </p>
+    </div>
+    <div class="card">
+      <h3>本篇文章</h3>
+      <p><strong>Hyperbaric Oxygen Therapy for Veterans With Combat-Associated PTSD: A Randomized, Sham-Controlled Clinical Trial</strong></p>
+      <p class="en" style="font-size:0.88em;">高壓氧治療戰鬥相關 PTSD 退伍軍人：隨機、假治療對照臨床試驗</p>
+      <p style="margin-top:8px;">
+        <span class="badge badge-blue">RCT（隨機對照試驗）</span>
+        <span class="badge badge-green">Sham-Controlled（假治療對照）</span>
+        <span class="badge badge-purple">fMRI / DTI（腦影像）</span>
+      </p>
+      <p style="font-size:0.88em;color:var(--muted);margin-top:8px;">
+        DOI: 10.4088/JCP.24m15464 &nbsp;|&nbsp; 臨床試驗：NCT04518007
+      </p>
+    </div>
+  </div>
+  <figure class="fig">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/ae/Mehrplatz-Druckkammer.jpg" alt="多人座高壓氧治療艙" loading="lazy" style="max-height:360px;object-fit:cover;">
+    <figcaption>Multi-place Hyperbaric Chamber（多人座高壓氧治療艙）<br>圖源：Wikimedia Commons, CC BY-SA 3.0 DE</figcaption>
+  </figure>
+</section>
+
+<!-- ═══════════════ 2. 既有治療 ═══════════════ -->
+<section id="old-tx">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>PTSD 的既有治療方式</h2>
+  </div>
+
+  <div class="card">
+    <h3>指引推薦的一線治療 <span class="en">Guideline-Recommended First-Line Treatments</span></h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>治療類型</th><th>代表方法</th><th>作用方式</th><th>已知限制</th></tr>
+        <tr>
+          <td><strong>創傷聚焦心理治療</strong><br><span class="en">Trauma-Focused Psychotherapy</span></td>
+          <td>CPT（認知處理治療）<br>PE（延長暴露治療）<br>EMDR（眼動減敏與歷程更新）</td>
+          <td>透過認知重構或反覆暴露，讓患者重新處理創傷記憶</td>
+          <td>高脫落率（約 30-40%）；部分患者無法耐受暴露過程</td>
+        </tr>
+        <tr>
+          <td><strong>藥物治療</strong><br><span class="en">Pharmacotherapy</span></td>
+          <td>Sertraline（舍曲林）<br>Paroxetine（帕羅西汀）<br>（SSRI 類抗憂鬱劑）</td>
+          <td>調節血清素系統，緩解情緒症狀</td>
+          <td>效果量偏小（d ≈ 0.3）；無法修復腦部結構損傷</td>
+        </tr>
+        <tr>
+          <td><strong>合併治療</strong><br><span class="en">Combined Treatment</span></td>
+          <td>心理治療 + 藥物</td>
+          <td>雙管齊下</td>
+          <td>仍有 ~50% 患者治療無效</td>
+        </tr>
+      </table>
+    </div>
+    <div class="callout callout-orange" style="margin-top:12px;">
+      <strong>關鍵問題：</strong>即使用盡所有指引推薦的治療，仍有約一半的 PTSD 患者沒有好轉。本研究的受試者正是這群「治療無效」的患者。<br>
+      <span style="font-size:0.88em;">HBOT 不是要取代心理治療，而是為已經試過所有標準治療卻沒好轉的人，提供一個新的選項。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 3. 瓶頸 ═══════════════ -->
+<section id="bottleneck">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>瓶頸：為什麼現有治療不夠？</h2>
+  </div>
+
+  <div class="quote">
+    「PTSD 不是性格缺陷，而是腦部真正的生物學傷害。」
+    <div class="attr">&mdash; Efrati &amp; Doenyas-Barak, Psychiatric Times 2025</div>
+  </div>
+
+  <div class="card">
+    <h3>PTSD 的神經生物學基礎 <span class="en">Neurobiology of PTSD</span></h3>
+    <p>傳統治療著重在「心理層面」，但 PTSD 的根源是<strong>腦部實質損傷</strong>：</p>
+    <ul>
+      <li><strong>杏仁核過度活化</strong> <span class="en">Amygdala Hyperactivation</span> &mdash; 恐懼中樞持續「拉警報」，即使身處安全環境</li>
+      <li><strong>前額葉皮質活性降低</strong> <span class="en">Prefrontal Cortex Hypoactivation</span> &mdash; 負責理性判斷與情緒調控的「煞車」失靈</li>
+      <li><strong>海馬迴體積減少</strong> <span class="en">Hippocampal Volume Reduction</span> &mdash; 掌管記憶脈絡化的區域萎縮，記憶碎片化</li>
+      <li><strong>額葉–邊緣迴路斷裂</strong> <span class="en">Fronto-Limbic Circuit Disconnection</span> &mdash; 「理性腦」和「情緒腦」之間的連線中斷</li>
+    </ul>
+    <p style="margin-top:10px;">結果：隱性記憶（情緒/軀體成分）不受控地主導行為，顯性記憶（敘事/脈絡）碎片化 &rarr; 腦部持續處於高度警覺與侵入性回憶狀態。</p>
+  </div>
+
+  <div class="card">
+    <h3>既有治療的根本侷限</h3>
+    <div class="grid-2">
+      <div class="callout callout-red" style="margin:0;">
+        <strong>心理治療</strong><br>
+        能重新處理創傷記憶，但無法修復受損的神經迴路。就像教人用破損的電話溝通 &mdash; 訊號線路沒修好，再怎麼練習通話技巧效果有限。
+      </div>
+      <div class="callout callout-red" style="margin:0;">
+        <strong>藥物治療</strong><br>
+        能暫時調節神經傳導物質，但無法逆轉腦部結構性損傷。就像吃止痛藥 &mdash; 緩解症狀但沒有治療骨折本身。
+      </div>
+    </div>
+    <div class="callout callout-blue" style="margin-top:16px;">
+      <strong>未被滿足的需求：</strong>我們需要一種能真正修復腦部損傷、促進神經可塑性的「生物學治療」。這就是 HBOT（高壓氧治療）登場的背景。
+    </div>
+  </div>
+
+  <figure class="fig">
+    <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/ca48/11496187/549e24891f37/fneur-15-1450134-g001.jpg" alt="HBOT 生物學機制示意圖" loading="lazy" style="max-height:420px;">
+    <figcaption>HBOT 的多重生物學作用機制：neuroplasticity（神經可塑性）、mitochondrial biogenesis（粒線體生物合成）、stem cell enhancement（幹細胞增殖）、anti-inflammatory（抗發炎）、synaptogenesis（突觸生成）、neurogenesis（神經再生）、angiogenesis（血管新生）<br>圖源：Frontiers in Neurology 2024, PMC11496278, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11496187/" target="_blank">CC BY 4.0</a></figcaption>
+  </figure>
+</section>
+
+<!-- ═══════════════ 4. 新思路 ═══════════════ -->
+<section id="new-idea">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>新思路：用高壓氧修復受損的腦</h2>
+  </div>
+
+  <div class="card">
+    <h3>核心機制 &mdash; 高氧–低氧悖論 <span class="en">Hyperoxic–Hypoxic Paradox, HHP</span></h3>
+    <p>HBOT 治療 PTSD 的關鍵不是單純「給氧」，而是利用<strong>高氧與低氧之間的反覆切換</strong>，「騙」細胞啟動修復程序：</p>
+    <div class="hhp-cycle" style="margin:20px 0;">
+      <div class="hhp-step step1">
+        <strong>步驟 1：高氧</strong><br>
+        戴面罩吸 100% 純氧<br>2 ATA，持續 20 分鐘<br>
+        血氧：100 &rarr; <strong>1,400 mmHg</strong><br>
+        <span class="badge badge-blue">飆升 14 倍</span>
+      </div>
+      <div class="hhp-arrow">&rarr;</div>
+      <div class="hhp-step step2">
+        <strong>步驟 2：驟降</strong><br>
+        移除面罩改吸空氣<br>休息 5 分鐘<br>
+        血氧：1,400 &rarr; <strong>~100 mmHg</strong><br>
+        <span class="badge badge-red">驟降（但仍安全）</span>
+      </div>
+      <div class="hhp-arrow">&rarr;</div>
+      <div class="hhp-step step3">
+        <strong>步驟 3：修復啟動</strong><br>
+        細胞感受到劇烈落差<br>「以為」自己在缺氧<br>
+        啟動 <strong>HIF-1&alpha;</strong> 主開關<br>
+        <span class="badge badge-green">觸發修復機制</span>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:0.92em;color:var(--muted);">
+      精妙之處：用「假缺氧」騙出「真修復」&mdash; 全程血氧都在安全範圍，但細胞感受到相對落差 &rarr; 像身體的「消防演習」
+    </p>
+  </div>
+
+  <div class="card">
+    <h3>HIF-1&alpha;（缺氧誘導因子）啟動的五大修復路徑</h3>
+    <div class="grid-5" style="margin-top:10px;">
+      <div class="stat-card"><div class="num" style="font-size:1.3em;color:var(--primary);">1</div><div class="label"><strong>神經可塑性</strong><br><span class="en">Neuroplasticity</span><br>神經元重新連接<br>修復斷裂的腦網路</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.3em;color:var(--green);">2</div><div class="label"><strong>幹細胞增殖</strong><br><span class="en">Stem Cell Proliferation</span><br>新幹細胞遷移至<br>受損區域</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.3em;color:#e91e63;">3</div><div class="label"><strong>血管新生</strong><br><span class="en">Angiogenesis</span><br>長出新的微血管<br>改善腦部血流灌注</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.3em;color:var(--orange);">4</div><div class="label"><strong>粒線體代謝增強</strong><br><span class="en">Mitochondrial Enhancement</span><br>細胞能量工廠升級<br>恢復腦區正常功能</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.3em;color:var(--teal);">5</div><div class="label"><strong>發炎調節</strong><br><span class="en">Inflammation Modulation</span><br>降低慢性神經發炎<br>（如 IL-6↓）</div></div>
+    </div>
+    <figure class="fig" style="margin-top:16px;">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/TcpO2_in_HBOT.jpg" alt="TcpO₂ 在不同壓力下的變化" loading="lazy" style="max-height:300px;">
+      <figcaption>Transcutaneous Oxygen Pressure（經皮氧分壓）在不同氧氣濃度與壓力下的變化：<br>21% O₂ at 1 atm（一般空氣）→ 100% O₂ at 1 atm（純氧常壓）→ 100% O₂ at 2 atm（純氧加壓）<br>圖源：Wikimedia Commons, CC BY-SA 3.0</figcaption>
+    </figure>
+  </div>
+
+  <div class="card">
+    <h3>Efrati 團隊的十年研究歷程</h3>
+    <p>這不是突然冒出的單一研究，而是以色列 Sagol Center 團隊<strong>從 2013 年起系統性累積了十年的證據</strong>：</p>
+    <div class="timeline">
+      <div class="timeline-item" data-step="1">
+        <strong>2013：TBI（創傷性腦損傷）先導研究</strong> &mdash; 發現 HBOT 可改善腦損傷後的認知功能
+      </div>
+      <div class="timeline-item" data-step="2">
+        <strong>2015–2020：機制研究累積期</strong> &mdash; 建立 HHP 理論框架，在纖維肌痛等疾病中驗證神經可塑性效果
+      </div>
+      <div class="timeline-item" data-step="3">
+        <strong>2022：PTSD 先期 RCT（PLOS ONE）</strong> &mdash; 首次展示 HBOT 對 PTSD 的臨床+影像改善（fMRI / DTI 圖源）
+      </div>
+      <div class="timeline-item" data-step="4">
+        <strong>2024：本篇 &mdash; 正式假治療對照 RCT（J Clin Psychiatry）</strong> &mdash; 最嚴謹的證據等級
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 5. 研究設計 ═══════════════ -->
+<section id="design">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>研究設計與方法</h2>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <tr><th style="width:160px;">項目</th><th>內容</th></tr>
+        <tr><td><strong>設計</strong></td><td>Randomized, Sham-Controlled Trial（隨機、假治療對照試驗）&mdash; RCT 是臨床研究的金標準</td></tr>
+        <tr><td><strong>研究期間</strong></td><td>2020 年 2 月 – 2023 年 7 月（歷時 3.5 年）</td></tr>
+        <tr><td><strong>研究地點</strong></td><td>Sagol Center for Hyperbaric Medicine, Shamir Medical Center, Israel（以色列薩高爾高壓氧醫學中心）</td></tr>
+        <tr><td><strong>受試者</strong></td><td>25–60 歲男性退伍軍人，戰鬥相關 PTSD 持續 ≥ 5 年</td></tr>
+        <tr><td><strong>納入條件</strong></td><td>CAPS-5 &gt; 20（PTSD 嚴重度達標）；對心理治療與藥物治療均無效</td></tr>
+        <tr><td><strong>排除條件</strong></td><td>TBI（創傷性腦損傷）病史、其他精神疾病、HBOT 禁忌症、吸菸</td></tr>
+        <tr><td><strong>臨床試驗註冊</strong></td><td>ClinicalTrials.gov NCT04518007</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>受試者流程 <span class="en">Participant Flow</span></h3>
+    <div class="flow">
+      <div class="flow-step"><strong>98 人</strong>登記篩選</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step"><strong>63 人</strong>隨機分組</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="border-color:#1976d2;"><strong>28 人</strong>HBOT 組完成</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step" style="border-color:#c62828;"><strong>28 人</strong>假治療組完成</div>
+    </div>
+    <p style="font-size:0.88em;color:var(--muted);margin-top:8px;">脫落率僅 11%（7 人），原因為使用非法物質或撤回同意，與治療效果無關。採用 Modified ITT（修正版意向治療分析）。</p>
+    <figure class="fig" style="margin-top:12px;">
+      <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1029/8863239/c418016b6f8f/pone.0264161.g001.jpg" alt="受試者流程圖" loading="lazy" style="max-height:500px;">
+      <figcaption>Study Flowchart（受試者流程圖），同一研究團隊 2022 先期 RCT<br>圖源：Doenyas-Barak et al., PLOS ONE 2022, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8863239/" target="_blank">CC BY 4.0</a></figcaption>
+    </figure>
+  </div>
+
+  <!-- 評估量表自然融入 -->
+  <div class="card">
+    <h3>如何衡量療效？&mdash; 本研究使用的臨床評估工具</h3>
+    <div class="grid-2" style="margin-top:10px;">
+      <div>
+        <h4>主要終點：CAPS-5 <span class="badge badge-blue">金標準 PTSD 量表</span></h4>
+        <p><em>Clinician-Administered PTSD Scale for DSM-5</em>（臨床醫師施測 PTSD 量表，第五版）</p>
+        <ul>
+          <li>30 題結構化臨床訪談，每次需 45-60 分鐘</li>
+          <li>評分：0-80 分，分數越高症狀越嚴重</li>
+          <li><strong>反應</strong> = 分數下降 ≥30%；<strong>緩解</strong> = 分數降至 &lt;20</li>
+        </ul>
+        <p style="margin-top:8px;"><strong>涵蓋 DSM-5 的四大 PTSD 症狀群：</strong></p>
+        <div class="grid-2" style="gap:8px;">
+          <div class="callout callout-red" style="margin:0;padding:10px 14px;font-size:0.85em;"><strong>B 再體驗</strong> <span class="en">Re-experiencing</span><br>閃回、惡夢、侵入性記憶</div>
+          <div class="callout callout-orange" style="margin:0;padding:10px 14px;font-size:0.85em;"><strong>C 迴避</strong> <span class="en">Avoidance</span><br>避開觸發物、情境/思緒</div>
+          <div class="callout callout-purple" style="margin:0;padding:10px 14px;font-size:0.85em;"><strong>D 認知情緒改變</strong> <span class="en">Cognition &amp; Mood</span><br>負向信念、疏離、麻木</div>
+          <div class="callout callout-teal" style="margin:0;padding:10px 14px;font-size:0.85em;"><strong>E 過度警覺</strong> <span class="en">Arousal &amp; Reactivity</span><br>易怒、驚嚇、注意力不集中</div>
+        </div>
+      </div>
+      <div>
+        <h4>次要終點：憂鬱與心理困擾</h4>
+        <p><strong>BDI-II</strong> <span class="en">Beck Depression Inventory-II</span>（貝克憂鬱量表第二版）</p>
+        <ul><li>21 題自評，0-63 分 &mdash; 憂鬱嚴重度</li></ul>
+        <div class="grid-4" style="gap:6px;margin:8px 0;">
+          <div style="background:#e8f5e9;padding:6px;border-radius:6px;text-align:center;font-size:0.8em;"><strong>正常</strong><br>0-13</div>
+          <div style="background:#fff9c4;padding:6px;border-radius:6px;text-align:center;font-size:0.8em;"><strong>輕度</strong><br>14-19</div>
+          <div style="background:#ffe0b2;padding:6px;border-radius:6px;text-align:center;font-size:0.8em;"><strong>中度</strong><br>20-28</div>
+          <div style="background:#ffcdd2;padding:6px;border-radius:6px;text-align:center;font-size:0.8em;"><strong>重度</strong><br>29-63</div>
+        </div>
+        <p style="margin-top:12px;"><strong>DASS-21</strong> <span class="en">Depression Anxiety Stress Scales &mdash; 21 items</span>（憂鬱焦慮壓力量表 21 題版）</p>
+        <ul>
+          <li>三個分量表各 7 題，每題 0-3 分：</li>
+          <li><strong>憂鬱</strong>（無望、快感缺失）/ <strong>焦慮</strong>（自主神經激發、恐慌）/ <strong>壓力</strong>（難以放鬆、急躁）</li>
+        </ul>
+        <h4 style="margin-top:16px;">客觀影像終點：rsfMRI <span class="en">Resting-State fMRI</span></h4>
+        <p>靜息態功能性磁振造影 &mdash; 在受試者安靜休息時掃描腦部，觀察不同腦區之間自發性活動的同步程度（功能連結），是研究腦部「網路」運作的主要方法。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 6. 治療方案 ═══════════════ -->
+<section id="treatment">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>治療方案：實驗組 vs 對照組</h2>
+  </div>
+
+  <div class="vs-grid">
+    <div class="vs-side vs-left">
+      <h4 style="color:#1565c0;">HBOT 組（實驗組）</h4>
+      <ul>
+        <li><strong>60 次</strong>每日治療（每週 5 天，共約 3 個月）</li>
+        <li><strong>100% 純氧</strong></li>
+        <li><strong>2 ATA</strong>（atmospheres absolute，大氣壓絕對值）</li>
+        <li>每次 <strong>90 分鐘</strong></li>
+        <li>每 20 分鐘穿插 <strong>5 分鐘空氣休息</strong>（觸發 HHP）</li>
+        <li>血氧升至 <strong>~1,400 mmHg</strong>（正常約 100 mmHg）</li>
+      </ul>
+    </div>
+    <div class="vs-divider">VS</div>
+    <div class="vs-side vs-right">
+      <h4 style="color:#b71c1c;">Sham 組（假治療對照組）</h4>
+      <ul>
+        <li><strong>60 次</strong>每日治療（外觀、流程完全相同）</li>
+        <li><strong>21% 氧氣</strong>（一般空氣，非純氧）</li>
+        <li><strong>1.02 ATA</strong>（幾乎等於常壓）</li>
+        <li>每次 <strong>90 分鐘</strong></li>
+        <li>短暫加壓至 <strong>1.2 ATA</strong> 再緩慢減壓（模擬「進艙體驗」）</li>
+        <li>1.02 ATA 是文獻中<strong>最低的 sham 壓力之一</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 盲性驗證自然融入 -->
+  <div class="callout callout-green" style="margin-top:16px;">
+    <strong>Blinding Verification（盲性驗證）成功：</strong>試驗結束後詢問受試者「你覺得自己接受的是真的還是假的治療？」兩組均有 <strong>64%</strong> 認為接受的是真治療（P = 1.0，無差異）。<br>
+    這代表假治療設計成功「騙過」了所有人 &rarr; HBOT 組的顯著改善<strong>確實來自高壓氧本身</strong>，而非心理期望（placebo effect，安慰劑效應）。
+  </div>
+
+  <div class="img-row">
+    <figure class="fig">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Monoplace_chamber.JPG" alt="單人座高壓氧艙" loading="lazy">
+      <figcaption>Monoplace Chamber（單人座高壓氧艙）<br>Wikimedia Commons, CC BY 3.0</figcaption>
+    </figure>
+    <figure class="fig">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Hyperbaric-oxygen-chamber-open.jpg" alt="高壓氧艙開啟狀態" loading="lazy">
+      <figcaption>Hyperbaric Chamber Open（高壓氧艙開啟狀態）<br>Wikimedia Commons, <a href="https://commons.wikimedia.org/wiki/File:Hyperbaric-oxygen-chamber-open.jpg" target="_blank">CC BY-SA 4.0</a></figcaption>
+    </figure>
+  </div>
+
+  <div class="card">
+    <h3>併用藥物與依從性 <span class="en">Concomitant Medications &amp; Adherence</span></h3>
+    <div class="grid-2">
+      <div>
+        <h4>併用藥物處理</h4>
+        <ul>
+          <li>允許繼續使用原本的心理治療和藥物（不因試驗而停藥）</li>
+          <li>任何劑量變化均有被記錄</li>
+          <li>安眠藥使用：HBOT 組從 <strong>46% &rarr; 18%</strong>（改善後自然減少用藥）</li>
+        </ul>
+        <p style="font-size:0.88em;color:var(--muted);margin-top:6px;">兩組都在吃藥，藥物效果被「抵消」。只有 HBOT 組改善 &rarr; 改善來自 HBOT。</p>
+      </div>
+      <div>
+        <h4>依從性比較</h4>
+        <ul>
+          <li><strong>HBOT 組：</strong>平均完成 59.92 次（範圍 58-60）&rarr; 幾乎全部完成</li>
+          <li><strong>Sham 組：</strong>平均完成 52.42 次（範圍 20-60）&rarr; 8 人不到 50 次</li>
+        </ul>
+        <p style="font-size:0.88em;color:var(--muted);margin-top:6px;">假治療組依從性較低，但即使完成度最高的人也只有 4% 反應率。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 7. 臨床成效 ═══════════════ -->
+<section id="results">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>實驗成效：臨床量表結果</h2>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:20px;">
+    <div class="stat-card green"><div class="num">68% vs 4%</div><div class="label">Response Rate（反應率）<br>CAPS-5 ≥30% 降低 | P &lt; .001</div></div>
+    <div class="stat-card blue"><div class="num">39.2% vs 0%</div><div class="label">Remission Rate（緩解率）<br>CAPS-5 &lt; 20</div></div>
+    <div class="stat-card orange"><div class="num">NNT = 1.56</div><div class="label">Number Needed to Treat<br>每治療 ~1.6 人多幫到 1 人</div></div>
+  </div>
+
+  <div class="card">
+    <h3>CAPS-5 主要終點 <span class="en">Primary Endpoint</span></h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>指標</th><th>HBOT 組</th><th>Sham 組</th><th>統計顯著性</th></tr>
+        <tr><td>CAPS-5：基線 &rarr; 治療後</td><td>42.57 &rarr; <strong>25.8</strong>（降 16.8 分）</td><td>45.11 &rarr; 47.75（反升）</td><td>P &lt; .001</td></tr>
+        <tr><td>CAPS-5：3 個月追蹤</td><td><strong>25.08</strong>（效果維持）</td><td>49.22</td><td>P &lt; .001</td></tr>
+        <tr><td>Response Rate（反應率，≥30% 降低）</td><td><strong>68%</strong></td><td>4%</td><td>P &lt; .001</td></tr>
+        <tr><td>Remission Rate（緩解率，&lt; 20 分）</td><td><strong>39.2%</strong></td><td>0%</td><td>&mdash;</td></tr>
+      </table>
+    </div>
+    <div class="callout callout-green">
+      <strong>效果量極大：</strong>Cohen's d 估計約 1.5–2.0（一般認為 d &gt; 0.8 即為「大效果」）。CAPS-5 組間差距達 ~21 分（25.8 vs 47.75），在精神科臨床試驗中極為罕見。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>次要終點 <span class="en">Secondary Endpoints</span></h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>量表</th><th>HBOT 組</th><th>Sham 組</th><th>統計顯著性</th></tr>
+        <tr><td>BDI-II 憂鬱 <span class="en">Depression</span></td><td>顯著改善</td><td>無變化</td><td>F=4.2, P=.043</td></tr>
+        <tr><td>DASS-21 憂鬱 <span class="en">Depression</span></td><td>顯著改善</td><td>無變化</td><td>F=4.55, P=.034</td></tr>
+        <tr><td>DASS-21 焦慮 <span class="en">Anxiety</span></td><td>未達顯著</td><td>未達顯著</td><td>NS</td></tr>
+        <tr><td>DASS-21 壓力 <span class="en">Stress</span></td><td>未達顯著</td><td>未達顯著</td><td>NS</td></tr>
+      </table>
+    </div>
+    <div class="callout callout-blue">
+      <strong>焦慮與壓力未達顯著 &mdash; 三種可能解釋：</strong><br>
+      ① <strong>不同腦迴路：</strong>HBOT 精準修復 PTSD 特定迴路，而非泛化抗焦慮（像修一條故障線路，不是整棟房子裝潢）<br>
+      ② <strong>統計效力不足：</strong>每組僅 28 人，中等大小的效果可能偵測不到（用太小的魚網，小魚漏掉）<br>
+      ③ <strong>量表靈敏度：</strong>DASS-21 是一般性量表，不如 CAPS-5（PTSD 專用金標準）靈敏<br>
+      <span style="font-size:0.88em;">&rarr; 這反而支持了 HBOT 具有<strong>生物學特異性</strong>，而非「什麼都治」的非特異效應。</span>
+    </div>
+  </div>
+
+  <figure class="fig">
+    <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1029/8863239/04a92e16fdf9/pone.0264161.g002.jpg" alt="CAPS 分數變化" loading="lazy" style="max-height:400px;">
+    <figcaption>CAPS Score Changes（CAPS 分數變化），同一研究團隊 2022 先期 RCT<br>圖源：Doenyas-Barak et al., PLOS ONE 2022, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8863239/" target="_blank">CC BY 4.0</a></figcaption>
+  </figure>
+</section>
+
+<!-- ═══════════════ 8. 腦影像 ═══════════════ -->
+<section id="brain">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2>腦影像佐證：不只是主觀感覺好轉</h2>
+  </div>
+
+  <p style="margin-bottom:16px;">量表分數是患者的主觀報告，可能受安慰劑效應影響。但腦影像是<strong>客觀的生物學證據</strong> &mdash; 大腦不會「騙人」。</p>
+
+  <div class="card">
+    <h3>8-A. rsfMRI 靜息態功能連結 <span class="en">Resting-State Functional Connectivity</span>（2024 RCT 新數據）</h3>
+    <p>HBOT 組在三大腦網路的功能連結均<strong>顯著增強</strong>，且<strong>無任何連結減弱</strong>：</p>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Brain Network（腦網路）</th><th>功能</th><th>連結變化</th><th>Specific Regions（具體區域）</th></tr>
+        <tr>
+          <td><strong>DMN</strong><br><span class="en">Default Mode Network</span><br>預設模式網路</td>
+          <td>自我參照、內省、自傳式記憶</td>
+          <td>增強</td>
+          <td>mPFC（內側前額葉皮質）&harr; Lingual Gyrus（舌回）</td>
+        </tr>
+        <tr>
+          <td><strong>CEN</strong><br><span class="en">Central Executive Network</span><br>中央執行網路</td>
+          <td>注意力、工作記憶、決策</td>
+          <td>增強</td>
+          <td>dlPFC（背外側前額葉皮質）&harr; Thalamus（丘腦）&harr; Angular/Supramarginal Gyrus（角回/緣上回）</td>
+        </tr>
+        <tr>
+          <td><strong>SN</strong><br><span class="en">Salience Network</span><br>突顯網路</td>
+          <td>威脅偵測、在 DMN/CEN 間切換</td>
+          <td>升高</td>
+          <td>Bilateral Rostral PFC（雙側喙前額皮質）&harr; Right Frontal Pole（右側額極）</td>
+        </tr>
+        <tr>
+          <td><strong>Thalamic Connectivity</strong><br>丘腦連結</td>
+          <td>感覺訊息中繼站</td>
+          <td>增強</td>
+          <td>Left Thalamus &harr; Right IPL（右下頂葉）；Right Thalamus &harr; Left MFG（左中額回）</td>
+        </tr>
+      </table>
+    </div>
+    <div class="callout callout-green">
+      <strong>為什麼這三個網路很重要？</strong>PTSD 患者的 SN（突顯網路）過度活躍，持續發出「危險！」的訊號；而 DMN（預設模式）和 CEN（中央執行）被壓抑，導致無法正常內省和做決策。HBOT 後三個網路的功能連結同時恢復，代表大腦從「戰鬥模式」逐步切回「正常模式」。
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>8-B. fMRI 腦活化圖 <span class="en">Task-Based fMRI Activation</span>（2022 先期 RCT）</h3>
+    <p>在語言工作記憶任務（2-Back vs 0-Back）中，HBOT 組治療後以下區域活化增強：</p>
+    <ul>
+      <li>左側 <strong>dlPFC</strong>（dorsolateral prefrontal cortex，背外側前額葉）&mdash; 執行功能與情緒調控</li>
+      <li><strong>Middle Temporal Gyrus</strong>（中顳回）&mdash; 語意處理與記憶提取</li>
+      <li>雙側 <strong>Thalami</strong>（丘腦）&mdash; 感覺訊息整合的中繼站</li>
+      <li>左側 <strong>Hippocampus</strong>（海馬迴）&mdash; 記憶編碼與空間導航</li>
+      <li>左側 <strong>Insula</strong>（島葉）&mdash; 內感受與情緒覺察</li>
+    </ul>
+    <figure class="fig" style="margin-top:12px;">
+      <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1029/8863239/38289f27846a/pone.0264161.g004.jpg" alt="fMRI 腦活化圖" loading="lazy" style="max-height:380px;">
+      <figcaption>Brain Activation in Verbal Working Memory Task（語言工作記憶任務腦活化圖）<br>圖源：Doenyas-Barak et al., PLOS ONE 2022, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8863239/" target="_blank">CC BY 4.0</a></figcaption>
+    </figure>
+  </div>
+
+  <div class="card">
+    <h3>8-C. DTI 白質完整性 <span class="en">Diffusion Tensor Imaging — White Matter Integrity</span>（2022 先期 RCT）</h3>
+    <p>DTI 測量白質纖維束的 <strong>FA 值</strong>（Fractional Anisotropy，分數異向性）&mdash; FA 值越高代表白質微結構越完整，訊號傳導越順暢。HBOT 組在以下區域 FA 值顯著增加：</p>
+    <ul>
+      <li><strong>Fornix</strong>（穹窿）&mdash; 海馬迴的主要傳出通路，記憶的「高速公路」</li>
+      <li><strong>Genu of Corpus Callosum</strong>（胼胝體膝部）&mdash; 連接左右前額葉的橋樑</li>
+      <li><strong>Anterior Corona Radiata</strong>（前冠放射）&mdash; 額葉白質通路</li>
+      <li><strong>ALIC / PLIC</strong>（Internal Capsule，內囊前肢/後肢）&mdash; 丘腦–皮質的連結幹道</li>
+    </ul>
+    <p style="margin-top:8px;">FA 值增加 = 白質微結構修復 = <strong>額葉–邊緣迴路重新連通</strong>的解剖學基礎。</p>
+    <figure class="fig" style="margin-top:12px;">
+      <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1029/8863239/31067f41e161/pone.0264161.g003.jpg" alt="DTI 白質 FA 值變化" loading="lazy" style="max-height:380px;">
+      <figcaption>Statistical Parametric Maps of White Matter FA Changes（DTI 白質 FA 值統計參數圖）<br>圖源：Doenyas-Barak et al., PLOS ONE 2022, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8863239/" target="_blank">CC BY 4.0</a></figcaption>
+    </figure>
+  </div>
+
+  <div class="card">
+    <h3>8-D. SPECT 腦血流灌注治療前後對比 <span class="en">SPECT Brain Perfusion — Before vs After</span></h3>
+    <p>SPECT（Single-Photon Emission Computed Tomography，單光子射出電腦斷層）可直接觀察腦部血流分佈。以下是另一項 HBOT 治療爆炸相關 TBI/PTSD 的案例報告影像：</p>
+    <div class="img-row">
+      <figure class="fig">
+        <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/b8e0/2740054/14def5ec2260/1757-1626-0002-0000006538-1.jpg" alt="治療前 SPECT" loading="lazy">
+        <figcaption><strong>Pre-HBOT（治療前）：</strong>雙側 orbital frontal（眼眶額葉）及 temporal lobe（顳葉）血流缺損，整體灌注不均勻</figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="https://cdn.ncbi.nlm.nih.gov/pmc/blobs/b8e0/2740054/a9d4ef75e095/1757-1626-0002-0000006538-2.jpg" alt="治療後 SPECT" loading="lazy">
+        <figcaption><strong>Post-HBOT（治療後）：</strong>額葉及顳葉血流灌注改善，整體趨於 homogeneous（均勻正常化）</figcaption>
+      </figure>
+    </div>
+    <p style="font-size:0.82em;color:var(--muted);">圖源：Cases Journal 2009, PMC2740054, <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2740054/" target="_blank">CC BY 2.0</a></p>
+  </div>
+</section>
+
+<!-- ═══════════════ 9. 安全性 ═══════════════ -->
+<section id="safety">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <h2>安全性與特殊現象</h2>
+  </div>
+
+  <div class="card">
+    <h3>Adverse Events（不良事件）總覽</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>項目</th><th>HBOT 組</th><th>Sham 組</th><th>說明</th></tr>
+        <tr><td>不良事件總數</td><td>23 例</td><td>15 例</td><td>均為輕微、self-limited（自限性）</td></tr>
+        <tr><td>Barotrauma（氣壓傷）</td><td>6 例</td><td>2 例</td><td>高壓環境常見的耳壓不適</td></tr>
+        <tr><td><strong>Memory Surfacing（記憶浮現）</strong></td><td><strong>7/28（25%）</strong></td><td><strong>0</strong></td><td>HBOT 組獨有的特殊現象</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout callout-red">
+    <strong>Memory Surfacing（記憶浮現現象）&mdash; 值得特別關注</strong>
+    <ul style="margin-top:8px;">
+      <li><strong>發生率：</strong>HBOT 組 25%，Sham 組 0%（只出現在真正接受治療的人）</li>
+      <li><strong>現象：</strong>受損的 memory encoding network（記憶編碼網路）重新連接後，先前無法存取的創傷記憶與情緒突然浮現</li>
+      <li><strong>表現：</strong>暫時性的焦慮升高、情緒激動、情緒不穩定</li>
+      <li><strong>臨床意義：</strong>可能是腦部修復的<strong>正面指標</strong>（代表斷裂的迴路正在重新連通），但過程令人痛苦</li>
+      <li><strong>因應方式：</strong>需要 psychiatrist（精神科醫師）、psychologist（心理師）、social worker（社工）組成的 <strong>multidisciplinary team（多專業團隊）</strong> 陪伴患者度過</li>
+    </ul>
+  </div>
+
+  <figure class="fig">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/29/Dr._Buza_practices_hyperbaric_medicine.JPG" alt="高壓醫學實務" loading="lazy" style="max-height:360px;object-fit:cover;">
+    <figcaption>Hyperbaric Medicine Practice（高壓醫學實務）&mdash; 醫師監控患者在高壓氧艙中的治療過程<br>Wikimedia Commons, <a href="https://commons.wikimedia.org/wiki/File:Dr._Buza_practices_hyperbaric_medicine.JPG" target="_blank">CC BY-SA 4.0</a></figcaption>
+  </figure>
+</section>
+
+<!-- ═══════════════ 10. 衍伸研究 ═══════════════ -->
+<section id="followup">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2>衍伸研究：站在這篇 RCT 的肩膀上</h2>
+  </div>
+
+  <!-- Danan 2025 -->
+  <div class="card">
+    <h3>衍伸① Danan et al. 2025 &mdash; Threshold Effect（閾值效應）</h3>
+    <p><em>Brain Behav.</em> 2025;15(8):e70757 &nbsp;|&nbsp; PMID: 40847457 &nbsp;|&nbsp; 同一試驗的 post-hoc analysis（事後分析）</p>
+    <p style="margin-top:8px;">追問了一個臨床上最關鍵的問題：<strong>「改善到什麼程度，效果才能持久？」</strong></p>
+
+    <div class="callout callout-green" style="margin-top:12px;">
+      <strong>核心發現：存在 35% 閾值</strong><br>
+      治療結束時 CAPS 改善 <strong>≥35%</strong> &rarr; 3 個月追蹤時症狀<strong>持續進步</strong>（像翻過山丘，往下坡走）<br>
+      改善 <strong>&lt;35%</strong> &rarr; 進步停滯或消退（像沒翻過山丘，又滾回去）<br>
+      <strong>P = 2&times;10⁻⁶</strong>（極度顯著）
+    </div>
+
+    <div class="card" style="background:#f8f9fa;margin-top:12px;">
+      <h4>Bistable Circuit Model（雙穩態迴路模型）&mdash; 直覺理解</h4>
+      <div class="flow" style="margin:16px 0;">
+        <div class="flow-step" style="background:var(--green-bg);border-color:var(--green);"><strong>Well 1</strong><br>健康穩態</div>
+        <div class="flow-arrow">&larr;</div>
+        <div class="flow-step" style="background:var(--orange-bg);border-color:var(--orange);"><strong>Threshold</strong><br>閾值（山丘）<br>需 ≥35% 改善</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step" style="background:var(--red-bg);border-color:var(--red);"><strong>Well 2</strong><br>病理穩態</div>
+      </div>
+      <p style="font-size:0.9em;text-align:center;">創傷 &rarr; 推入 Well 2 &nbsp;|&nbsp; 治療不足 &rarr; 滾回 Well 2 &nbsp;|&nbsp; 足夠治療 &rarr; 翻到 Well 1</p>
+    </div>
+
+    <h4 style="margin-top:14px;">Clinical Implications（臨床意義）</h4>
+    <ol>
+      <li>以 ≥35% CAPS 改善作為<strong>治療目標</strong>，而非滿足於「有進步就好」</li>
+      <li>Avoidance symptoms（迴避症狀，僅 2 題）可作為<strong>早期監測指標</strong>，快速判斷療效走向</li>
+      <li>Baseline severity（基線嚴重度）不影響結果 &mdash; 輕重度患者均可受益</li>
+      <li>未達閾值者應考慮 extending treatment（延長療程）或 increasing pressure（提高壓力）</li>
+    </ol>
+  </div>
+
+  <!-- Wang 2026 -->
+  <div class="card">
+    <h3>衍伸② Wang 2026 &mdash; HBOT 在神經外科的回顧 <span class="en">Neurosurgical Review</span></h3>
+    <p><em>Med Gas Res.</em> 2026;16(2):156-160 &nbsp;|&nbsp; PMID: 40826939 &nbsp;|&nbsp; Review Article（回顧文獻）</p>
+    <p style="margin-top:8px;">來自<strong>不同領域（神經外科）的獨立驗證</strong>，引用了 Doenyas-Barak 團隊的多篇研究。</p>
+
+    <h4 style="margin-top:12px;">HBOT 的六大作用機制 <span class="en">Six Mechanisms of Action</span></h4>
+    <div class="grid-3" style="margin-top:10px;">
+      <div class="stat-card"><div class="num" style="font-size:1.2em;color:var(--primary);">O₂↑</div><div class="label"><strong>Oxygen Delivery</strong><br>氧氣輸送↑<br>增加血漿溶解氧</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.2em;color:var(--teal);">ICP↓</div><div class="label"><strong>Intracranial Pressure</strong><br>腦壓↓<br>血管收縮→血流↓21%，但含氧量↑</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.2em;color:var(--green);">WBC↑</div><div class="label"><strong>Immune Enhancement</strong><br>免疫↑<br>白血球殺菌力增強</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.2em;color:#e91e63;">↻</div><div class="label"><strong>Microcirculation</strong><br>微循環↑<br>血液黏稠度↓，側支循環建立</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.2em;color:var(--red);">⊘</div><div class="label"><strong>Antimicrobial</strong><br>抗菌<br>抑制 anaerobes（厭氧菌）</div></div>
+      <div class="stat-card"><div class="num" style="font-size:1.2em;color:var(--purple);">⚕</div><div class="label"><strong>Anti-Tumor</strong><br>抗腫瘤<br>Radiosensitization（放療增敏）</div></div>
+    </div>
+    <div class="callout callout-blue" style="margin-top:14px;">
+      <strong>跨領域意義：</strong>Wang 從神經外科視角獨立確認了 HBOT 的 neuroplasticity（神經可塑性）機制，並引用 Doenyas-Barak 團隊在 PTSD 和 fibromyalgia（纖維肌痛）的研究 &rarr; 證明 HBOT 的修復效果<strong>跨越多種神經/精神疾病</strong>，不僅限於 PTSD，支持「platform technology（平台技術）」概念。
+    </div>
+  </div>
+
+  <!-- 長期追蹤 -->
+  <div class="card">
+    <h3>非正式長期追蹤（約 2 年後）<span class="en">~2-Year Follow-Up (Informal)</span></h3>
+    <p>Efrati &amp; Doenyas-Barak 在 Psychiatric Times 專訪中透露的觀察（尚非正式發表）：</p>
+    <div class="grid-4" style="margin-top:12px;">
+      <div class="stat-card green"><div class="num" style="font-size:1.4em;">✓</div><div class="label"><strong>療效維持</strong><br>大致持久</div></div>
+      <div class="stat-card blue"><div class="num" style="font-size:1.3em;">↓</div><div class="label"><strong>減藥/停藥</strong><br>多數退伍軍人<br>成功減藥</div></div>
+      <div class="stat-card orange"><div class="num" style="font-size:1.3em;">2&times;</div><div class="label"><strong>就業 &amp; 關係</strong><br>穩定比例<br>幾乎翻倍</div></div>
+      <div class="stat-card purple"><div class="num" style="font-size:1.3em;">⬆</div><div class="label"><strong>質的改變</strong><br>從「症狀緩解」<br>到「功能恢復」</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ 11. 未來展望 ═══════════════ -->
+<section id="future">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <h2>未來展望</h2>
+  </div>
+
+  <div class="card">
+    <h3>研究限制 &mdash; 也是下一步的方向 <span class="en">Limitations &amp; Future Directions</span></h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>限制</th><th>影響</th><th>下一步方向</th></tr>
+        <tr><td><strong>樣本量偏小</strong>（每組 28 人）</td><td>統計效力有限，中等效果可能漏掉</td><td>更大樣本的 multi-center RCT（多中心隨機對照試驗）</td></tr>
+        <tr><td><strong>僅限男性退伍軍人</strong></td><td>無法推廣至女性、非軍人族群</td><td>納入女性、非軍人、兒童青少年 PTSD 患者</td></tr>
+        <tr><td><strong>追蹤期僅 3 個月</strong></td><td>長期療效尚未正式驗證</td><td>≥1 年的正式 long-term follow-up（長期追蹤）</td></tr>
+        <tr><td><strong>排除 TBI 病史</strong></td><td>TBI 合併 PTSD 的患者未涵蓋</td><td>TBI + PTSD comorbidity（共病）的專門試驗</td></tr>
+        <tr><td><strong>單一中心</strong>（以色列）</td><td>結果可能受場域特殊性影響</td><td>international multi-center trial（國際多中心試驗），含台灣本土資料</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>對高壓氧治療從業者的臨床啟示</h3>
+    <div class="grid-2" style="gap:14px;margin-top:10px;">
+      <div class="callout callout-green" style="margin:0;"><strong>標準化方案有了 RCT 證據</strong><br>60 次、2 ATA、100% O₂、90 分鐘 &mdash; 可作為臨床實務依據</div>
+      <div class="callout callout-blue" style="margin:0;"><strong>客觀影像佐證</strong><br>rsfMRI + DTI 雙重腦影像證據 &mdash; 超越主觀量表</div>
+      <div class="callout callout-teal" style="margin:0;"><strong>可作為衛教素材</strong><br>向患者解釋 HBOT 治療 PTSD 的科學基礎與安全性</div>
+      <div class="callout callout-orange" style="margin:0;"><strong>輔助而非取代</strong><br>不取代 psychotherapy（心理治療），需 multidisciplinary team（多專業團隊）配合</div>
+    </div>
+    <div class="callout callout-red" style="margin-top:14px;">
+      <strong>Efrati 團隊的重要提醒：</strong>「不是所有 HBOT 都一樣。縮短或簡化方案不僅可能無效，在某些情況下甚至可能產生相反的、不期望的結果。」<br>
+      <span style="font-size:0.88em;">&mdash; Efrati &amp; Doenyas-Barak, Psychiatric Times 2025</span><br>
+      <strong style="margin-top:6px;display:block;">本研究驗證的完整方案：</strong>60 次 &times; 每日 &times; 每週 5 天 &times; 2 ATA &times; 100% O₂ &times; 90 分鐘 &times; 每 20 分鐘空氣休息 5 分鐘
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>討論問題</h3>
+    <ol style="font-size:1.05em;">
+      <li style="margin-bottom:12px;"><strong>此方案在台灣的可行性？</strong><br><span style="font-size:0.88em;color:var(--muted);">設備、人力、費用 &mdash; 目前 PTSD 不在台灣健保 HBOT 給付範圍內</span></li>
+      <li style="margin-bottom:12px;"><strong>如何因應 Memory Surfacing（記憶浮現）？</strong><br><span style="font-size:0.88em;color:var(--muted);">需要精神科 + 心理 + 社工的多專業團隊整合</span></li>
+      <li><strong>HBOT 作為 Platform Technology（平台技術）的其他可能？</strong><br><span style="font-size:0.88em;color:var(--muted);">Fibromyalgia（纖維肌痛）、TBI（創傷性腦損傷）、Post-COVID（長新冠）、Autism（自閉症）…</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ═══════════════ Q&A 預備 ═══════════════ -->
+<section id="qa">
+  <div class="section-header">
+    <div class="section-num">Q&A</div>
+    <h2>Q&A 預備（展開查看）</h2>
+  </div>
+
+  <details>
+    <summary><span class="badge badge-orange">Q1</span> UHMS 核准的適應症清單裡沒有 PTSD，這樣算有效嗎？</summary>
+    <div class="detail-body">
+      <p>PTSD 目前確實不在 UHMS（Undersea and Hyperbaric Medical Society，美國水下暨高壓氧醫學會）的核准適應症清單上，仍屬「研究階段」。但 ISSHL（Idiopathic Sudden Sensorineural Hearing Loss，突發性感音神經性聽力損失）也是 2011 年才加入清單的 &mdash; 科學是漸進的。台灣健保同樣不給付 PTSD 的 HBOT。</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="badge badge-red">Q2</span> 60 次治療太多了吧？患者負擔得起嗎？（台灣情境）</summary>
+    <div class="detail-body">
+      <ul>
+        <li><strong>每天到院：</strong>偏遠地區困難，需考慮交通與住宿安排</li>
+        <li><strong>3 個月療程：</strong>需穩定的社會支持系統</li>
+        <li><strong>不能中斷：</strong>60 次缺一不可（Danan 2025 的閾值研究也支持這一點）</li>
+        <li><strong>多專業團隊：</strong>精神科 + 心理師 + 社工，人力成本高</li>
+      </ul>
+      <p style="margin-top:8px;"><em>「不便宜也不輕鬆，但長期追蹤顯示 medication reduction（減藥停藥）、employment rate doubled（就業率翻倍）&mdash; 從 societal cost（社會成本）角度看，反而可能是節省的。」</em></p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="badge badge-purple">Q3</span> Sham（假治療）真的沒效嗎？1.02 ATA 也是加壓啊</summary>
+    <div class="detail-body">
+      <p><strong>本研究的三重反駁：</strong></p>
+      <ol>
+        <li><strong>壓力超低：</strong>1.02 ATA 是文獻中最低的 sham 壓力之一，相當於水下 20 公分，不具臨床意義</li>
+        <li><strong>Blinding verification 成功：</strong>兩組 64% 認為是真治療（P=1.0）&rarr; 患者完全分不出真假</li>
+        <li><strong>Effect size 巨大：</strong>68% vs 4% &mdash; 如果 sham 也有效，4% 不應該這麼低</li>
+      </ol>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="badge badge-blue">Q4</span> 這跟潛水員用的再加壓治療有什麼關係？</summary>
+    <div class="detail-body">
+      <h4>給潛水員和海軍水下作業聽眾的連結</h4>
+      <ul>
+        <li>研究對象就是 combat veterans（戰鬥退伍軍人），與國軍弟兄背景相似</li>
+        <li>水下作業（打撈遺體、水下爆破）本身可能造成 psychological trauma（心理創傷）</li>
+        <li>水下作業人員對 hyperbaric chamber（高壓艙）已經熟悉，理解成本低</li>
+      </ul>
+      <p style="margin-top:8px;"><em>「Treatment Table 治療 DCS（Decompression Sickness，減壓症）是壓縮 bubble（氣泡）排 nitrogen（氮氣），治療 PTSD 是利用反覆 hyperoxic–hypoxic switching（高氧–低氧切換）喚醒大腦修復 &mdash; 同一個艙，完全不同的概念。」</em></p>
+      <figure class="fig" style="margin-top:12px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a3/USN_Treatment_Table_6.png" alt="USN Treatment Table 6" loading="lazy" style="max-height:300px;">
+        <figcaption>USN Treatment Table 6（美國海軍再加壓治療方案第六表）<br>來源：Naval Sea Systems Command, Public Domain（美國聯邦政府著作，公共領域）</figcaption>
+      </figure>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="badge badge-green">Q5</span> 既然新型 HBOT 和傳統 HBOT 不一樣，差在哪裡？</summary>
+    <div class="detail-body">
+      <p>關鍵差異在於 <strong>air breaks（空氣休息間隔）</strong>的設計：</p>
+      <ul>
+        <li><strong>傳統 HBOT：</strong>持續吸純氧，主要目的是 oxygen delivery（氧氣輸送）&mdash; 治療 wound healing（傷口癒合）、DCS 等</li>
+        <li><strong>新型 HBOT（本研究）：</strong>每 20 分鐘穿插 5 分鐘 air break，<strong>刻意製造高氧–低氧落差</strong> &mdash; 利用 HHP 觸發 neuroplasticity（神經可塑性）</li>
+      </ul>
+      <div class="callout callout-orange" style="margin-top:10px;">
+        Efrati 團隊明確警告：「Not all HBOT is the same（不是所有 HBOT 都一樣）。縮短或簡化方案不僅可能無效，甚至可能產生 opposite, undesirable results（相反的不良結果）。」
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ═══════════════ 參考文獻 ═══════════════ -->
+<section id="refs">
+  <div class="section-header">
+    <div class="section-num">📚</div>
+    <h2>參考文獻 <span class="en">References</span></h2>
+  </div>
+  <div class="card">
+    <ol style="font-size:0.9em;line-height:2;">
+      <li>Doenyas-Barak K, et al. Hyperbaric Oxygen Therapy for Veterans With Combat-Associated PTSD: A Randomized, Sham-Controlled Clinical Trial. <em>J Clin Psychiatry.</em> 2024;85(4):24m15464. <a href="https://pubmed.ncbi.nlm.nih.gov/39566051/" target="_blank">PMID: 39566051</a></li>
+      <li>Doenyas-Barak K, et al. Hyperbaric oxygen therapy improves symptoms, brain's microstructure and functionality in veterans with treatment resistant post-traumatic stress disorder. <em>PLOS ONE.</em> 2022;17(2):e0264161. <a href="https://pubmed.ncbi.nlm.nih.gov/35192645/" target="_blank">PMID: 35192645</a>（fMRI / DTI 圖源）</li>
+      <li>Danan D, et al. Hyperbaric Oxygen Therapy for PTSD: Threshold Effect for Sustained Symptom Improvement in a Biologically Based Treatment. <em>Brain Behav.</em> 2025;15(8):e70757. <a href="https://pubmed.ncbi.nlm.nih.gov/40847457/" target="_blank">PMID: 40847457</a>（閾值效應）</li>
+      <li>Wang X. Application of hyperbaric oxygen therapy in neurosurgery. <em>Med Gas Res.</em> 2026;16(2):156-160. <a href="https://pubmed.ncbi.nlm.nih.gov/40826939/" target="_blank">PMID: 40826939</a>（神經外科回顧）</li>
+      <li>Psychiatric Times. "Hyperbaric Oxygen Therapy: An Innovative PTSD Treatment for Veterans." <a href="https://www.psychiatrictimes.com/view/hyperbaric-oxygen-therapy-an-innovative-ptsd-treatment-for-veterans" target="_blank">2025-11-11</a></li>
+    </ol>
+    <p style="margin-top:14px;font-size:0.88em;">
+      <strong>Google Sheets 研究資料表：</strong><a href="https://docs.google.com/spreadsheets/d/1N_k-X-17a4dUUTH_GIh9t32YsVGKbCS0piBvoTAFBbQ/edit" target="_blank">點此開啟</a>
+    </p>
+  </div>
+</section>
+
+<!-- ═══════════════ 圖片來源 ═══════════════ -->
+<section>
+  <div class="card" style="background:#f8f9fa;">
+    <h3>圖片來源與授權 <span class="en">Image Sources &amp; Licenses</span></h3>
+    <div class="table-wrap">
+      <table style="font-size:0.82em;">
+        <tr><th>圖片</th><th>來源</th><th>授權</th></tr>
+        <tr><td>Multi-place Chamber（多人座高壓氧艙）</td><td>Wikimedia Commons</td><td>CC BY-SA 3.0 DE</td></tr>
+        <tr><td>Monoplace Chamber（單人座高壓氧艙）</td><td>Wikimedia Commons (Intermedichbo)</td><td>CC BY 3.0</td></tr>
+        <tr><td>Hyperbaric Chamber Open（高壓氧艙開啟）</td><td>Wikimedia Commons (Hyperbaric Center of Queens)</td><td>CC BY-SA 4.0</td></tr>
+        <tr><td>Hyperbaric Medicine Practice（高壓醫學實務）</td><td>Wikimedia Commons (Paulbuza)</td><td>CC BY-SA 4.0</td></tr>
+        <tr><td>TcpO₂ Diagram（經皮氧分壓圖表）</td><td>Wikimedia Commons (Intermedichbo)</td><td>CC BY-SA 3.0</td></tr>
+        <tr><td>HBOT Biological Mechanisms（生物學機制）</td><td>Frontiers in Neurology 2024, PMC11496187</td><td>CC BY 4.0</td></tr>
+        <tr><td>Study Flowchart, CAPS Scores, DTI, fMRI（流程圖、量表、腦影像）</td><td>Doenyas-Barak et al., PLOS ONE 2022, PMC8863239</td><td>CC BY 4.0</td></tr>
+        <tr><td>SPECT Pre/Post（治療前後腦血流）</td><td>Cases Journal 2009, PMC2740054</td><td>CC BY 2.0</td></tr>
+        <tr><td>USN Treatment Table 6（海軍再加壓方案）</td><td>Naval Sea Systems Command</td><td>Public Domain</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+</div><!-- .main -->
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer class="footer">
+  <strong>高壓氧治療戰鬥型 PTSD — 隨機假治療對照臨床試驗</strong><br>
+  Doenyas-Barak K, et al. <em>J Clin Psychiatry</em> 2024; 85(4): 24m15464<br>
+  報告者：陳映竹 &nbsp;|&nbsp; 日期：2026 / 4 / 21<br><br>
+  <a href="https://docs.google.com/spreadsheets/d/1N_k-X-17a4dUUTH_GIh9t32YsVGKbCS0piBvoTAFBbQ/edit" target="_blank">Google Sheets 研究資料表</a>
+</footer>
+
+<script>
+// Handle broken images gracefully
+document.querySelectorAll('.fig img').forEach(img => {
+  img.addEventListener('error', function() {
+    this.setAttribute('data-failed', '');
+    const fallback = document.createElement('div');
+    fallback.className = 'img-fallback';
+    fallback.innerHTML = '圖片載入失敗 — 請點選下方來源連結查看原圖';
+    this.insertAdjacentElement('afterend', fallback);
+  });
+  // Also check already-failed images
+  if (img.complete && img.naturalWidth === 0 && img.src) {
+    img.setAttribute('data-failed', '');
+    const fallback = document.createElement('div');
+    fallback.className = 'img-fallback';
+    fallback.innerHTML = '圖片載入失敗 — 請點選下方來源連結查看原圖';
+    img.insertAdjacentElement('afterend', fallback);
+  }
+});
+</script>
+</body>
+</html>
