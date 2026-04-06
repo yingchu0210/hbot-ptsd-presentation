@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>HBOT x PTSD Reel</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
+
+    :root {
+      --primary: #0d2137;
+      --accent: #3b82f6;
+      --green: #22c55e;
+      --red: #ef4444;
+      --orange: #f59e0b;
+      --purple: #a855f7;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      font-family: 'Noto Sans TC', system-ui, sans-serif;
+      background: #000;
+      color: #fff;
+      overflow: hidden;
+      height: 100%;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    /* ── Reel Container ── */
+    .reel {
+      width: 100%;
+      max-width: 430px;
+      height: 100vh;
+      height: 100dvh;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── Progress Bar ── */
+    .progress-bar {
+      position: absolute;
+      top: 12px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      gap: 4px;
+      z-index: 100;
+    }
+    .progress-seg {
+      flex: 1;
+      height: 3px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-seg .fill {
+      height: 100%;
+      width: 0%;
+      background: #fff;
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+    .progress-seg.done .fill { width: 100%; }
+    .progress-seg.active .fill { width: 0%; }
+
+    /* ── Slides ── */
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 28px 80px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.5s, transform 0.5s;
+      pointer-events: none;
+      text-align: center;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    /* ── Slide backgrounds ── */
+    .slide-1 {
+      background: linear-gradient(160deg, #0d2137 0%, #1e3a5f 50%, #2563eb 100%);
+    }
+    .slide-2 {
+      background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    }
+    .slide-3 {
+      background: linear-gradient(160deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+    }
+    .slide-4 {
+      background: linear-gradient(160deg, #042f2e 0%, #064e3b 50%, #065f46 100%);
+    }
+    .slide-5 {
+      background: linear-gradient(160deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
+    }
+    .slide-6 {
+      background: linear-gradient(160deg, #0c4a6e 0%, #075985 50%, #0369a1 100%);
+    }
+    .slide-7 {
+      background: linear-gradient(160deg, #14532d 0%, #166534 50%, #15803d 100%);
+    }
+    .slide-8 {
+      background: linear-gradient(160deg, #450a0a 0%, #7f1d1d 50%, #991b1b 100%);
+    }
+    .slide-9 {
+      background: linear-gradient(160deg, #0d2137 0%, #1a3a6b 50%, #2c5aa0 100%);
+    }
+
+    /* ── Typography ── */
+    .slide .tag {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.75em;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .slide h1 {
+      font-size: 2.2em;
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    .slide h2 {
+      font-size: 1.5em;
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .slide p {
+      font-size: 1em;
+      line-height: 1.7;
+      opacity: 0.9;
+      max-width: 360px;
+    }
+    .slide .small {
+      font-size: 0.78em;
+      opacity: 0.6;
+      margin-top: 12px;
+    }
+
+    /* ── Big Number ── */
+    .big-num {
+      font-size: 4.5em;
+      font-weight: 900;
+      line-height: 1;
+      margin: 12px 0;
+      background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.8) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .big-num.green {
+      background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+      -webkit-background-clip: text; background-clip: text;
+    }
+    .big-num.red {
+      background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+      -webkit-background-clip: text; background-clip: text;
+    }
+    .big-num.blue {
+      background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+      -webkit-background-clip: text; background-clip: text;
+    }
+
+    /* ── VS block ── */
+    .vs-block {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .vs-block .side {
+      flex: 1;
+      padding: 16px 12px;
+      border-radius: 16px;
+      text-align: center;
+    }
+    .vs-block .side.left {
+      background: rgba(34, 197, 94, 0.15);
+      border: 2px solid rgba(34, 197, 94, 0.4);
+    }
+    .vs-block .side.right {
+      background: rgba(239, 68, 68, 0.15);
+      border: 2px solid rgba(239, 68, 68, 0.4);
+    }
+    .vs-block .side .num {
+      font-size: 2.4em;
+      font-weight: 900;
+    }
+    .vs-block .side .lbl {
+      font-size: 0.78em;
+      opacity: 0.7;
+      margin-top: 4px;
+    }
+    .vs-block .vs-text {
+      font-size: 1.2em;
+      font-weight: 900;
+      opacity: 0.4;
+    }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+      width: 100%;
+      max-width: 380px;
+    }
+    .stat-box {
+      flex: 1;
+      padding: 16px 8px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat-box .num {
+      font-size: 1.6em;
+      font-weight: 900;
+    }
+    .stat-box .lbl {
+      font-size: 0.7em;
+      opacity: 0.65;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    /* ── Flow steps ── */
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+      margin: 16px 0;
+    }
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      text-align: left;
+    }
+    .flow-step .icon {
+      font-size: 1.8em;
+      flex-shrink: 0;
+    }
+    .flow-step .text {
+      font-size: 0.88em;
+      line-height: 1.4;
+    }
+    .flow-step .text strong {
+      display: block;
+      font-size: 1.05em;
+    }
+
+    /* ── Pill list ── */
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin: 16px 0;
+      max-width: 380px;
+    }
+    .pill {
+      padding: 8px 16px;
+      border-radius: 24px;
+      font-size: 0.82em;
+      font-weight: 700;
+    }
+    .pill-green { background: rgba(34,197,94,0.2); border: 1px solid rgba(34,197,94,0.4); color: #86efac; }
+    .pill-blue { background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4); color: #93c5fd; }
+    .pill-purple { background: rgba(168,85,247,0.2); border: 1px solid rgba(168,85,247,0.4); color: #d8b4fe; }
+    .pill-orange { background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4); color: #fcd34d; }
+    .pill-red { background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4); color: #fca5a5; }
+    .pill-teal { background: rgba(20,184,166,0.2); border: 1px solid rgba(20,184,166,0.4); color: #5eead4; }
+
+    /* ── Bottom bar ── */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 28px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.6));
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75em;
+      opacity: 0.6;
+    }
+
+    /* ── Tap zones ── */
+    .tap-left, .tap-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      z-index: 80;
+    }
+    .tap-left { left: 0; width: 30%; cursor: w-resize; }
+    .tap-right { right: 0; width: 70%; cursor: e-resize; }
+
+    /* ── Pause indicator ── */
+    .pause-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      z-index: 90;
+      width: 60px;
+      height: 60px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+    .pause-icon.show { transform: translate(-50%, -50%) scale(1); }
+    .pause-icon::before {
+      content: '❚❚';
+      color: #fff;
+      font-size: 1.2em;
+      letter-spacing: 2px;
+    }
+    .pause-icon.playing::before { content: '▶'; letter-spacing: 0; }
+
+    /* ── Animations ── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes countUp {
+      from { opacity: 0; transform: scale(0.5); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    .slide.active .anim-1 { animation: fadeInUp 0.6s 0.1s both; }
+    .slide.active .anim-2 { animation: fadeInUp 0.6s 0.3s both; }
+    .slide.active .anim-3 { animation: fadeInUp 0.6s 0.5s both; }
+    .slide.active .anim-4 { animation: fadeInUp 0.6s 0.7s both; }
+    .slide.active .anim-5 { animation: fadeInUp 0.6s 0.9s both; }
+    .slide.active .big-num { animation: countUp 0.7s 0.3s both; }
+
+    /* ── Desktop hint ── */
+    @media (min-width: 431px) {
+      .reel {
+        border-radius: 24px;
+        margin-top: 20px;
+        height: calc(100vh - 40px);
+        height: calc(100dvh - 40px);
+        box-shadow: 0 0 60px rgba(0,0,0,0.5);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="reel" id="reel">
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <!-- Tap zones -->
+  <div class="tap-left" id="tapLeft"></div>
+  <div class="tap-right" id="tapRight"></div>
+
+  <!-- Pause indicator -->
+  <div class="pause-icon" id="pauseIcon"></div>
+
+  <!-- ═══════ SLIDE 1: Title ═══════ -->
+  <div class="slide slide-1" data-duration="5000">
+    <div class="tag anim-1">RCT 隨機對照試驗</div>
+    <h1 class="anim-2">高壓氧治療<br>戰鬥型 PTSD</h1>
+    <p class="anim-3">當 50% 的患者對現有治療無效時<br>一個來自以色列的突破性研究</p>
+    <p class="small anim-4">Doenyas-Barak et al. | J Clin Psychiatry 2024</p>
+  </div>
+
+  <!-- ═══════ SLIDE 2: The Problem ═══════ -->
+  <div class="slide slide-2" data-duration="6000">
+    <div class="tag anim-1">現有治療的困境</div>
+    <h2 class="anim-2">一半的 PTSD 患者<br>治療後沒有好轉</h2>
+    <div class="flow-steps anim-3">
+      <div class="flow-step">
+        <div class="icon">🧠</div>
+        <div class="text"><strong>心理治療</strong>能重新處理記憶，但無法修復受損的神經迴路</div>
+      </div>
+      <div class="flow-step">
+        <div class="icon">💊</div>
+        <div class="text"><strong>藥物治療</strong>能緩解症狀，但無法逆轉腦部結構性損傷</div>
+      </div>
+    </div>
+    <p class="small anim-4">PTSD 不是性格缺陷 — 是腦部真正的生物學傷害</p>
+  </div>
+
+  <!-- ═══════ SLIDE 3: The Idea ═══════ -->
+  <div class="slide slide-3" data-duration="6000">
+    <div class="tag anim-1">新思路</div>
+    <h2 class="anim-2">用高壓氧<br>修復受損的腦</h2>
+    <div class="flow-steps anim-3">
+      <div class="flow-step">
+        <div class="icon">⬆️</div>
+        <div class="text"><strong>高氧 → 血氧飆升 14 倍</strong>100% 純氧 + 2 ATA 加壓</div>
+      </div>
+      <div class="flow-step">
+        <div class="icon">⬇️</div>
+        <div class="text"><strong>驟降 → 細胞以為在缺氧</strong>移除面罩，血氧驟降</div>
+      </div>
+      <div class="flow-step">
+        <div class="icon">🔧</div>
+        <div class="text"><strong>啟動修復 → HIF-1&alpha;</strong>用「假缺氧」騙出「真修復」</div>
+      </div>
+    </div>
+    <p class="small anim-4">高氧-低氧悖論 (HHP) — 像身體的消防演習</p>
+  </div>
+
+  <!-- ═══════ SLIDE 4: Study Design ═══════ -->
+  <div class="slide slide-4" data-duration="5000">
+    <div class="tag anim-1">研究設計</div>
+    <h2 class="anim-2">最嚴格的 RCT 設計</h2>
+    <div class="stats-row anim-3">
+      <div class="stat-box">
+        <div class="num" style="color:#4ade80;">63</div>
+        <div class="lbl">受試者<br>隨機分組</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" style="color:#60a5fa;">60</div>
+        <div class="lbl">每人治療<br>次數</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" style="color:#fbbf24;">3.5</div>
+        <div class="lbl">研究歷時<br>年</div>
+      </div>
+    </div>
+    <div class="flow-steps anim-4" style="gap:8px;">
+      <div class="flow-step" style="justify-content:center;">
+        <div class="text" style="text-align:center;"><strong>盲性驗證成功</strong>兩組都有 64% 認為接受了真治療 (P=1.0)</div>
+      </div>
+    </div>
+    <p class="small anim-5">Sham 組：1.02 ATA / 21% O₂ — 文獻中最低的假治療壓力</p>
+  </div>
+
+  <!-- ═══════ SLIDE 5: Results - CAPS ═══════ -->
+  <div class="slide slide-5" data-duration="6000">
+    <div class="tag anim-1">主要結果</div>
+    <h2 class="anim-2">PTSD 反應率</h2>
+    <div class="vs-block anim-3">
+      <div class="side left">
+        <div class="num" style="color:#4ade80;">68%</div>
+        <div class="lbl">HBOT 組</div>
+      </div>
+      <div class="vs-text">vs</div>
+      <div class="side right">
+        <div class="num" style="color:#f87171;">4%</div>
+        <div class="lbl">假治療組</div>
+      </div>
+    </div>
+    <div class="stats-row anim-4">
+      <div class="stat-box">
+        <div class="num" style="color:#c084fc;">39.2%</div>
+        <div class="lbl">完全緩解率<br>(CAPS &lt; 20)</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" style="color:#fbbf24;">1.56</div>
+        <div class="lbl">NNT<br>每治療 1.6 人<br>多幫到 1 人</div>
+      </div>
+    </div>
+    <p class="anim-5" style="font-size:0.85em;opacity:0.7;">效果量 Cohen's d ≈ 1.5-2.0 | P &lt; .001</p>
+  </div>
+
+  <!-- ═══════ SLIDE 6: Brain Evidence ═══════ -->
+  <div class="slide slide-6" data-duration="6000">
+    <div class="tag anim-1">腦影像佐證</div>
+    <h2 class="anim-2">大腦不會騙人</h2>
+    <p class="anim-3" style="margin-bottom:16px;">三大腦網路功能連結<strong>同時恢復</strong></p>
+    <div class="pill-list anim-4">
+      <div class="pill pill-blue">DMN 預設模式網路 ↑</div>
+      <div class="pill pill-purple">CEN 中央執行網路 ↑</div>
+      <div class="pill pill-orange">SN 突顯網路 正常化</div>
+      <div class="pill pill-teal">丘腦連結 ↑</div>
+      <div class="pill pill-green">白質 FA 值 ↑</div>
+    </div>
+    <p class="anim-5" style="font-size:0.85em;opacity:0.7;margin-top:16px;">大腦從「戰鬥模式」切回「正常模式」<br>rsfMRI + DTI 雙重影像證據</p>
+  </div>
+
+  <!-- ═══════ SLIDE 7: 5 Repair Pathways ═══════ -->
+  <div class="slide slide-7" data-duration="5000">
+    <div class="tag anim-1">修復機制</div>
+    <h2 class="anim-2">HIF-1&alpha; 啟動<br>五大修復路徑</h2>
+    <div class="pill-list anim-3" style="flex-direction:column;align-items:stretch;max-width:320px;">
+      <div class="pill pill-blue" style="text-align:left;">🧬 神經可塑性 — 神經元重新連接</div>
+      <div class="pill pill-green" style="text-align:left;">🌱 幹細胞增殖 — 遷移至受損區域</div>
+      <div class="pill pill-red" style="text-align:left;">🩸 血管新生 — 改善腦部血流</div>
+      <div class="pill pill-orange" style="text-align:left;">⚡ 粒線體增強 — 細胞能量升級</div>
+      <div class="pill pill-teal" style="text-align:left;">🛡️ 發炎調節 — 降低慢性神經發炎</div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 8: Safety ═══════ -->
+  <div class="slide slide-8" data-duration="5000">
+    <div class="tag anim-1">安全性</div>
+    <h2 class="anim-2">Memory Surfacing<br>記憶浮現現象</h2>
+    <div class="big-num anim-3" style="font-size:3.5em;">25%</div>
+    <p class="anim-3">HBOT 組出現記憶浮現<br>假治療組 = 0%</p>
+    <div class="flow-steps anim-4" style="margin-top:16px;">
+      <div class="flow-step">
+        <div class="icon">💡</div>
+        <div class="text"><strong>可能是修復的正面指標</strong>代表斷裂的迴路正在重新連通<br>需多專業團隊陪伴度過</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 9: Closing ═══════ -->
+  <div class="slide slide-9" data-duration="6000">
+    <div class="tag anim-1">結論</div>
+    <h1 class="anim-2" style="font-size:1.8em;">不是取代心理治療<br>而是修復硬體</h1>
+    <div class="stats-row anim-3">
+      <div class="stat-box">
+        <div class="num" style="color:#4ade80;font-size:1.3em;">68%</div>
+        <div class="lbl">反應率</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" style="color:#60a5fa;font-size:1.3em;">39%</div>
+        <div class="lbl">緩解率</div>
+      </div>
+      <div class="stat-box">
+        <div class="num" style="color:#c084fc;font-size:1.3em;">60次</div>
+        <div class="lbl">完整方案</div>
+      </div>
+    </div>
+    <p class="anim-4" style="font-size:0.92em;line-height:1.8;">為試過所有治療卻沒好轉的患者<br>提供一個有腦影像佐證的新選項</p>
+    <p class="small anim-5">
+      陳映竹 報告 | 2026.04.21<br>
+      J Clin Psychiatry 2024; 85(4): 24m15464
+    </p>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <span>點擊右側 → 下一頁 | 左側 ← 上一頁</span>
+    <span id="slideCounter">1/9</span>
+  </div>
+</div>
+
+<script>
+  const reel = document.getElementById('reel');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const totalSlides = slides.length;
+  const progressBar = document.getElementById('progressBar');
+  const pauseIcon = document.getElementById('pauseIcon');
+  const counter = document.getElementById('slideCounter');
+
+  let current = 0;
+  let timer = null;
+  let progressTimer = null;
+  let paused = false;
+  let startTime = 0;
+  let elapsed = 0;
+
+  // Build progress bar
+  slides.forEach((_, i) => {
+    const seg = document.createElement('div');
+    seg.className = 'progress-seg';
+    seg.innerHTML = '<div class="fill"></div>';
+    progressBar.appendChild(seg);
+  });
+  const segments = Array.from(progressBar.children);
+
+  function getDuration(i) {
+    return parseInt(slides[i].dataset.duration) || 5000;
+  }
+
+  function updateProgress() {
+    segments.forEach((seg, i) => {
+      const fill = seg.querySelector('.fill');
+      if (i < current) {
+        seg.className = 'progress-seg done';
+        fill.style.width = '100%';
+      } else if (i === current) {
+        seg.className = 'progress-seg active';
+      } else {
+        seg.className = 'progress-seg';
+        fill.style.width = '0%';
+      }
+    });
+  }
+
+  function animateProgress() {
+    const dur = getDuration(current);
+    const fill = segments[current].querySelector('.fill');
+    const remaining = dur - elapsed;
+    const step = 50;
+    let progressElapsed = elapsed;
+
+    clearInterval(progressTimer);
+    progressTimer = setInterval(() => {
+      if (paused) return;
+      progressElapsed += step;
+      const pct = Math.min((progressElapsed / dur) * 100, 100);
+      fill.style.width = pct + '%';
+    }, step);
+  }
+
+  function goTo(index) {
+    if (index < 0 || index >= totalSlides) return;
+    clearTimeout(timer);
+    clearInterval(progressTimer);
+    elapsed = 0;
+
+    slides[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    counter.textContent = (current + 1) + '/' + totalSlides;
+
+    updateProgress();
+    if (!paused) startSlideTimer();
+  }
+
+  function startSlideTimer() {
+    const dur = getDuration(current) - elapsed;
+    animateProgress();
+    startTime = Date.now();
+    timer = setTimeout(() => {
+      elapsed = 0;
+      if (current < totalSlides - 1) {
+        goTo(current + 1);
+      }
+    }, dur);
+  }
+
+  function togglePause() {
+    paused = !paused;
+    pauseIcon.className = paused ? 'pause-icon show' : 'pause-icon show playing';
+
+    if (paused) {
+      clearTimeout(timer);
+      elapsed += Date.now() - startTime;
+    } else {
+      startSlideTimer();
+      setTimeout(() => { pauseIcon.className = 'pause-icon'; }, 400);
+    }
+
+    if (paused) {
+      setTimeout(() => {
+        if (paused) pauseIcon.className = 'pause-icon show';
+      }, 0);
+    }
+  }
+
+  // Tap zones
+  document.getElementById('tapRight').addEventListener('click', (e) => {
+    if (current < totalSlides - 1) {
+      elapsed = 0;
+      goTo(current + 1);
+    }
+  });
+
+  document.getElementById('tapLeft').addEventListener('click', (e) => {
+    if (current > 0) {
+      elapsed = 0;
+      goTo(current - 1);
+    }
+  });
+
+  // Long press to pause
+  let pressTimer = null;
+  let didLongPress = false;
+
+  reel.addEventListener('pointerdown', (e) => {
+    didLongPress = false;
+    pressTimer = setTimeout(() => {
+      didLongPress = true;
+      if (!paused) togglePause();
+    }, 300);
+  });
+
+  reel.addEventListener('pointerup', () => {
+    clearTimeout(pressTimer);
+    if (didLongPress && paused) {
+      togglePause();
+    }
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      if (current < totalSlides - 1) { elapsed = 0; goTo(current + 1); }
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (current > 0) { elapsed = 0; goTo(current - 1); }
+    } else if (e.key === 'p') {
+      togglePause();
+    }
+  });
+
+  // Init
+  slides[0].classList.add('active');
+  updateProgress();
+  startSlideTimer();
+</script>
+</body>
+</html>
