@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6個月男寶寶尿布疹 × 黴菌感染完整照護指南｜成因・治療・產品推薦</title>
+  <style>
+    :root {
+      --primary: #c2185b;
+      --primary-light: #e91e63;
+      --accent: #fce4ec;
+      --accent2: #fff0f5;
+      --green: #34a853;
+      --green-bg: #e6f4ea;
+      --orange: #f9ab00;
+      --orange-bg: #fff8e1;
+      --red: #ea4335;
+      --red-bg: #fce8e6;
+      --purple: #7b1fa2;
+      --purple-bg: #f3e5f5;
+      --teal: #00838f;
+      --teal-bg: #e0f7fa;
+      --text: #1a1a1a;
+      --muted: #5f6368;
+      --border: #f1d4e0;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --card-shadow-hover: 0 4px 16px rgba(0,0,0,0.14);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Noto Sans TC", "Microsoft JhengHei", "Segoe UI", system-ui, sans-serif;
+      color: var(--text); line-height: 1.8; background: #fff8fb;
+    }
+    .hero {
+      background: linear-gradient(135deg, #880e4f 0%, #c2185b 50%, #ec407a 100%);
+      color: #fff; padding: 54px 24px 46px; text-align: center; position: relative;
+    }
+    .hero-inner { position: relative; max-width: 900px; margin: 0 auto; }
+    .hero .tag {
+      display: inline-block; background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35); padding: 4px 16px;
+      border-radius: 20px; font-size: 0.85em; margin-bottom: 14px; letter-spacing: 1px;
+    }
+    .hero h1 { font-size: 2em; font-weight: 800; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+    .hero .subtitle { font-size: 1.08em; opacity: 0.95; margin-bottom: 14px; }
+    .hero .meta-line { font-size: 0.88em; opacity: 0.8; }
+
+    .toc {
+      background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .toc-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 16px;
+      display: flex; overflow-x: auto; gap: 0;
+    }
+    .toc a {
+      padding: 12px 14px; font-size: 0.82em; color: var(--muted); text-decoration: none;
+      white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s;
+    }
+    .toc a:hover { color: var(--primary); border-bottom-color: var(--primary-light); background: var(--accent2); }
+
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px 16px 60px; }
+    section { margin-bottom: 48px; scroll-margin-top: 60px; }
+    .section-header {
+      display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+      padding-bottom: 10px; border-bottom: 2px solid var(--primary);
+    }
+    .section-num {
+      background: var(--primary); color: #fff; width: 36px; height: 36px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; flex-shrink: 0;
+    }
+    .section-header h2 { font-size: 1.35em; color: var(--primary); }
+
+    .card {
+      background: #fff; border-radius: 12px; padding: 22px; margin-bottom: 18px;
+      box-shadow: var(--card-shadow); border: 1px solid var(--border);
+    }
+    .card:hover { box-shadow: var(--card-shadow-hover); }
+    .card h3 { color: var(--primary-light); font-size: 1.08em; margin-bottom: 12px; }
+    .card h4 { color: var(--text); font-size: 0.98em; margin: 14px 0 8px; }
+    .card p { margin-bottom: 10px; }
+    .card ul, .card ol { padding-left: 22px; margin: 8px 0; }
+    .card li { margin-bottom: 5px; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 860px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.5em; }
+    }
+
+    .table-wrap { overflow-x: auto; margin: 12px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92em; }
+    th { background: var(--primary); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; white-space: nowrap; }
+    td { padding: 10px 14px; border-bottom: 1px solid #f0dce5; vertical-align: top; }
+    tr:nth-child(even) td { background: #fdf5f9; }
+
+    .callout { padding: 16px 20px; border-radius: 0 10px 10px 0; margin: 14px 0; font-size: 0.95em; }
+    .callout-green { background: var(--green-bg); border-left: 4px solid var(--green); }
+    .callout-orange { background: var(--orange-bg); border-left: 4px solid var(--orange); }
+    .callout-red { background: var(--red-bg); border-left: 4px solid var(--red); }
+    .callout-purple { background: var(--purple-bg); border-left: 4px solid var(--purple); }
+    .callout-teal { background: var(--teal-bg); border-left: 4px solid var(--teal); }
+    .callout-blue { background: var(--accent); border-left: 4px solid var(--primary-light); }
+    .callout strong { color: var(--primary); }
+
+    .vs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+    .vs-side { padding: 18px; border-radius: 12px; }
+    .vs-left { background: #e3f2fd; border: 2px solid #1976d2; }
+    .vs-right { background: #fce4ec; border: 2px solid #c62828; }
+    .vs-side h4 { margin-bottom: 10px; text-align: center; }
+    @media (max-width: 700px) { .vs-grid { grid-template-columns: 1fr; } }
+
+    .badge {
+      display: inline-block; padding: 2px 10px; border-radius: 12px;
+      font-size: 0.78em; font-weight: 600; margin-right: 4px;
+    }
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-red { background: var(--red-bg); color: var(--red); }
+    .badge-orange { background: var(--orange-bg); color: #b87500; }
+    .badge-blue { background: var(--accent); color: var(--primary); }
+
+    .footer {
+      text-align: center; padding: 30px 20px; color: var(--muted);
+      font-size: 0.85em; border-top: 1px solid var(--border); background: #fff;
+    }
+    .footer a { color: var(--primary-light); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <span class="tag">6 個月男寶寶 × 居家照護</span>
+    <h1>屁屁不再紅通通：尿布疹 × 黴菌感染完整指南</h1>
+    <p class="subtitle">成因辨識 ・ 念珠菌治療 ・ 排便偵測 ・ 台灣市售產品推薦</p>
+    <p class="meta-line">給新手爸媽的實戰手冊 ｜ 2026 更新</p>
+  </div>
+</div>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#s1">1. 尿布疹成因</a>
+    <a href="#s2">2. 辨識黴菌感染</a>
+    <a href="#s3">3. 治療與處理</a>
+    <a href="#s4">4. 即時偵測排便</a>
+    <a href="#s5">5. 台灣產品推薦</a>
+    <a href="#s6">6. 何時該看醫師</a>
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- ========== SECTION 1 ========== -->
+  <section id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <h2>尿布疹的四大成因</h2>
+    </div>
+
+    <div class="callout callout-blue">
+      尿布疹（Diaper Dermatitis）是 6 個月寶寶最常見的皮膚問題之一。核心原因可歸納為「<strong>悶、濕、摩、刺</strong>」四個字——而當這些條件持續存在，黴菌（念珠菌）就會趁虛而入。
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>① 刺激型尿布疹（最常見）</h3>
+        <p>尿液中的<strong>尿素分解成氨</strong>，加上糞便中的消化酵素，直接腐蝕嬌嫩皮膚，是單純最常見的紅屁屁成因。</p>
+        <ul>
+          <li>分布：尿布接觸的凸面（屁股、大腿外側）</li>
+          <li>特徵：一整片紅、微微發亮、沒有小紅點</li>
+          <li>誘因：換尿布間隔 &gt; 3 小時、腹瀉、副食品剛開始</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>② 念珠菌（黴菌）感染</h3>
+        <p><strong>白色念珠菌（Candida albicans）</strong>在潮濕悶熱環境大量繁殖，常在刺激型尿布疹「超過 3 天未好」後繼發。</p>
+        <ul>
+          <li>分布：<strong>皺褶深處</strong>（鼠蹊部、陰囊、大腿根）</li>
+          <li>特徵：邊緣清楚的紅斑 + 周圍<strong>衛星狀小紅點</strong></li>
+          <li>誘因：抗生素使用、腹瀉、鵝口瘡（口腔念珠菌）</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>③ 摩擦型</h3>
+        <p>尿布邊緣、鬆緊帶與皮膚反覆摩擦，加上活動量變大（6 個月開始會翻身、坐立）。</p>
+        <ul>
+          <li>分布：尿布鬆緊帶位置、大腿根部</li>
+          <li>特徵：對稱紅線、乾燥脫屑</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>④ 過敏 / 接觸性</h3>
+        <p>對尿布材質、濕紙巾的香精/防腐劑、洗劑殘留過敏。</p>
+        <ul>
+          <li>分布：僅限接觸部位</li>
+          <li>特徵：界線清楚、換品牌後改善</li>
+          <li>常見過敏原：MI/MCI 防腐劑、香精、酒精</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-orange">
+      <strong>6 個月男寶寶特別注意：</strong>此階段開始吃副食品，大便性狀改變（變酸、變軟、變臭），對皮膚刺激增加；同時開始長牙、口水增多、常咬手指，如果媽媽哺乳中也可能有念珠菌循環感染（乳頭 ↔ 寶寶口腔 ↔ 屁股），需要同時治療。
+    </div>
+  </section>
+
+  <!-- ========== SECTION 2 ========== -->
+  <section id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <h2>如何辨識：一般尿布疹 vs. 黴菌感染</h2>
+    </div>
+
+    <div class="callout callout-red">
+      <strong>關鍵判讀：</strong>念珠菌感染若誤當一般尿布疹擦類固醇或氧化鋅，不但無效，類固醇更會讓黴菌「越養越多」。先辨識再治療，是黃金原則。
+    </div>
+
+    <div class="vs-grid">
+      <div class="vs-side vs-left">
+        <h4>🔵 一般刺激型尿布疹</h4>
+        <ul>
+          <li><strong>位置：</strong>尿布接觸的凸面（屁股、大腿外側）</li>
+          <li><strong>形狀：</strong>一整片均勻發紅</li>
+          <li><strong>邊緣：</strong>不清楚、漸層</li>
+          <li><strong>皺褶處：</strong>反而乾淨、無紅疹</li>
+          <li><strong>小紅點：</strong>無</li>
+          <li><strong>脫屑：</strong>可能有輕微脫皮</li>
+          <li><strong>病程：</strong>勤換尿布 + 屁屁膏 <strong>2–3 天</strong> 明顯改善</li>
+        </ul>
+      </div>
+      <div class="vs-side vs-right">
+        <h4>🔴 念珠菌（黴菌）感染</h4>
+        <ul>
+          <li><strong>位置：</strong><strong>皺褶深處</strong>（鼠蹊、陰囊、大腿根）</li>
+          <li><strong>形狀：</strong>鮮紅、邊緣像<strong>地圖</strong>界線</li>
+          <li><strong>邊緣：</strong>清楚、微微隆起</li>
+          <li><strong>皺褶處：</strong>最嚴重、紅腫明顯</li>
+          <li><strong>小紅點：</strong>✅ 周圍有<strong>衛星狀紅點/膿皰</strong>（關鍵！）</li>
+          <li><strong>脫屑：</strong>邊緣白色脫屑</li>
+          <li><strong>病程：</strong>屁屁膏擦 3 天以上<strong>越擦越糟</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>三秒快速自我檢查</h3>
+      <ol>
+        <li><strong>看皺褶：</strong>大腿根、陰囊、屁股縫深處——越深越紅 ➜ 懷疑黴菌</li>
+        <li><strong>看邊緣：</strong>主紅斑周圍有沒有「一粒一粒的小紅點」（衛星狀病灶）➜ 有 = 念珠菌幾乎確診</li>
+        <li><strong>看口腔：</strong>翻翻舌頭、口腔黏膜，有沒有刮不掉的白色斑塊（鵝口瘡）？有 ➜ 內外都念珠菌感染</li>
+      </ol>
+    </div>
+
+    <div class="callout callout-purple">
+      <strong>男寶寶特別檢查：</strong>陰囊皮膚皺褶多，且容易被忽略。換尿布時輕輕撐開檢查陰囊與大腿內側的接觸面，是念珠菌最常被漏掉的藏身處。
+    </div>
+  </section>
+
+  <!-- ========== SECTION 3 ========== -->
+  <section id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <h2>治療與處理：分級處置流程</h2>
+    </div>
+
+    <div class="card">
+      <h3>📋 三階段處置原則</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>狀況</th><th>處置</th><th>主成分</th><th>用多久</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>輕微紅（1–2 天）</td>
+              <td>勤換尿布 + 屁屁膏隔離</td>
+              <td>氧化鋅 10% / 凡士林</td>
+              <td>2–3 天可改善</td>
+            </tr>
+            <tr>
+              <td>一般尿布疹（3–5 天）</td>
+              <td>加上短期低效類固醇</td>
+              <td>1% Hydrocortisone</td>
+              <td>≤ 5 天，醫師指示</td>
+            </tr>
+            <tr>
+              <td>念珠菌感染</td>
+              <td><strong>抗黴菌藥膏</strong>（不能只擦屁屁膏！）</td>
+              <td>Miconazole、Clotrimazole、Ketoconazole</td>
+              <td>7–14 天，紅退後再擦 3 天</td>
+            </tr>
+            <tr>
+              <td>嚴重 / 併發細菌</td>
+              <td>就醫處方（可能合併抗生素）</td>
+              <td>Mupirocin + 抗黴菌</td>
+              <td>遵醫囑</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>✅ 居家照護 6 步驟（任何階段都適用）</h3>
+        <ol>
+          <li><strong>勤換尿布：</strong>白天每 <strong>2 小時</strong> 檢查一次，有大便立刻換</li>
+          <li><strong>溫水沖洗：</strong>用<strong>溫水</strong>沖洗（避免濕紙巾摩擦），沖完<strong>輕拍</strong>到完全乾燥</li>
+          <li><strong>空氣浴：</strong>每天讓屁屁<strong>晾 10–15 分鐘</strong>不包尿布（鋪防水墊）</li>
+          <li><strong>厚擦隔離膏：</strong>乾燥後厚厚一層氧化鋅屁屁膏，像「奶油抹土司」</li>
+          <li><strong>尿布挑寬鬆：</strong>選透氣款、寬鬆一點，避免壓擠發炎處</li>
+          <li><strong>避開刺激：</strong>暫停含酒精、香精的濕紙巾</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h3>❌ 常見錯誤 NG 行為</h3>
+        <ul>
+          <li>❌ 紅通通就直接擦<strong>類固醇</strong>或複方藥膏（會養出黴菌）</li>
+          <li>❌ 用<strong>爽身粉</strong>（吸濕後結塊反而滋生細菌，且會嗆到）</li>
+          <li>❌ 用<strong>吹風機</strong>吹乾（過熱傷皮膚）</li>
+          <li>❌ 洗完用毛巾<strong>來回擦拭</strong>（只能輕拍）</li>
+          <li>❌ 洗澡水加<strong>茶樹油、精油</strong>（嬰兒皮膚會吸收刺激）</li>
+          <li>❌ 認為「黴菌藥膏擦幾天紅退就停藥」（會復發，要擦滿療程）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-teal">
+      <strong>塗藥順序（同時有一般尿布疹 + 黴菌時）：</strong><br>
+      ① 溫水洗淨 ➜ ② 輕拍乾燥 ➜ ③ <strong>先擦抗黴菌藥膏</strong>（薄薄一層、等吸收 1 分鐘）➜ ④ <strong>再厚擦氧化鋅屁屁膏</strong>做隔離 ➜ ⑤ 穿上新尿布。<br>
+      順序很重要：先治療、後保護。
+    </div>
+  </section>
+
+  <!-- ========== SECTION 4 ========== -->
+  <section id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <h2>寶寶不會說：如何即時知道他排便了？</h2>
+    </div>
+
+    <div class="callout callout-blue">
+      6 個月寶寶不會說話，但身體和行為都是訊號。只要你抓到這些「排便前兆」，就能在糞便接觸皮膚 <strong>5–10 分鐘內</strong> 更換，大幅降低紅屁屁機率。
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>🎯 排便前兆（行為徵兆）</h3>
+        <ul>
+          <li><strong>臉紅、用力表情：</strong>眉頭皺、臉脹紅、暫時停止活動</li>
+          <li><strong>身體緊繃：</strong>四肢僵直、踢腳、弓背</li>
+          <li><strong>突然安靜 or 專注：</strong>正在玩突然停下、眼神放空</li>
+          <li><strong>特定哼聲：</strong>短促「嗯嗯」聲、像在使勁</li>
+          <li><strong>放屁變多：</strong>連續放屁通常是前奏</li>
+          <li><strong>討抱討哭：</strong>部分寶寶會在便前煩躁</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>👃 排便完成的即時訊號</h3>
+        <ul>
+          <li><strong>氣味：</strong>最直接——副食品階段後大便明顯有味</li>
+          <li><strong>尿布膨起：</strong>從屁股/背後輕摸尿布，有<strong>溫熱鼓起</strong>感</li>
+          <li><strong>寶寶突然放鬆：</strong>用力完後表情鬆開、吐氣</li>
+          <li><strong>短暫哭一聲：</strong>大便刺激屁屁可能會哼叫</li>
+          <li><strong>坐姿改變：</strong>原本玩玩具突然躺下扭動</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📅 養成規律觀察節奏</h3>
+      <p>6 個月寶寶的排便規律可預測，建立下面這份「排便日記」，1–2 週就能抓到寶寶的固定時段：</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>時段</th><th>常見狀況</th><th>檢查建議</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>起床 15 分內</td><td>早晨胃結腸反射，常大便</td><td>喝奶前先檢查</td></tr>
+            <tr><td>喝奶後 10–30 分</td><td>進食反射觸發腸蠕動</td><td>打嗝後順手檢查</td></tr>
+            <tr><td>副食品後 30 分</td><td>固體食物消化推擠</td><td>固定時段檢查</td></tr>
+            <tr><td>洗澡前後</td><td>溫水刺激常觸發</td><td>洗澡前順便換</td></tr>
+            <tr><td>午睡醒來</td><td>放鬆後排便</td><td>醒來 5 分內檢查</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🛠️ 輔助工具 / 技巧</h3>
+      <div class="grid-2">
+        <div>
+          <h4>🔔 智慧尿布感應器</h4>
+          <ul>
+            <li><strong>Lumi by Pampers</strong>（海外）：濕度感應，App 即時通知</li>
+            <li><strong>Opro9 SmartDiaper</strong>（台灣有代理）：藍牙濕度偵測</li>
+            <li>※ 僅偵測濕度，大便仍需靠氣味 / 觀察</li>
+          </ul>
+        </div>
+        <div>
+          <h4>📱 低成本作法</h4>
+          <ul>
+            <li>手機設定 <strong>2 小時鬧鐘</strong>提醒檢查</li>
+            <li>寶寶監視器：看到表情用力時過去檢查</li>
+            <li>使用<strong>尿布顯示條</strong>款式（有尿變藍）</li>
+            <li>穿薄布尿布練習，更快察覺</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>黃金規則：</strong>寧可多檢查一次，不要少檢查一次。糞便接觸皮膚每多停留 10 分鐘，尿布疹機率就上升一個等級。
+    </div>
+  </section>
+
+  <!-- ========== SECTION 5 ========== -->
+  <section id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <h2>台灣市售產品完整推薦</h2>
+    </div>
+
+    <div class="callout callout-orange">
+      <strong>選購原則：</strong>不含香精、不含類固醇、不含 Parabens/MI/MCI 防腐劑；pH 值 4.5–6；氧化鋅 10% 以下（台灣法規上限）。以下為市面常見品項整理，<strong>非藥品廣告，實際使用請諮詢醫師或藥師</strong>。
+    </div>
+
+    <h3 style="color:var(--primary); margin: 18px 0 10px;">🍑 A. 日常預防保養型屁屁膏（隔離保護）</h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>品牌</th><th>產品</th><th>主成分</th><th>特色</th><th>價位</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>貝恩 Baan</strong></td>
+              <td>嬰兒全效護膚膏</td>
+              <td>9.5% 氧化鋅、B5、金盞花</td>
+              <td>台灣媽媽口碑款，無香精無類固醇</td>
+              <td>$280 / 100g</td>
+            </tr>
+            <tr>
+              <td><strong>Desitin（藍）</strong></td>
+              <td>日常護理屁屁膏</td>
+              <td>13% 氧化鋅（美版）/10%（台灣版）</td>
+              <td>Costco 常見，預防型最經典</td>
+              <td>$350 / 113g</td>
+            </tr>
+            <tr>
+              <td><strong>施巴 Sebamed</strong></td>
+              <td>嬰兒護膚膏</td>
+              <td>泛醇、乳木果油</td>
+              <td>pH 5.5，德國品牌，敏感肌適用</td>
+              <td>$380 / 100ml</td>
+            </tr>
+            <tr>
+              <td><strong>Weleda 薇蕾德</strong></td>
+              <td>金盞花護膚膏</td>
+              <td>金盞花萃取、甜杏仁油</td>
+              <td>有機認證，滋潤度高</td>
+              <td>$520 / 75ml</td>
+            </tr>
+            <tr>
+              <td><strong>Mustela 慕之恬廊</strong></td>
+              <td>1 2 3 屁屁膏</td>
+              <td>氧化鋅、葵花籽萃取</td>
+              <td>法國藥妝，臨床實驗背書</td>
+              <td>$550 / 100ml</td>
+            </tr>
+            <tr>
+              <td><strong>Aquaphor 愛可膚</strong></td>
+              <td>萬用修護膏</td>
+              <td>凡士林、羊毛脂</td>
+              <td>無氧化鋅，純隔離型，可全身用</td>
+              <td>$450 / 85g</td>
+            </tr>
+            <tr>
+              <td><strong>施巴屁屁膏 / Bübchen</strong></td>
+              <td>嬰兒護膚膏</td>
+              <td>氧化鋅、泛醇</td>
+              <td>德國屈臣氏常見，CP 值高</td>
+              <td>$250 / 75ml</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h3 style="color:var(--primary); margin: 22px 0 10px;">🦠 B. 念珠菌（黴菌）感染治療型藥膏 <span style="font-size:0.7em; color:var(--red);">⚠️ 需醫師處方或藥師指示</span></h3>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>藥品（中文）</th><th>成分</th><th>類型</th><th>取得方式</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>達克寧 Daktarin</strong></td>
+              <td>Miconazole 2%</td>
+              <td>廣效抗黴菌</td>
+              <td>藥局指示用藥</td>
+            </tr>
+            <tr>
+              <td><strong>卡黴速停 Canesten</strong></td>
+              <td>Clotrimazole 1%</td>
+              <td>抗念珠菌首選</td>
+              <td>藥局指示用藥</td>
+            </tr>
+            <tr>
+              <td><strong>必克多黴 / 美康</strong></td>
+              <td>Ketoconazole 2%</td>
+              <td>強效抗黴菌</td>
+              <td>醫師處方</td>
+            </tr>
+            <tr>
+              <td><strong>療黴舒 Lamisil</strong></td>
+              <td>Terbinafine 1%</td>
+              <td>對皮癬菌效果佳</td>
+              <td>藥局指示用藥</td>
+            </tr>
+            <tr>
+              <td><strong>Nystatin 乳膏</strong></td>
+              <td>Nystatin</td>
+              <td>專攻念珠菌、嬰兒常用</td>
+              <td>醫師處方（最常給嬰幼兒）</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout callout-red" style="margin-top:14px;">
+        <strong>⚠️ 警告：</strong>切勿自行購買含類固醇的複方藥膏（如皮爾膚、新皮爾膚、皮質醇）給寶寶擦在皺褶處。類固醇會讓念珠菌惡化，且臉部/生殖器附近皮膚薄，類固醇易被吸收。
+      </div>
+    </div>
+
+    <h3 style="color:var(--primary); margin: 22px 0 10px;">👶 C. 尿布 / 濕紙巾建議</h3>
+    <div class="grid-2">
+      <div class="card">
+        <h3>透氣尿布（紅屁屁時期）</h3>
+        <ul>
+          <li><strong>幫寶適一級幫</strong>：透氣度高，日本製</li>
+          <li><strong>好奇白金</strong>：表層柔軟，吸收快</li>
+          <li><strong>滿意寶寶極上自然</strong>：有機棉表層</li>
+          <li><strong>大王 GOO.N</strong>：超薄透氣</li>
+          <li><strong>Moony 頂級</strong>：日本媽媽口碑冠軍</li>
+        </ul>
+        <p style="margin-top:8px; font-size:0.88em; color:var(--muted);">※ 紅屁屁時期尤其建議選透氣款，或比平常<strong>大一號</strong>。</p>
+      </div>
+      <div class="card">
+        <h3>低刺激濕紙巾（或溫水沖洗）</h3>
+        <ul>
+          <li><strong>貝恩 Baan 嬰兒保養柔濕巾</strong>（無香精）</li>
+          <li><strong>NAC NAC EDI 純水濕巾</strong>（99.9% 純水）</li>
+          <li><strong>Combi 純水濕紙巾</strong></li>
+          <li><strong>康乃馨寶貝天使純水柔濕巾</strong></li>
+          <li>紅屁屁發作時：<strong>優先用溫水 + 乾淨紗布</strong>擦拭</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>💡 家長實戰組合推薦：</strong><br>
+      【日常預防】貝恩全效護膚膏 + 幫寶適一級幫 + NAC NAC 純水濕巾<br>
+      【輕微紅屁屁】以上 + 增加換尿布頻率到 1.5 小時 + 空氣浴 15 分<br>
+      【確定念珠菌】Nystatin 乳膏（先）+ 氧化鋅屁屁膏（後）+ 就醫確認
+    </div>
+  </section>
+
+  <!-- ========== SECTION 6 ========== -->
+  <section id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <h2>出現這些狀況，請立刻就醫</h2>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>🚨 緊急就醫（當天）</h3>
+        <ul>
+          <li>紅疹處出現<strong>黃色膿皰</strong>或<strong>滲液</strong></li>
+          <li>皮膚<strong>破皮流血</strong></li>
+          <li>寶寶<strong>發燒 ≥ 38°C</strong></li>
+          <li>紅疹擴散到肚子、背部、腋下</li>
+          <li>寶寶<strong>異常哭鬧、拒絕進食</strong></li>
+          <li>尿量明顯減少（脫水徵兆）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>📅 建議就醫（1–2 天內）</h3>
+        <ul>
+          <li>居家照護 <strong>3 天</strong> 未改善</li>
+          <li>懷疑念珠菌（有衛星紅點）</li>
+          <li>口腔也有白斑（鵝口瘡）</li>
+          <li>紅疹反覆發作，每月都來</li>
+          <li>哺乳媽媽乳頭疼痛 / 刺痛（可能念珠菌循環感染）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout callout-blue">
+      <strong>建議科別：</strong>優先掛<strong>小兒科</strong>（含兒童皮膚評估、最了解嬰兒用藥），或<strong>皮膚科</strong>（若有疑似黴菌培養需求）。台灣大醫院多有兒童皮膚科門診，可先電話詢問。
+    </div>
+
+    <div class="callout callout-teal">
+      <strong>帶寶寶看診前可以準備：</strong>
+      <ul style="margin-top:8px;">
+        <li>拍幾張<strong>清楚的患部照片</strong>（不同角度、自然光下）</li>
+        <li>記錄紅疹<strong>出現時間、變化</strong>、已用過哪些藥</li>
+        <li>記錄近期<strong>飲食改變、抗生素使用</strong>、腹瀉狀況</li>
+        <li>帶上目前在使用的尿布、濕紙巾、屁屁膏（方便醫師判斷是否過敏）</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<div class="footer">
+  <p>本指南僅供家長參考，非醫療診斷。若紅疹持續 &gt; 3 天未改善、出現膿皰、發燒或寶寶明顯不適，請立即就醫。</p>
+  <p style="margin-top:8px;">© 2026 ｜ 給新手爸媽的居家照護指南</p>
+</div>
+
+</body>
+</html>
