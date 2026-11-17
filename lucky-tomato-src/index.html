@@ -304,16 +304,18 @@ function scene6(u,t){
  else{pose.legR=[[30,-175],[78,-120],[34,-62]];pose.hr=[110,-330];pose.hl=[-104,-185]}
  person(pose);
  if(!walking&&u<3.2)phone(gx+62,900-395*.95-40,.2,.9);
- // QR card
- const q=back(prog(u,1.3,2));if(q>0){ctx.save();ctx.translate(1480,470);ctx.scale(q,q);
-  fillS(rrect(-250,-300,500,600,24),'#fffdf4',{w:5,a:1.6,alpha:1});
-  txt('LINE 官方帳號訂購',0,-250,{size:46,col:'#06a24a'});
-  const n=QR.length,cell=330/(n),ox=-165,oy=-205;
-  ctx.fillStyle='#fff';ctx.fillRect(ox-14,oy-14,358,358);
-  ctx.fillStyle='#1c1c1c';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(QR[r][c])ctx.fillRect(ox+c*cell,oy+r*cell,cell+.6,cell+.6);
-  txt('lin.ee/NIcBKDs',0,205,{size:40});txt('開團通知・出貨・訂購',0,260,{size:32,col:'#6a5a46'});
-  stroke([[-250,-300],[-210,-318],[-170,-300]],{w:5,c:'#f2b705',a:1});stroke([[250,300],[210,318],[170,300]],{w:5,c:'#f2b705',a:1});ctx.restore()}
- stamp(1000,230,92,prog(u,3.4,3.9));
+ // QR cards (LINE + Facebook)
+ const card=(cx,delay,M,label,lc,l1,l2)=>{const q=back(prog(u,delay,delay+.7));if(q<=0)return;ctx.save();ctx.translate(cx,500);ctx.scale(q,q);
+  fillS(rrect(-205,-290,410,560,24),'#fffdf4',{w:5,a:1.6,alpha:1});
+  txt(label,0,-245,{size:38,col:lc});
+  const n=M.length,cell=290/n,ox=-145,oy=-195;
+  ctx.fillStyle='#fff';ctx.fillRect(ox-12,oy-12,314,314);
+  ctx.fillStyle='#1c1c1c';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(M[r][c])ctx.fillRect(ox+c*cell,oy+r*cell,cell+.6,cell+.6);
+  txt(l1,0,165,{size:32});txt(l2,0,215,{size:l2.length>20?21:28,col:'#6a5a46'});
+  stroke([[-205,-290],[-165,-308],[-125,-290]],{w:5,c:'#f2b705',a:1});stroke([[205,270],[165,288],[125,270]],{w:5,c:'#f2b705',a:1});ctx.restore()};
+ card(1260,1.3,QR,'LINE 官方帳號訂購','#06a24a','lin.ee/NIcBKDs','開團通知・出貨・訂購');
+ card(1690,1.7,QR2,'追蹤 Facebook 粉專','#1877f2','好運來蕃茄園','facebook.com/share/1DknhYVL9y');
+ stamp(700,300,92,prog(u,3.4,3.9));
  if(u>3.4)for(let i=0;i<5;i++)spark(gx+Math.cos(i*1.4+u*3)*240,560+Math.sin(i*1.4+u*3)*200,12+4*Math.sin(u*9+i));
 }
 
