@@ -47,7 +47,7 @@ async function loadAll(){
 // 圖層座標（1103×1426 畫布）：肩膀＝袖口下緣、脖子、腳底
 const PV={L:[377,750],R:[733,750],neck:[555,540],feet:[555,1391]};
 const SCALE_ADJ=0.95;
-let CUR_OUTFIT='daily';
+let CUR_OUTFIT='daily',CUR_EYES='arc',CUR_T=0;   // CUR_EYES：open＝睜大的驚喜眼（MV 開頭與敘事段落）／arc＝彎彎笑眼（唱到笑的段落）
 const FACE={eyeL:[479,374],eyeR:[638,374],browL:[477,318],browR:[638,318],nose:[559,406],mouth:[559,464]};
 const FACE_INK='#1b120b',BROW='#8a644f';
 // 表情：eyes(arc|round|wow)、brow(偏移/傾斜)、mouth(open 0..1 / frown / o)
@@ -63,12 +63,15 @@ function faceDraw(name,mopen){
   const E=EXPR[name]||EXPR.smile,F=FACE;
   c.save();c.lineCap='round';c.lineJoin='round';
   // 眼睛
+  const openEyes=(E.eyes==='arc'&&CUR_EYES==='open');
+  const blink=((CUR_T%3.7)<.13)?.12:1;
   for(const [i,[x,y]] of [[0,F.eyeL],[1,F.eyeR]]){
-    if(E.eyes==='arc'){c.beginPath();c.moveTo(x-40,y+13);c.quadraticCurveTo(x,y+13-E.curve*1.9,x+40,y+13);c.lineWidth=13;c.strokeStyle=FACE_INK;c.stroke()}
+    if(openEyes){const ry=18*blink;c.beginPath();c.ellipse(x,y+6,13.5,ry,0,0,TAU);c.fillStyle=FACE_INK;c.fill();if(blink>.5){c.beginPath();c.arc(x-4.5,y-1,4.6,0,TAU);c.fillStyle='#fff';c.fill();c.beginPath();c.arc(x+4,y+14,2.2,0,TAU);c.fill()}}
+    else if(E.eyes==='arc'){c.beginPath();c.moveTo(x-40,y+13);c.quadraticCurveTo(x,y+13-E.curve*1.9,x+40,y+13);c.lineWidth=13;c.strokeStyle=FACE_INK;c.stroke()}
     else{const rx=E.eyes==='wow'?15:11,ry=E.eyes==='wow'?18:13;c.beginPath();c.ellipse(x,y+8,rx,ry,0,0,TAU);c.fillStyle=FACE_INK;c.fill();c.beginPath();c.arc(x-4,y+2,4.2,0,TAU);c.fillStyle='#fff';c.fill()}
   }
   // 眉毛
-  const [by,tilt]=E.brow;c.strokeStyle=BROW;c.lineWidth=14;
+  const [by0,tilt]=E.brow;const by=by0+(openEyes?-8:0);c.strokeStyle=BROW;c.lineWidth=14;
   for(const [i,[x,y]] of [[0,F.browL],[1,F.browR]]){
     const sd=i?1:-1;                                // 左眉 sd=-1：外側在左
     const outerY=y+10+by+tilt, innerY=y+10+by-tilt*.7;
@@ -523,8 +526,10 @@ function subtitle(t){
 
 /* ---------- 主繪製：換場 + 鏡頭 ---------- */
 const OUTFIT_BY={intro:'daily',v1:'hakka',v2:'apron',chorus:'stripe',bridge:'redtang',v1r:'dress',v2r:'apron',chorus2:'mint',bridge2:'redtang',final:'dress',refrain:'redtang',outro:'daily'};
+const EYES_BY={intro:'open',v1:'open',v2:'open',chorus:'arc',bridge:'arc',v1r:'open',v2r:'open',chorus2:'arc',bridge2:'arc',final:'arc',refrain:'arc',outro:'open'};
 function drawScene(i,t){
-  CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';
+  CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';CUR_T=t;
+  CUR_EYES=EYES_BY[SECS[i].k]||'arc';if(SECS[i].k==='outro'&&t>SECS[i].t[3])CUR_EYES='arc';   // 結尾「看到梅蘭，就想到你」起換成笑眼
   c.save();
   const key=SECS[i].k,T=SECS[i].t;
   // 輕微推鏡
