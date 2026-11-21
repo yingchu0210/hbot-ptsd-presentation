@@ -52,9 +52,9 @@ const FACE={eyeL:[479,374],eyeR:[638,374],browL:[477,318],browR:[638,318],nose:[
 const FACE_INK='#1b120b',BROW='#8a644f';
 // 表情：eyes(arc|round|wow)、brow(偏移/傾斜)、mouth(open 0..1 / frown / o)
 const EXPR={
-  smile:{eyes:'arc',curve:26,brow:[0,0],open:.16,ticks:true},
-  happy:{eyes:'arc',curve:30,brow:[-2,0],open:.5,ticks:true},
-  laugh:{eyes:'arc',curve:36,brow:[-8,0],open:1,ticks:true},
+  smile:{eyes:'arc',curve:26,brow:[0,0],open:.16,ticks:false},
+  happy:{eyes:'arc',curve:30,brow:[-2,0],open:.5,ticks:false},
+  laugh:{eyes:'arc',curve:36,brow:[-8,0],open:1,ticks:false},
   shy:{eyes:'arc',curve:16,brow:[5,0],open:.1,ticks:false,blush:true},
   sad:{eyes:'round',brow:[-2,12],open:0,frown:true},
   wow:{eyes:'wow',brow:[-12,0],open:0,mo:true}
