@@ -14,8 +14,8 @@ const stack=items=>items.map(i=>i.ink).join('')+items.map(i=>i.fill).join('');
 const ln=(d,w=3,c=INK,o=1)=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`;
 const mirror=(s,cx=250)=>`<g transform="translate(${cx*2},0) scale(-1,1)">${s}</g>`;
 
-const SKIN={dad:'#e9b88f',mom:'#f0c29d',girl:'#f5cfae'};
-const SKSH={dad:'#c98c63',mom:'#d79e78',girl:'#e3ac88'};
+const SKIN={dad:'#e3b088',mom:'#f0c29d',girl:'#f5cfae'};
+const SKSH={dad:'#c28a60',mom:'#d79e78',girl:'#e3ac88'};
 
 /* ---------- HANDS (origin at wrist, fingers point up (−y)) ---------- */
 function hand(type,skin,glove){const col=glove||skin,items=[];
@@ -66,23 +66,41 @@ function blush(expr,kind){const o=(expr==='shy'?.75:expr==='laugh'||expr==='happ
  return `<ellipse cx="-62" cy="38" rx="20" ry="12" fill="#ee7f78" opacity="${o}"/><ellipse cx="62" cy="38" rx="20" ry="12" fill="#ee7f78" opacity="${o}"/>`}
 
 function headDad(expr='smile'){
- const face='M -92,-22 C -98,-92 -52,-128 0,-128 C 52,-128 98,-92 92,-22 C 90,48 56,100 0,110 C -56,100 -90,48 -92,-22 Z';
+ const SK=SKIN.dad,SS=SKSH.dad,GR='#d9d7d2',GD='#a9a7a3';
+ const face='M -90,-34 C -94,-100 -54,-132 0,-132 C 54,-132 94,-100 90,-34 C 92,38 62,104 0,118 C -62,104 -92,38 -90,-34 Z';
+ const earL='M -88,-16 C -118,-28 -122,38 -88,46 Z';
+ const hairL='M -88,-72 C -110,-66 -118,-24 -108,14 C -104,28 -96,34 -92,22 C -86,-6 -84,-40 -88,-72 Z';
  const items=[];
- items.push(blob('M -88,-6 C -112,-14 -112,34 -88,38 Z','#e9b88f',{}),blob('M 88,-6 C 112,-14 112,34 88,38 Z','#e9b88f',{}));
- // grey side hair
- const hairL='M -88,-56 C -112,-52 -122,-14 -104,16 C -98,26 -92,30 -90,20 C -84,-6 -84,-34 -88,-56 Z';
- items.push(blob(hairL,'#cfcfd0',{sh:[{d:'M -110,10 L -92,10 L -92,30 L -110,30 Z',c:'#8a8a90',o:.3}],line:['M -108,-36 Q -100,-30 -98,-18','M -112,-12 Q -102,-8 -100,4']}));
- items.push(blob(mirrorPath(hairL),'#cfcfd0',{line:['M 108,-36 Q 100,-30 98,-18','M 112,-12 Q 102,-8 100,4']}));
- items.push(blob(face,SKIN.dad,{sh:[{d:'M 60,-110 C 100,-80 98,20 70,70 C 60,90 40,104 0,112 L 100,112 L 100,-110 Z',c:SKSH.dad,o:.28},{d:'M -92,40 C -70,92 -30,108 0,110 L -92,112 Z',c:SKSH.dad,o:.15}],hl:[{d:'M -52,-110 C -20,-128 20,-128 40,-116 C 10,-120 -30,-110 -52,-84 Z',o:.45},{d:'M -16,-26 C -4,-20 6,-20 16,-26 C 8,-8 -6,-8 -16,-26 Z',c:'#ffd9b8',o:.35}]}));
+ items.push(blob(earL,SK,{sh:[{d:'M -100,4 C -108,20 -102,36 -90,40 L -90,10 Z',c:SS,o:.35}],line:['M -104,8 Q -110,22 -98,34']}),blob(mirrorPath(earL),SK,{line:['M 104,8 Q 110,22 98,34']}));
+ items.push(blob(hairL,GR,{sh:[{d:'M -118,10 L -90,10 L -90,36 L -118,36 Z',c:GD,o:.35}],line:['M -108,-48 Q -100,-30 -98,-12','M -112,-18 Q -102,-8 -100,8']}),blob(mirrorPath(hairL),GR,{line:['M 108,-48 Q 100,-30 98,-12','M 112,-18 Q 102,-8 100,8']}));
+ items.push(blob(face,SK,{sh:[{d:'M 62,-122 C 102,-90 100,24 74,76 C 62,100 44,112 0,120 L 104,120 L 104,-122 Z',c:SS,o:.26},{d:'M -92,50 C -70,100 -34,114 0,118 L -92,122 Z',c:SS,o:.14}],hl:[{d:'M -54,-122 C -20,-136 22,-136 42,-124 C 10,-128 -30,-118 -54,-92 Z',o:.5},{d:'M -22,-24 C -6,-18 8,-18 22,-24 C 12,-4 -8,-4 -22,-24 Z',c:'#ffd9b8',o:.3}]}));
  let s=stack(items);
- // wrinkles
- s+=ln('M -50,-92 Q 0,-104 50,-92',2.6,INK,.5)+ln('M -42,-80 Q 0,-90 42,-80',2.2,INK,.4);
- s+=ln('M -70,-4 l -14,-6',2.6,INK,.7)+ln('M -70,6 l -14,2',2.6,INK,.7)+ln('M -68,16 l -12,8',2.6,INK,.7)+ln('M 70,-4 l 14,-6',2.6,INK,.7)+ln('M 70,6 l 14,2',2.6,INK,.7)+ln('M 68,16 l 12,8',2.6,INK,.7);
- s+=ln('M -26,36 Q -42,62 -34,84',2.8,INK,.65)+ln('M 26,36 Q 42,62 34,84',2.8,INK,.65);
- s+=blush(expr,'dad')+eyes('dad',expr)+brows('dad',expr)+nose('dad')+mouth('dad',expr);
- // stubble
- for(let i=0;i<34;i++){const a=i*2.4,r=24+((i*37)%30);const x=Math.cos(a)*r*1.6,y=70+Math.abs(Math.sin(a))*22+((i*13)%12);if(Math.abs(x)<66&&!(Math.abs(x)<30&&y<80&&expr!=='sad'&&false))s+=`<circle cx="${f(x)}" cy="${f(y)}" r="1.5" fill="${INK}" opacity=".35"/>`}
- s+=ln('M -34,44 Q 0,52 34,44',6,'#cfcfcf',.0);
+ // sparse silver strands at upper-left of head
+ s+=ln('M -74,-106 Q -52,-126 -22,-128',3,GR,.95)+ln('M -80,-92 Q -56,-118 -30,-124',2.6,GR,.8)+ln('M -66,-112 Q -46,-124 -18,-124',2.4,GR,.6);
+ // forehead wrinkles
+ s+=ln('M -52,-98 Q 0,-110 52,-98',2.6,INK,.5)+ln('M -44,-86 Q 0,-96 44,-86',2.2,INK,.42)+ln('M -34,-74 Q 0,-82 34,-74',2,INK,.34);
+ // eyes
+ const hap=(expr==='happy'||expr==='laugh');
+ for(const sd of[-1,1]){const x=sd*40,y=-6;
+  if(hap){s+=ln(`M ${x-15},${y+4} Q ${x},${y-14} ${x+15},${y+4}`,4.6)}
+  else if(expr==='sad'||expr==='wow'){s+=''}
+  else{s+=`<ellipse cx="${x}" cy="${y+1}" rx="8.2" ry="7" fill="#2e211b"/><circle cx="${x+3}" cy="${y-2}" r="2.8" fill="#fff"/>`+ln(`M ${x-16},${y-1} Q ${x},${y-12} ${x+16},${y+1}`,3.4)}
+  s+=ln(`M ${x-14},${y+14} Q ${x},${y+22} ${x+14},${y+14}`,2.4,INK,.5);
+  s+=ln(`M ${x+sd*18},${y-3} l ${sd*10},-6`,2.4,INK,.6)+ln(`M ${x+sd*19},${y+3} l ${sd*11},0`,2.4,INK,.6)+ln(`M ${x+sd*18},${y+9} l ${sd*9},6`,2.4,INK,.55);
+  const bd=`M ${x-sd*18},-38 Q ${x+sd*2},-44 ${x+sd*20},-28`;
+  s+=ln(bd,5.4,'#8f8c88',.95)}
+ if(expr==='sad'||expr==='wow')s+=eyes('dad',expr);
+ // nose (wide, rounded)
+ s+=ln('M -8,18 Q -6,34 -20,40 Q -10,50 0,46 Q 10,50 20,40 Q 6,34 8,18',3.2)+ln('M -15,44 Q -10,48 -6,46',2,INK,.6)+ln('M 15,44 Q 10,48 6,46',2,INK,.6);
+ // nasolabial folds & cheek lines
+ s+=ln('M -30,44 Q -52,70 -42,98',3,INK,.62)+ln('M 30,44 Q 52,70 42,98',3,INK,.62)+ln('M -56,22 Q -66,36 -62,50',2.2,INK,.4)+ln('M 56,22 Q 66,36 62,50',2.2,INK,.4);
+ s+=`<ellipse cx="-62" cy="44" rx="16" ry="9" fill="#e0846c" opacity="${expr==='shy'?.5:.3}"/><ellipse cx="62" cy="44" rx="16" ry="9" fill="#e0846c" opacity="${expr==='shy'?.5:.3}"/>`;
+ // mouth
+ if(expr==='smile'||expr==='happy')s+=ln('M -28,70 Q 0,88 28,70',4.2)+ln('M -31,68 l -4,-5',3)+ln('M 31,68 l 4,-5',3)+ln('M -14,80 Q 0,86 14,80',2.2,INK,.4);
+ else if(expr==='shy')s+=ln('M -20,74 Q 0,84 20,74',4)+ln('M 23,72 l 3,-4',2.6);
+ else s+=mouth('dad',expr);
+ // grey stubble
+ for(let k=0;k<44;k++){const a=k*2.399,r=22+((k*37)%34);const x=Math.cos(a)*r*1.5,y=88+Math.abs(Math.sin(a))*24+((k*13)%14);if(Math.abs(x)<50&&y<106-Math.abs(x)*.25)s+=`<circle cx="${f(x)}" cy="${f(y)}" r="1.5" fill="#8d8a86" opacity=".5"/>`}
  return s}
 function mirrorPath(d){return d.replace(/(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/g,(m,x,_a,y)=>`${-parseFloat(x)},${y}`)}
 
@@ -114,23 +132,26 @@ function headMom(expr='smile'){
  return s}
 
 function headGirl(expr='smile'){
- const HC='#3b2a25',HL='#7a5a50';
- const face='M -90,-30 C -94,-86 -52,-112 0,-112 C 52,-112 94,-86 90,-30 C 92,40 54,98 0,108 C -54,98 -92,40 -90,-30 Z';
+ const HC='#3a2b27',HD='#2a1d1a',HL='#8a6a5e';
+ const face='M -96,-34 C -98,-90 -56,-112 0,-112 C 56,-112 98,-90 96,-34 C 98,38 60,96 0,104 C -60,96 -98,38 -96,-34 Z';
+ const back='M -124,-40 C -130,-142 -60,-162 0,-162 C 60,-162 130,-142 124,-40 C 130,10 128,60 136,94 C 122,106 92,102 76,84 L 70,40 L -70,40 L -76,84 C -92,102 -122,106 -136,94 C -128,60 -130,10 -124,-40 Z';
  const items=[];
- const back='M -110,-54 C -120,-134 -50,-154 0,-154 C 50,-154 120,-134 110,-54 C 118,-4 114,48 104,86 C 92,106 62,98 54,72 L -54,72 C -62,98 -92,106 -104,86 C -114,48 -118,-4 -110,-54 Z';
- items.push(blob(back,HC,{sh:[{d:'M 50,-154 C 120,-134 120,0 104,86 L 140,90 L 140,-154 Z',c:'#000',o:.3}],hl:[{d:'M -84,-124 C -44,-146 0,-148 32,-140 C -20,-136 -62,-116 -94,-72 Z',c:HL,o:.55},{d:'M -100,30 C -108,50 -104,74 -92,88 C -100,60 -96,40 -88,24 Z',c:HL,o:.4}]}));
- items.push(blob(face,SKIN.girl,{sh:[{d:'M 58,-104 C 94,-70 92,30 66,72 C 54,90 36,102 0,108 L 100,110 L 100,-104 Z',c:SKSH.girl,o:.22}],hl:[{d:'M -14,-4 C -4,2 6,2 14,-4 C 8,12 -6,12 -14,-4 Z',c:'#ffe5d0',o:.45}]}));
- items.push(blob('M -90,2 C -110,-4 -108,40 -88,42 Z',SKIN.girl,{}),blob('M 90,2 C 110,-4 108,40 88,42 Z',SKIN.girl,{}));
+ items.push(blob(back,HC,{sh:[{d:'M 50,-162 C 130,-142 130,0 136,94 L 150,100 L 150,-162 Z',c:'#000',o:.28}],hl:[{d:'M -96,-128 C -50,-152 0,-154 40,-146 C -10,-142 -56,-120 -100,-70 Z',c:HL,o:.5}],
+  line:['M -104,-70 Q -116,0 -112,70','M -90,-92 Q -108,-20 -100,60','M 104,-70 Q 116,0 112,70','M 90,-92 Q 108,-20 100,60','M -118,60 Q -124,84 -130,92','M 118,60 Q 124,84 130,92']}));
+ items.push(blob('M -94,0 C -116,-6 -114,44 -92,46 Z',SKIN.girl,{}),blob('M 94,0 C 116,-6 114,44 92,46 Z',SKIN.girl,{}));
+ items.push(blob(face,SKIN.girl,{sh:[{d:'M 60,-104 C 98,-70 96,30 68,72 C 56,90 38,100 0,104 L 100,106 L 100,-104 Z',c:SKSH.girl,o:.2}],hl:[{d:'M -14,-4 C -4,2 6,2 14,-4 C 8,12 -6,12 -14,-4 Z',c:'#ffe5d0',o:.4}]}));
  let s=stack(items);
- s+=blush(expr,'girl')+eyes('girl',expr)+brows('girl',expr)+nose('girl');
+ s+=blush(expr,'girl')+eyes('girl',expr)+nose('girl');
  if(expr==='smile'||expr==='happy'||expr==='laugh'){
-  s+=`<path d="M -34,50 Q 0,62 34,50 Q 32,96 0,98 Q -32,96 -34,50 Z" fill="#8f3238" stroke="${INK}" stroke-width="3.6" stroke-linejoin="round"/><path d="M -30,52 Q 0,63 30,52 L 28,68 Q 0,77 -28,68 Z" fill="#fff"/><ellipse cx="0" cy="88" rx="15" ry="7.5" fill="#e9808a"/>`+ln('M -36,49 Q 0,64 36,49',4.2,'#c94f5e');
+  s+=`<path d="M -32,52 Q 0,63 32,52 Q 30,94 0,96 Q -30,94 -32,52 Z" fill="#8f3238" stroke="${INK}" stroke-width="3.6" stroke-linejoin="round"/><path d="M -28,54 Q 0,64 28,54 L 26,68 Q 0,76 -26,68 Z" fill="#fff"/><ellipse cx="0" cy="86" rx="14" ry="7" fill="#e9808a"/>`+ln('M -34,50 Q 0,65 34,50',4.2,'#c94f5e');
  } else s+=mouth('girl',expr);
- // wispy side-swept bangs (left curtain larger, forehead peeks through)
- const bl='M -100,-50 C -98,-120 -46,-140 4,-134 C -4,-104 -22,-82 -48,-62 C -66,-48 -86,-40 -100,-50 Z';
- const br='M 100,-50 C 98,-118 52,-138 12,-132 C 22,-104 44,-84 64,-62 C 80,-48 92,-42 100,-50 Z';
- s+=stack([blob(bl,HC,{hl:[{d:'M -88,-112 C -56,-132 -20,-134 0,-130 C -36,-120 -64,-98 -86,-66 Z',c:HL,o:.5}],line:['M -78,-100 Q -72,-74 -64,-56','M -46,-122 Q -42,-96 -34,-76','M -16,-130 Q -14,-110 -12,-96']}),blob(br,HC,{hl:[{d:'M 90,-108 C 62,-128 34,-130 14,-126 C 46,-114 70,-94 88,-66 Z',c:HL,o:.4}],line:['M 78,-96 Q 72,-72 64,-56','M 44,-118 Q 42,-96 34,-78']})]);
- s+=`<path d="M -8,-118 Q -12,-96 -30,-72" fill="none" stroke="${HC}" stroke-width="3" stroke-linecap="round" opacity=".8"/>`;
+ // center-parted hair cap + wispy see-through bangs
+ const cap='M -112,-58 C -112,-136 -58,-150 0,-150 C 58,-150 112,-136 112,-58 C 104,-86 76,-102 44,-108 C 26,-100 8,-98 0,-96 C -8,-98 -26,-100 -44,-108 C -76,-102 -104,-86 -112,-58 Z';
+ s+=stack([blob(cap,HC,{hl:[{d:'M -84,-130 C -46,-146 -4,-148 24,-142 C -20,-138 -60,-118 -92,-84 Z',c:HL,o:.5}],line:['M -70,-130 Q -60,-112 -48,-104','M 70,-130 Q 60,-112 48,-104']})]);
+ const L=[[-22,-58,-6],[-44,-66,-3],[-66,-74,0]],R=[[24,-60,6],[48,-68,3],[70,-76,0]];
+ for(const [ex,ey,bend] of L.concat(R)){const sx=ex<0?-3:3,cx=ex*.3+bend*2,cy=-102+(ey+102)*.3;
+  s+=`<path d="M ${sx},-100 Q ${cx},${cy} ${ex},${ey}" fill="none" stroke="${HC}" stroke-width="5.5" stroke-linecap="round" opacity=".92"/>`}
+ s+=ln('M -2,-100 Q -22,-80 -40,-62',2.4,HL,.7)+ln('M 2,-100 Q 24,-82 44,-64',2.4,HL,.6);
  return s}
 const HEADS={dad:headDad,mom:headMom,girl:headGirl};
 
