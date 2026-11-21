@@ -41,7 +41,11 @@ function mascotSVG(kind,expr){const red=kind==='red',body=red?'#e8513d':'#f6a43a
  if(expr==='sing'||expr==='wow')face+=`<ellipse cx="${cx}" cy="${my+8}" rx="${expr==='wow'?10:14}" ry="${expr==='wow'?14:17}" fill="#74292b" stroke="${INKC}" stroke-width="3.4"/><ellipse cx="${cx}" cy="${my+16}" rx="8" ry="6" fill="#ee8a94"/>`;
  else if(hap)face+=`<path d="M ${cx-20},${my-2} Q ${cx},${my+4} ${cx+20},${my-2} Q ${cx+16},${my+26} ${cx},${my+26} Q ${cx-16},${my+26} ${cx-20},${my-2} Z" fill="#74292b" stroke="${INKC}" stroke-width="3.4" stroke-linejoin="round"/><ellipse cx="${cx}" cy="${my+18}" rx="9" ry="5" fill="#ee8a94"/>`;
  else face+=ln(`M ${cx-14},${my} Q ${cx},${my+14} ${cx+14},${my}`,4.4);
- const main=blob(d,body,{ow:10,sh:[{d:`M ${cx+rx*.3},${cy-ry} C ${cx+rx*1.5},${cy-ry} ${cx+rx*1.5},${cy+ry} ${cx},${cy+ry} Z`,c:dk,o:.28},{d:`M ${cx-rx*1.3},${cy+ry*.55} C ${cx-rx*.6},${cy+ry*1.1} ${cx+rx*.6},${cy+ry*1.1} ${cx+rx*1.3},${cy+ry*.55} L ${cx+rx*1.3},${cy+ry*1.2} L ${cx-rx*1.3},${cy+ry*1.2} Z`,c:dk,o:.2}],hl:[{d:`M ${cx-rx*.75},${cy-ry*.55} C ${cx-rx*.75},${cy-ry*.85} ${cx-rx*.35},${cy-ry*.95} ${cx-rx*.1},${cy-ry*.88} C ${cx-rx*.4},${cy-ry*.78} ${cx-rx*.62},${cy-ry*.45} ${cx-rx*.75},${cy-ry*.55} Z`,c:'#fff',o:.65}]});
+ const main=blob(d,body,{ow:10,sh:[
+   /* thin crescent hugging the lower-right rim only (no half-face shadow) */
+   {d:`M ${cx+rx*1.0},${cy-ry*.35} C ${cx+rx*1.34},${cy-ry*.1} ${cx+rx*1.34},${cy+ry*.62} ${cx+rx*.5},${cy+ry*.98} C ${cx+rx*.7},${cy+ry*.8} ${cx+rx*1.06},${cy+ry*.4} ${cx+rx*1.0},${cy-ry*.35} Z`,c:dk,o:.22},
+   {d:`M ${cx-rx*.85},${cy+ry*.78} C ${cx-rx*.4},${cy+ry*1.06} ${cx+rx*.4},${cy+ry*1.06} ${cx+rx*.85},${cy+ry*.78} L ${cx+rx*.85},${cy+ry*1.2} L ${cx-rx*.85},${cy+ry*1.2} Z`,c:dk,o:.14}],
+  hl:[{d:`M ${cx-rx*.75},${cy-ry*.55} C ${cx-rx*.75},${cy-ry*.85} ${cx-rx*.35},${cy-ry*.95} ${cx-rx*.1},${cy-ry*.88} C ${cx-rx*.4},${cy-ry*.78} ${cx-rx*.62},${cy-ry*.45} ${cx-rx*.75},${cy-ry*.55} Z`,c:'#fff',o:.55}]});
  return stack([main,...leafItems])+`<path d="M ${cx},${cy-ry+4} q 4,-18 10,-24" stroke="#3f8a4a" stroke-width="7" fill="none" stroke-linecap="round"/>`+face}
 async function loadSprites(){
  const jobs=[];
