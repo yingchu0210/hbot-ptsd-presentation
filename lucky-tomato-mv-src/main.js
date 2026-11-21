@@ -26,4 +26,4 @@ function render(t){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.fillStyle
  lyricsOverlay(t);
  if(t<.35){ctx.fillStyle=`rgba(255,243,214,${1-t/.35})`;ctx.fillRect(0,0,W,H)}
  if(t>119.8){ctx.fillStyle=`rgba(255,243,214,${cl((t-119.8)/1.0)})`;ctx.fillRect(0,0,W,H)}}
-(async()=>{BEATS=TIMING.beats;await loadSprites();window.render=render;window.READY=true})();
+(async()=>{BEATS=TIMING.beats;await loadSprites();await loadRig();window.person=personRig;window.render=render;window.READY=true})();
