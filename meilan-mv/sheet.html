@@ -40,11 +40,11 @@ function sheet1(){
   gs.forEach(([l,p],i)=>{const x=900+i*200;mom(Object.assign({x,y:1335,s:.22,expr:'happy',shadow:false,outfit:'daily'},p));txt(l,x,1395,30,INK,{})});
   // 右：配色
   pill('配色',1620,230);
-  const pal=[['頭髮灰白','#CEBCAE'],['膚色','#FCC4A5'],['腮紅','#FC9694'],['上衣紫','#CAA2BC'],['長褲鵝黃','#FDD07C'],['球鞋米白','#F1E5D6'],['小花髮夾','#F9EFDF'],['髮夾淡紫','#C8A2CB'],['手套灰紫','#87859F'],['描線棕','#2D1C0F']];
-  pal.forEach(([n,h],i)=>{const y=315+i*77;rrect(1620,y,130,62,14,h,4);txt(n,1780,y+24,34,INK,{align:'left'});txt(h,1780,y+54,24,'#8a6a58',{align:'left'})});
+  const pal=[['頭髮灰白','#CEBCAE'],['膚色','#FCC4A5'],['腮紅','#FC9694'],['上衣紫','#CAA2BC'],['長褲鵝黃','#FDD07C'],['球鞋米白','#F1E5D6'],['小花髮夾','#F9EFDF'],['髮夾淡紫','#C8A2CB'],['描線棕','#2D1C0F']];
+  pal.forEach(([n,h],i)=>{const y=320+i*84;rrect(1620,y,130,62,14,h,4);txt(n,1780,y+24,34,INK,{align:'left'});txt(h,1780,y+54,24,'#8a6a58',{align:'left'})});
   // 右：外型特徵
   pill('外型特徵',1620,1100);
-  const ft=['灰白色短捲髮，前面一綹往旁邊梳','圓圓臉、彎彎的笑眼、粉紅腮紅','笑起來露出牙齒，嗓門超嘹亮','側邊別一朵小白花髮夾（淡紫夾子）','日常：紫花衫、鵝黃長褲、米白球鞋、灰紫手套'];
+  const ft=['灰白色短捲髮，前面一綹往旁邊梳','圓圓臉、彎彎的笑眼、粉紅腮紅','笑起來露出牙齒，嗓門超嘹亮','側邊別一朵小白花髮夾（淡紫夾子）','日常：紫花衫、鵝黃長褲、米白球鞋'];
   ft.forEach((s,i)=>{c.fillStyle=RED;c.beginPath();c.arc(1636,1200+i*54,8,0,TAU);c.fill();txt(s,1660,1200+i*54,31,INK,{align:'left'})});
 }
 function sheet2(){

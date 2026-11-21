@@ -2,7 +2,7 @@
 import os
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rig3')
 INK = '#2d1c0f'; SKIN = '#fcc4a5'; OW = 8
-GLOVE = '#87859f'; HINK = '#1c110c'   # 手：沿用原角色包畫的灰紫工作手套與描線
+GLOVE = SKIN; HINK = INK   # 手：沿用「花洋裝版」畫的膚色裸手（形狀與手勢不變）
 def ln(d, w, op=1): return f'<path d="{d}" fill="none" stroke="{INK}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round" opacity="{op}"/>'
 def parts_svg(parts, fill=None, ink=None):
     o = f = ''
@@ -29,7 +29,6 @@ def hand(kind, wy, sd, k=1.15):
     def hl(d, w, op=1): return f'<path d="{d}" fill="none" stroke="{HINK}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round" opacity="{op}"/>'
     if kind in ('fist', 'thumb'):
         for x in (-14, 0, 14): o += hl(f'M {x*k} {wy+44*k} L {x*k} {wy+64*k}', 4*k, .9)
-    o += hl(f'M {-22*k} {wy+46*k} l {12*k} {14*k}', 4*k) + hl(f'M {-4*k} {wy+46*k} l {12*k} {14*k}', 4*k)   # 手套縫線
     return o
 def arm(side, kind):
     sd = -1 if side == 'L' else 1; wy = 235
