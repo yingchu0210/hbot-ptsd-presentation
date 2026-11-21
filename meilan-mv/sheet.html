@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><title>美蘭設定圖</title>
+<link rel="stylesheet" href="fonts/noto-serif-tc-900.css">
+<style>@font-face{font-family:'JF OpenHuninn';src:url(fonts/jf-openhuninn-2.0.ttf)}html,body{margin:0;background:#222}canvas{display:block}</style></head>
+<body><canvas id="c" width="2400" height="1500"></canvas>
+<script src="timeline.js"></script>
+<script src="scenes.js"></script>
+<script>
+// 設定圖：?sheet=1 主設定（表情／手勢／配色）  ?sheet=2 服裝設定
+const SH=new URLSearchParams(location.search).get('sheet')||'1';
+const SW=2400,SHH=1500;
+function bg(){const g=c.createLinearGradient(0,0,0,SHH);g.addColorStop(0,'#FFF8E8');g.addColorStop(1,'#F8EAD2');c.fillStyle=g;c.fillRect(0,0,SW,SHH);
+  const r=c.createRadialGradient(SW/2,SHH/2,SHH*.5,SW/2,SHH/2,SHH*1.1);r.addColorStop(0,'rgba(120,80,40,0)');r.addColorStop(1,'rgba(120,80,40,.08)');c.fillStyle=r;c.fillRect(0,0,SW,SHH)}
+function pill(txt,x,y,col=TEAL){c.font=`40px ${FONT}`;const w=c.measureText(txt).width+64;rrect(x,y,w,64,32,col,5);txt_(txt,x+w/2,y+33,40,'#FFFFFF')}
+function txt_(s,x,y,size,fill,o={}){txt(s,x,y,size,fill,o)}
+function header(zh,sub){
+  c.save();c.font=`900 92px ${SERIF}`;c.letterSpacing=(92*.16)+'px';const w=c.measureText(zh).width;c.restore();
+  titleText(zh,80+w/2,78,92,['#EE7B8E','#B83F6A'],5,PLUMD,CREAM,.08);
+  txt(sub,84,160,36,INK,{align:'left',ls:2});
+  c.save();c.setLineDash([2,10]);c.lineCap='round';c.strokeStyle=INK;c.lineWidth=4;c.beginPath();c.moveTo(80,200);c.lineTo(2320,200);c.stroke();c.restore();
+}
+function headCell(cx,cy,expr,label,mopen){ // 頭部特寫
+  c.save();c.beginPath();c.roundRect(cx-125,cy-120,250,250,36);c.fillStyle='rgba(255,255,255,.55)';c.fill();c.lineWidth=4;c.strokeStyle='rgba(74,50,38,.35)';c.stroke();c.clip();
+  const s=.38;mom({x:cx,y:cy+8+(1391-300)*s*SCALE_ADJ,s,expr,shadow:false,mopen});c.restore();
+  txt(label,cx,cy+148,34,INK,{});
+}
+function sheet1(){
+  bg();header('美蘭','MOM　愛笑、嗓門大的滷豬腳主廚');
+  // 左：全身大圖
+  c.save();c.fillStyle='rgba(255,255,255,.45)';c.beginPath();c.roundRect(70,230,700,1190,50);c.fill();c.restore();
+  mom({x:420,y:1385,s:.84,expr:'laugh',L:[10,'fist'],R:[10,'fist'],outfit:'daily',shadow:true});
+  txt('全身圖（身體／手臂／頭，表情另畫）',420,1450,32,INK,{});
+  // 中：表情
+  pill('表情',800,230);
+  const ex=[['smile','微笑'],['happy','開心瞇眼'],['laugh','大笑'],['shy','靦腆'],['sad','擔憂'],['wow','驚喜']];
+  ex.forEach(([e,l],i)=>headCell(930+(i%3)*270,400+Math.floor(i/3)*310,e,l));
+  // 中：手勢
+  pill('手勢',800,950);
+  const gs=[['垂放',{L:[6,'fist'],R:[6,'fist']}],['揮手',{L:[6,'fist'],R:[145,'open']}],['比讚',{L:[6,'fist'],R:[80,'thumb']}],['雙手微張',{L:[48,'open'],R:[48,'open']}]];
+  gs.forEach(([l,p],i)=>{const x=900+i*200;mom(Object.assign({x,y:1335,s:.22,expr:'happy',shadow:false,outfit:'daily'},p));txt(l,x,1395,30,INK,{})});
+  // 右：配色
+  pill('配色',1620,230);
+  const pal=[['頭髮灰白','#CEBCAE'],['膚色','#FCC4A5'],['腮紅','#FC9694'],['上衣紫','#CAA2BC'],['長褲鵝黃','#FDD07C'],['球鞋米白','#F1E5D6'],['小花髮夾','#F9EFDF'],['髮夾淡紫','#C8A2CB'],['描線棕','#2D1C0F']];
+  pal.forEach(([n,h],i)=>{const y=320+i*84;rrect(1620,y,130,62,14,h,4);txt(n,1780,y+24,34,INK,{align:'left'});txt(h,1780,y+54,24,'#8a6a58',{align:'left'})});
+  // 右：外型特徵
+  pill('外型特徵',1620,1100);
+  const ft=['灰白色短捲髮，前面一綹往旁邊梳','圓圓臉、彎彎的笑眼、粉紅腮紅','笑起來露出牙齒，嗓門超嘹亮','側邊別一朵小白花髮夾（淡紫夾子）','日常：紫色小花衫、鵝黃長褲、米白球鞋'];
+  ft.forEach((s,i)=>{c.fillStyle=RED;c.beginPath();c.arc(1636,1200+i*54,8,0,TAU);c.fill();txt(s,1660,1200+i*54,31,INK,{align:'left'})});
+}
+function sheet2(){
+  bg();header('美蘭服裝','共七套　上衣、長褲、鞋可獨立更換　髮型、髮夾與表情不變');
+  const info=JSON.parse(OUT_JSON);
+  const ids=['daily','hakka','apron','redtang','mint','stripe','dress'];
+  const cw=SW/ids.length;
+  ids.forEach((id,i)=>{
+    const x=cw*i+cw/2;
+    c.save();c.fillStyle='rgba(255,255,255,.5)';c.beginPath();c.roundRect(cw*i+14,330,cw-28,1030,40);c.fill();c.restore();
+    mom({x,y:1190,s:.55,expr:i%2?'laugh':'happy',L:[6,'fist'],R:[6,'fist'],outfit:id,shadow:true});
+    txt(String(i+1).padStart(2,'0'),cw*i+60,372,40,'#B9A794',{align:'left',font:SERIF,weight:900});
+    txt(info[id].zh,x,1262,32,INK,{});
+    txt(info[id].note||'',x,1314,27,'#8a6a58',{});
+  });
+  txt('穿搭對應 MV：美濃田野＝客家藍衫　廚房＝格紋圍裙　橋段＝喜氣紅唐裝　「一身花衣」＝花洋裝',SW/2,1420,32,INK,{});
+}
+let OUT_JSON='{}';
+(async()=>{
+  await loadAll();
+  OUT_JSON=await (await fetch('rig3/outfits.json')).text();
+  if(SH==='2')sheet2();else sheet1();
+  window.ready=true;
+})();
+</script></body></html>

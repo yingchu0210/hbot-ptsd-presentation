@@ -27,37 +27,87 @@ function txt(s,x,y,size,fill,o={}){c.save();c.font=`${o.weight||'normal'} ${size
 function grad(y0,y1,a,b){const g=c.createLinearGradient(0,y0,0,y1);g.addColorStop(0,a);g.addColorStop(1,b);return g}
 function mix(a,b,x){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));const A=p(a),B=p(b);return '#'+A.map((v,i)=>Math.round(lerp(v,B[i],x)).toString(16).padStart(2,'0')).join('')}
 
-/* ---------- 素材載入：把 SVG 圖層先轉成點陣（加速） ---------- */
+/* ---------- 素材載入：把圖層先轉成點陣（加速）---------- */
 const RS=0.7, LAY={};
-async function raster(name,w,h){
-  const img=new Image(); img.src='rig/'+name+'.svg'; await img.decode();
+const OUTFITS=['daily','hakka','apron','redtang','mint','stripe','dress'];
+async function rasterURL(key,url,w,h){
+  const img=new Image(); img.src=url; await img.decode();
   const o=document.createElement('canvas'); o.width=Math.round(w*RS); o.height=Math.round(h*RS);
-  o.getContext('2d').drawImage(img,0,0,o.width,o.height); LAY[name]=o;
+  o.getContext('2d').drawImage(img,0,0,o.width,o.height); LAY[key]=o;
 }
 async function loadAll(){
-  const jobs=[raster('mom2_body',1103,1426),raster('mom2_head',1103,1426)];
-  for(const e of ['smile','happy','laugh','shy','sad','wow']) jobs.push(raster('mom_face_'+e,1103,1426));
-  for(const s of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(raster(`mom2_arm${s}_${h}`,340,760));
+  const jobs=[rasterURL('head','rig3/head.png',1103,1426)];
+  for(const k of OUTFITS) jobs.push(rasterURL('body_'+k,`rig3/body_${k}.png`,1103,1426));
+  for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`arm${sd}_${h}`,`rig3/arm${sd}_${h}.svg`,340,760));
   await Promise.all(jobs);
-  
-  if(document.fonts){const all=SECS.map(x=>x.L.join('')).join('')+'獻給最愛的媽！開飯囉福對啊真的是喔好～';await Promise.all([document.fonts.load(`40px ${FONT}`,all),document.fonts.load(`900 40px ${SERIF}`,'美蘭，我愛你獻給最愛的媽福比讚！'),document.fonts.load(`900 40px ${SERIF}`,'嗓門超嘹亮')]).catch(()=>{});await document.fonts.ready}
+  if(document.fonts){const all=SECS.map(x=>x.L.join('')).join('')+'獻給最愛的媽！開飯囉對啊真的是喔好～';await Promise.all([document.fonts.load(`40px ${FONT}`,all),document.fonts.load(`900 40px ${SERIF}`,'美蘭，我愛你獻給最愛的媽福！'),document.fonts.load(`900 40px ${SERIF}`,'嗓門超嘹亮')]).catch(()=>{});await document.fonts.ready}
 }
 
-/* ---------- 美蘭（媽媽角色）---------- */
-const PV={L:[455,650],R:[665,650],neck:[560,565],feet:[560,1384]};
-function mom(o){
-  const s=o.s||0.42, x=o.x, y=o.y;
-  c.save();
-  if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(x,y+4,150*s*(o.sx||1),22*s,0,0,TAU);c.fill()}
-  c.translate(x,y);c.scale(s*(o.flip?-1:1)*(o.sx||1),s*(o.sy||1));c.rotate((o.rot||0)*PI/180);c.translate(-PV.feet[0],-PV.feet[1]);
-  const k=1/RS, draw=(n,dx=0,dy=0)=>c.drawImage(LAY[n],dx,dy,LAY[n].width*k,LAY[n].height*k);
-  draw('mom2_body');
-  for(const side of ['L','R']){
-    const a=o[side]||[0,'fist']; c.save(); c.translate(PV[side][0],PV[side][1]); c.rotate((side==='L'?a[0]:-a[0])*PI/180);
-    c.drawImage(LAY[`mom2_arm${side}_${a[1]}`],-170,-110,340,760); c.restore();
+/* ---------- 美蘭（媽媽角色）：灰白捲髮、白花髮夾；服裝可換 ---------- */
+// 圖層座標（1103×1426 畫布）：肩膀＝袖口下緣、脖子、腳底
+const PV={L:[377,750],R:[733,750],neck:[555,540],feet:[555,1391]};
+const SCALE_ADJ=0.95;
+let CUR_OUTFIT='daily';
+const FACE={eyeL:[479,374],eyeR:[638,374],browL:[477,318],browR:[638,318],nose:[559,406],mouth:[559,464]};
+const FACE_INK='#1b120b',BROW='#8a644f';
+// 表情：eyes(arc|round|wow)、brow(偏移/傾斜)、mouth(open 0..1 / frown / o)
+const EXPR={
+  smile:{eyes:'arc',curve:26,brow:[0,0],open:.16,ticks:true},
+  happy:{eyes:'arc',curve:30,brow:[-2,0],open:.5,ticks:true},
+  laugh:{eyes:'arc',curve:36,brow:[-8,0],open:1,ticks:true},
+  shy:{eyes:'arc',curve:16,brow:[5,0],open:.1,ticks:false,blush:true},
+  sad:{eyes:'round',brow:[-2,12],open:0,frown:true},
+  wow:{eyes:'wow',brow:[-12,0],open:0,mo:true}
+};
+function faceDraw(name,mopen){
+  const E=EXPR[name]||EXPR.smile,F=FACE;
+  c.save();c.lineCap='round';c.lineJoin='round';
+  // 眼睛
+  for(const [i,[x,y]] of [[0,F.eyeL],[1,F.eyeR]]){
+    if(E.eyes==='arc'){c.beginPath();c.moveTo(x-40,y+13);c.quadraticCurveTo(x,y+13-E.curve*1.9,x+40,y+13);c.lineWidth=13;c.strokeStyle=FACE_INK;c.stroke()}
+    else{const rx=E.eyes==='wow'?15:11,ry=E.eyes==='wow'?18:13;c.beginPath();c.ellipse(x,y+8,rx,ry,0,0,TAU);c.fillStyle=FACE_INK;c.fill();c.beginPath();c.arc(x-4,y+2,4.2,0,TAU);c.fillStyle='#fff';c.fill()}
   }
+  // 眉毛
+  const [by,tilt]=E.brow;c.strokeStyle=BROW;c.lineWidth=14;
+  for(const [i,[x,y]] of [[0,F.browL],[1,F.browR]]){
+    const sd=i?1:-1;                                // 左眉 sd=-1：外側在左
+    const outerY=y+10+by+tilt, innerY=y+10+by-tilt*.7;
+    c.beginPath();c.moveTo(x+sd*36,outerY);c.quadraticCurveTo(x,y-14+by,x-sd*36,innerY);c.stroke();
+  }
+  // 鼻
+  c.beginPath();c.moveTo(F.nose[0]-14,F.nose[1]);c.quadraticCurveTo(F.nose[0],F.nose[1]+16,F.nose[0]+14,F.nose[1]);c.lineWidth=8;c.strokeStyle=FACE_INK;c.stroke();
+  // 嘴
+  const [mx,my]=F.mouth;const open=(mopen!=null&&E.open>0)?mopen:E.open;
+  if(E.mo){c.beginPath();c.ellipse(mx,my+8,15,19,0,0,TAU);c.fillStyle='#c4444f';c.fill();c.lineWidth=7;c.strokeStyle=FACE_INK;c.stroke()}
+  else if(E.frown){c.beginPath();c.moveTo(mx-26,my+16);c.quadraticCurveTo(mx,my-6,mx+26,my+16);c.lineWidth=9;c.strokeStyle=FACE_INK;c.stroke()}
+  else if(open<.14){c.beginPath();c.moveTo(mx-34,my-2);c.quadraticCurveTo(mx,my+26,mx+34,my-2);c.lineWidth=9;c.strokeStyle=FACE_INK;c.stroke()}
+  else{
+    const w=40+16*open,d=10+54*open,y0=my-8;
+    c.beginPath();c.moveTo(mx-w,y0);c.quadraticCurveTo(mx,y0+7,mx+w,y0);c.bezierCurveTo(mx+w*.95,y0+d*1.25,mx-w*.95,y0+d*1.25,mx-w,y0);c.closePath();
+    c.fillStyle='#cf4f5d';c.fill();
+    c.save();c.clip();
+    c.beginPath();c.ellipse(mx,y0+d*.95,w*.7,d*.4,0,0,TAU);c.fillStyle='#ef7f88';c.fill();
+    c.fillStyle='#fff';c.beginPath();c.moveTo(mx-w+4,y0);c.quadraticCurveTo(mx,y0+7,mx+w-4,y0);c.lineTo(mx+w-8,y0+Math.min(17,d*.36));c.quadraticCurveTo(mx,y0+Math.min(24,d*.5),mx-w+8,y0+Math.min(17,d*.36));c.closePath();c.fill();
+    c.restore();
+    c.beginPath();c.moveTo(mx-w,y0);c.quadraticCurveTo(mx,y0+7,mx+w,y0);c.bezierCurveTo(mx+w*.95,y0+d*1.25,mx-w*.95,y0+d*1.25,mx-w,y0);c.closePath();c.lineWidth=6;c.strokeStyle='#7a2a34';c.stroke();
+    if(E.ticks){c.lineWidth=8;c.strokeStyle=FACE_INK;for(const sd of[-1,1]){c.beginPath();c.moveTo(mx+sd*(w+14),y0-6);c.quadraticCurveTo(mx+sd*(w+22),y0+4,mx+sd*(w+14),y0+14);c.stroke()}}
+  }
+  if(E.blush){c.fillStyle='rgba(250,120,130,.35)';c.beginPath();c.ellipse(447,418,44,32,0,0,TAU);c.fill();c.beginPath();c.ellipse(671,418,44,32,0,0,TAU);c.fill()}
+  c.restore();
+}
+function mom(o){
+  const s=(o.s||0.42)*SCALE_ADJ, x=o.x, y=o.y, outfit=o.outfit||CUR_OUTFIT;
+  c.save();
+  if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(x,y+4,175*s*(o.sx||1),22*s*1.1,0,0,TAU);c.fill()}
+  c.translate(x,y);c.scale(s*(o.flip?-1:1)*(o.sx||1),s*(o.sy||1));c.rotate((o.rot||0)*PI/180);c.translate(-PV.feet[0],-PV.feet[1]);
+  const k=1/RS, draw=(n)=>c.drawImage(LAY[n],0,0,LAY[n].width*k,LAY[n].height*k);
+  for(const side of ['L','R']){                       // 手臂在身體後面（從袖子下面伸出來）
+    const a=o[side]||[0,'fist']; c.save(); c.translate(PV[side][0],PV[side][1]); c.rotate((side==='L'?a[0]:-a[0])*PI/180);
+    c.drawImage(LAY[`arm${side}_${a[1]}`],-170,-110,340,760); c.restore();
+  }
+  draw('body_'+outfit);
   c.save();c.translate(PV.neck[0],PV.neck[1]);c.rotate((o.tilt||0)*PI/180);c.translate(-PV.neck[0],-PV.neck[1]);
-  draw('mom2_head');draw('mom_face_'+(o.expr||'smile'));c.restore();
+  draw('head');faceDraw(o.expr||'smile',o.mopen);c.restore();
   c.restore();
 }
 // 唱歌嘴型：依歌詞逐字開合
@@ -224,7 +274,7 @@ SC.intro=function(t){
   const en=easeOut((t-3.8)/2.4); const mx=lerp(W+200,W/2,en);
   const exp=mouth(t,'happy')==='smile'&&activeLyric(t)==null?'happy':mouth(t,'happy');
   const wave=Math.sin(t*5)*14;
-  mom({x:mx,y:612+bounce(t,10*en),s:.38,expr:t<3.8?'smile':exp,L:[8,'fist'],R:[en>.9?130+wave:20,'open'],tilt:sway(t,2)*4});
+  mom({x:mx,y:612+bounce(t,10*en),s:.36,expr:t<3.8?'smile':exp,L:[8,'fist'],R:[en>.9?130+wave:20,'open'],tilt:sway(t,2)*4});
   // 愛心
   if(L.l>=0&&t>1.6){for(let i=0;i<4;i++){const a=((t-1.6)*.5+i/4)%1;heart(W/2+Math.sin(i*2+t)*260,690-a*420,.8+.5*hash(i),HOT);}}
 };
@@ -255,7 +305,7 @@ SC.v1=function(t){
   petalsFall(t,k===0?24:8,['#7FC66B','#A5DE7A','#F0B340'],70,1.1);
   // 美蘭
   const base=k===3?'wow':'happy';let ex=mouth(t,base);
-  let o={x:640,y:612+bounce(t,9),s:.46,expr:ex,L:[10+sway(t,2)*6,'fist'],R:[10-sway(t,2)*6,'fist'],tilt:sway(t,4)*4};
+  let o={x:640,y:612+bounce(t,9),s:.42,expr:ex,L:[10+sway(t,2)*6,'fist'],R:[10-sway(t,2)*6,'fist'],tilt:sway(t,4)*4};
   if(k===0){o.tilt=Math.sin(t*3)*6;o.L=[14+Math.sin(t*3)*10,'open'];o.R=[14+Math.sin(t*3+1)*10,'open'];o.rot=Math.sin(t*1.8)*2}
   if(k===1){o.tilt=Math.sin(t*2)*5;o.expr=ex==='smile'?'shy':ex}
   if(k===2){const sp=ease((t-SECS[1].t[2])/.5);o.sx=Math.cos(t*4)*0+1;o.L=[110,'open'];o.R=[35,'open'];o.tilt=Math.sin(t*4)*6;}
@@ -413,7 +463,7 @@ SC.v1r=function(t){
   if(k>=1){const a=back((t-T[1])/.4);neighbor(150,470,1.0*a,t,0,1);neighbor(1130,470,1.0*a,t,1,1);
     const bt=Math.floor(t*3)%3;c.save();c.globalAlpha=a;bubble(240,330,150,64,['對啊','真的？','是喔'][bt],1);c.restore();c.save();c.globalAlpha=a;bubble(1040,330,150,64,['好啊','是啊','喔～'][(bt+1)%3],-1);c.restore()}
   const ex=mouth(t,'happy');
-  const o={x:640,y:612+bounce(t,10),s:.46,expr:ex,L:[20+sway(t,2)*6,'fist'],R:[20-sway(t,2)*6,'fist'],tilt:sway(t,4)*4};
+  const o={x:640,y:612+bounce(t,10),s:.42,expr:ex,L:[20+sway(t,2)*6,'fist'],R:[20-sway(t,2)*6,'fist'],tilt:sway(t,4)*4};
   if(k===0){const sp=Math.sin((t-T[0])*3);o.sx=1;o.rot=sp*3;o.L=[70+sp*20,'open'];o.R=[70-sp*20,'open']}
   if(k===1){o.L=[100+Math.sin(t*5)*10,'open'];o.R=[30,'fist'];o.tilt=Math.sin(t*3)*6}
   if(k===2){o.L=[35,'fist'];o.R=[35,'fist'];o.expr=mouth(t,'happy')}
@@ -472,7 +522,9 @@ function subtitle(t){
 }
 
 /* ---------- 主繪製：換場 + 鏡頭 ---------- */
+const OUTFIT_BY={intro:'daily',v1:'hakka',v2:'apron',chorus:'stripe',bridge:'redtang',v1r:'dress',v2r:'apron',chorus2:'mint',bridge2:'redtang',final:'dress',refrain:'redtang',outro:'daily'};
 function drawScene(i,t){
+  CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';
   c.save();
   const key=SECS[i].k,T=SECS[i].t;
   // 輕微推鏡
