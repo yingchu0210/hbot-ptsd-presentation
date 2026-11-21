@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><title>好運來角色包・預覽</title>
+<style>body{margin:0;font-family:"Noto Sans CJK TC","WenQuanYi Zen Hei",sans-serif;background:#FBF5E6;color:#4A3226}
+header{padding:18px 28px;font-size:26px;color:#B33A22}.row{display:flex;gap:20px;padding:0 20px 28px;flex-wrap:wrap}
+.card{background:#FFF9EA;border:3px solid #4A3226;border-radius:22px;padding:14px 16px;width:420px;box-sizing:border-box}
+.card h3{margin:0 0 8px;font-size:20px}.stage{height:520px;display:flex;align-items:flex-end;justify-content:center;background:linear-gradient(#BDE7FF,#F4FBE8);border-radius:14px;overflow:hidden}
+label{display:block;margin:6px 0;font-size:14px}select,input[type=range]{width:100%}</style></head><body>
+<header>好運來蕃茄園・角色包預覽（可選表情、手勢、手臂角度、頭部傾斜）</header><div class="row" id="row"></div>
+<script src="code/puppet.js"></script><script>
+const EX=[['smile','微笑'],['happy','開心瞇眼'],['laugh','大笑'],['shy','靦腆'],['sad','擔憂'],['wow','驚喜']],HD=[['fist','握拳／垂放'],['open','張開／揮手'],['thumb','豎大拇指']];
+const NM={dad:'爸爸「運來」',mom:'媽媽',girl:'女兒'};
+for(const k of ['dad','mom','girl']){
+ const c=document.createElement('div');c.className='card';c.innerHTML=`<h3>${NM[k]}</h3><div class="stage"></div>
+ <label>表情 <select data-f="expr">${EX.map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select></label>
+ <label>左臂手勢 <select data-f="lh">${HD.map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select> 角度 <input type="range" data-f="la" min="0" max="170" value="0"></label>
+ <label>右臂手勢 <select data-f="rh">${HD.map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select> 角度 <input type="range" data-f="ra" min="0" max="170" value="0"></label>
+ <label>頭部傾斜 <input type="range" data-f="tilt" min="-12" max="12" value="0"></label>`;
+ document.getElementById('row').appendChild(c);
+ const p=createPuppet(c.querySelector('.stage'),k,{scale:.34});
+ const upd=()=>{const g=f=>c.querySelector(`[data-f=${f}]`).value;p.set({expr:g('expr'),left:[+g('la'),g('lh')],right:[+g('ra'),g('rh')],tilt:+g('tilt')})};
+ c.querySelectorAll('[data-f]').forEach(e=>e.addEventListener('input',upd));
+ window['P_'+k]={p,c,upd};
+}
+</script></body></html>
