@@ -43,7 +43,7 @@ function eyes(kind,expr){let s='';
   if(expr==='happy'||expr==='laugh'){s+=ln(`M ${x-14},${y+5} Q ${x},${y-17} ${x+14},${y+5}`,4.5)+(lash?ln(`M ${x+sd*13},${y+1} l ${sd*7},-6`,3):'')}
   else if(expr==='wow'){s+=`<ellipse cx="${x}" cy="${y}" rx="14" ry="17" fill="#fff" stroke="${INK}" stroke-width="3"/><ellipse cx="${x}" cy="${y+1}" rx="8" ry="10" fill="#2e211b"/><circle cx="${x+3}" cy="${y-3}" r="3.4" fill="#fff"/>`}
   else if(expr==='sad'){s+=`<ellipse cx="${x}" cy="${y+3}" rx="10" ry="12" fill="#2e211b"/><circle cx="${x+3}" cy="${y-1}" r="3.3" fill="#fff"/><circle cx="${x-3}" cy="${y+8}" r="1.8" fill="#fff" opacity=".8"/>`+ln(`M ${x-14},${y-5} Q ${x},${y-17} ${x+14},${y-4}`,3.4)}
-  else {const ry=kind==='girl'?14:12;s+=`<ellipse cx="${x}" cy="${y}" rx="${kind==='girl'?11:10}" ry="${ry}" fill="#2e211b"/><circle cx="${x+3.5}" cy="${y-4}" r="3.8" fill="#fff"/><circle cx="${x-3}" cy="${y+5}" r="1.6" fill="#fff" opacity=".8"/>`+ln(`M ${x-15},${y-7} Q ${x},${y-ry-9} ${x+15},${y-7}`,3.8)+(lash?ln(`M ${x+sd*14},${y-6} l ${sd*8},-6`,3.2)+ln(`M ${x+sd*12},${y-1} l ${sd*8},-1`,2.8):'')}
+  else {const ry=kind==='girl'?12.5:12;s+=`<ellipse cx="${x}" cy="${y}" rx="${kind==='girl'?9.5:10}" ry="${ry}" fill="#2e211b"/><circle cx="${x+3.5}" cy="${y-4}" r="3.8" fill="#fff"/><circle cx="${x-3}" cy="${y+5}" r="1.6" fill="#fff" opacity=".8"/>`+ln(`M ${x-15},${y-7} Q ${x},${y-ry-9} ${x+15},${y-7}`,3.8)+(lash?ln(`M ${x+sd*14},${y-6} l ${sd*8},-6`,3.2)+ln(`M ${x+sd*12},${y-1} l ${sd*8},-1`,2.8):'')}
  }
  return s}
 function brows(kind,expr){const c=kind==='dad'?'#8a8580':'#5b4030',w=kind==='dad'?7:(kind==='mom'?4.2:4);let s='';
@@ -114,18 +114,23 @@ function headMom(expr='smile'){
  return s}
 
 function headGirl(expr='smile'){
- const face='M -86,-30 C -90,-84 -50,-110 0,-110 C 50,-110 90,-84 86,-30 C 84,36 50,96 0,106 C -50,96 -84,36 -86,-30 Z';
+ const HC='#3b2a25',HL='#7a5a50';
+ const face='M -90,-30 C -94,-86 -52,-112 0,-112 C 52,-112 94,-86 90,-30 C 92,40 54,98 0,108 C -54,98 -92,40 -90,-30 Z';
  const items=[];
- const back='M -112,-52 C -118,-130 -50,-150 0,-150 C 50,-150 118,-130 112,-52 C 118,0 110,60 96,100 C 70,118 40,96 40,70 L -40,70 C -40,96 -70,118 -96,100 C -110,60 -118,0 -112,-52 Z';
- items.push(blob(back,'#2f2a30',{sh:[{d:'M 50,-150 C 118,-130 118,0 96,100 L 140,100 L 140,-150 Z',c:'#000',o:.3}],hl:[{d:'M -80,-120 C -40,-140 0,-142 30,-134 C -20,-132 -60,-112 -90,-70 Z',c:'#8a7f96',o:.5}]}));
- items.push(blob(face,SKIN.girl,{sh:[{d:'M 58,-104 C 92,-70 90,30 64,70 C 54,88 36,100 0,106 L 100,108 L 100,-104 Z',c:SKSH.girl,o:.22}],hl:[{d:'M -14,-6 C -4,0 6,0 14,-6 C 8,10 -6,10 -14,-6 Z',c:'#ffe5d0',o:.45}]}));
- items.push(blob('M -88,2 C -108,-4 -106,40 -86,42 Z',SKIN.girl,{}),blob('M 88,2 C 108,-4 106,40 86,42 Z',SKIN.girl,{}));
+ const back='M -110,-54 C -120,-134 -50,-154 0,-154 C 50,-154 120,-134 110,-54 C 118,-4 114,48 104,86 C 92,106 62,98 54,72 L -54,72 C -62,98 -92,106 -104,86 C -114,48 -118,-4 -110,-54 Z';
+ items.push(blob(back,HC,{sh:[{d:'M 50,-154 C 120,-134 120,0 104,86 L 140,90 L 140,-154 Z',c:'#000',o:.3}],hl:[{d:'M -84,-124 C -44,-146 0,-148 32,-140 C -20,-136 -62,-116 -94,-72 Z',c:HL,o:.55},{d:'M -100,30 C -108,50 -104,74 -92,88 C -100,60 -96,40 -88,24 Z',c:HL,o:.4}]}));
+ items.push(blob(face,SKIN.girl,{sh:[{d:'M 58,-104 C 94,-70 92,30 66,72 C 54,90 36,102 0,108 L 100,110 L 100,-104 Z',c:SKSH.girl,o:.22}],hl:[{d:'M -14,-4 C -4,2 6,2 14,-4 C 8,12 -6,12 -14,-4 Z',c:'#ffe5d0',o:.45}]}));
+ items.push(blob('M -90,2 C -110,-4 -108,40 -88,42 Z',SKIN.girl,{}),blob('M 90,2 C 110,-4 108,40 88,42 Z',SKIN.girl,{}));
  let s=stack(items);
- s+=blush(expr,'girl')+eyes('girl',expr)+brows('girl',expr)+nose('girl')+mouth('girl',expr);
- // bangs & front hair
- const bangs='M -98,-56 C -92,-124 -40,-134 0,-134 C 40,-134 92,-124 98,-56 C 88,-46 76,-52 64,-66 C 48,-46 28,-40 8,-44 C -14,-40 -38,-46 -56,-68 C -68,-52 -86,-46 -98,-56 Z';
- s+=stack([blob(bangs,'#2f2a30',{sh:[{d:'M 30,-132 C 90,-122 96,-60 96,-60 L 120,-60 L 120,-140 Z',c:'#000',o:.25}],hl:[{d:'M -70,-116 C -30,-130 10,-130 36,-124 C -10,-120 -50,-104 -76,-84 Z',c:'#9c91a8',o:.45}],line:['M -62,-112 Q -56,-84 -50,-64','M -22,-124 Q -18,-92 -14,-48','M 24,-124 Q 26,-92 28,-46','M 62,-112 Q 62,-86 62,-66']})]);
- s+=ln('M -44,-120 Q -50,-94 -46,-66',3,'#d8d3de',.9)+ln('M 34,-124 Q 38,-96 34,-60',3,'#d8d3de',.8);
+ s+=blush(expr,'girl')+eyes('girl',expr)+brows('girl',expr)+nose('girl');
+ if(expr==='smile'||expr==='happy'||expr==='laugh'){
+  s+=`<path d="M -34,50 Q 0,62 34,50 Q 32,96 0,98 Q -32,96 -34,50 Z" fill="#8f3238" stroke="${INK}" stroke-width="3.6" stroke-linejoin="round"/><path d="M -30,52 Q 0,63 30,52 L 28,68 Q 0,77 -28,68 Z" fill="#fff"/><ellipse cx="0" cy="88" rx="15" ry="7.5" fill="#e9808a"/>`+ln('M -36,49 Q 0,64 36,49',4.2,'#c94f5e');
+ } else s+=mouth('girl',expr);
+ // wispy side-swept bangs (left curtain larger, forehead peeks through)
+ const bl='M -100,-50 C -98,-120 -46,-140 4,-134 C -4,-104 -22,-82 -48,-62 C -66,-48 -86,-40 -100,-50 Z';
+ const br='M 100,-50 C 98,-118 52,-138 12,-132 C 22,-104 44,-84 64,-62 C 80,-48 92,-42 100,-50 Z';
+ s+=stack([blob(bl,HC,{hl:[{d:'M -88,-112 C -56,-132 -20,-134 0,-130 C -36,-120 -64,-98 -86,-66 Z',c:HL,o:.5}],line:['M -78,-100 Q -72,-74 -64,-56','M -46,-122 Q -42,-96 -34,-76','M -16,-130 Q -14,-110 -12,-96']}),blob(br,HC,{hl:[{d:'M 90,-108 C 62,-128 34,-130 14,-126 C 46,-114 70,-94 88,-66 Z',c:HL,o:.4}],line:['M 78,-96 Q 72,-72 64,-56','M 44,-118 Q 42,-96 34,-78']})]);
+ s+=`<path d="M -8,-118 Q -12,-96 -30,-72" fill="none" stroke="${HC}" stroke-width="3" stroke-linecap="round" opacity=".8"/>`;
  return s}
 const HEADS={dad:headDad,mom:headMom,girl:headGirl};
 
@@ -210,6 +215,9 @@ function bodyGirl(o={}){
  s+=`<path d="M 332,368 C 290,430 220,520 168,596" fill="none" stroke="${INK}" stroke-width="16" stroke-linecap="round"/><path d="M 332,368 C 290,430 220,520 168,596" fill="none" stroke="#2b2b30" stroke-width="10" stroke-linecap="round"/>`;
  s+=stack([blob('M 108,570 C 108,556 124,552 140,552 L 206,552 C 222,552 226,566 226,580 L 226,636 C 226,650 214,654 200,654 L 134,654 C 118,654 108,648 108,634 Z','#2c2c32',{sh:[{d:'M 200,552 L 228,552 L 228,656 L 200,656 Z',c:'#000',o:.3}],hl:[{d:'M 114,562 C 140,554 190,554 214,558 L 214,566 C 180,562 140,562 114,570 Z',c:'#6a6a76',o:.55}],line:['M 114,590 L 222,590','M 160,590 L 160,606']}),blob('M 118,556 C 130,540 196,540 214,556 L 214,566 L 118,566 Z','#3a3a44',{})]);
  s+=`<circle cx="160" cy="610" r="6" fill="#c8ccd6" stroke="${INK}" stroke-width="2"/>`;
+ // hood
+ s+=stack([blob('M 168,352 C 190,318 310,318 332,352 C 350,376 340,402 302,408 L 198,408 C 160,402 150,376 168,352 Z','#cf6f88',{sh:[{d:'M 250,330 L 340,330 L 340,410 L 250,410 Z',c:'#7a2c44',o:.25}],hl:[{d:'M 180,350 C 200,328 250,324 270,326 C 220,336 196,352 186,372 Z',o:.4}],line:['M 190,380 Q 250,396 310,380']})]);
+ s+=`<circle cx="204" cy="394" r="6" fill="#f3a9bc" stroke="${INK}" stroke-width="2.2"/><circle cx="296" cy="394" r="6" fill="#f3a9bc" stroke="${INK}" stroke-width="2.2"/>`;
  // scarf
  const ring='M 184,330 C 206,368 294,368 316,330 C 338,352 338,376 304,386 C 270,398 230,398 196,386 C 162,376 162,352 184,330 Z';
  const tail='M 288,380 L 342,392 L 330,540 L 284,530 Z';

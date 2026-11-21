@@ -129,7 +129,7 @@ S(40.2,45.5,(t,u,p)=>{skyGrad('#bfe9ff','#e8ffe0');ctx.save();ctx.translate(560,
  const pin=back(prog(u,.7,1.2));ctx.save();ctx.translate(-45,230);ctx.scale(pin,pin);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-34,-44,-30,-84,0,-84);ctx.bezierCurveTo(30,-84,34,-44,0,0);outl('#ff5a5a',5);ctx.beginPath();ctx.arc(0,-56,12,0,TAU);outl('#fff',3);ctx.restore();ctx.restore();
  text('高雄・美濃',1300,230,{size:100,col:C.tomato,alpha:prog(u,.9,1.4)});
  infoCard(1300,520,820,340,'美濃小檔案',['全高雄最大的小番茄產區','種植面積約 130 公頃'],prog(u,1.4,2),{col:C.leaf,ts:56,ls:46,lh:66,top:112});
- text('資料：自由時報',1300,905,{size:32,col:'#7a6a56',stroke:false,alpha:prog(u,2,2.6)});
+
  mdance('red',1240,GY+30,.9,t,{expr:'happy'});mdance('orange',1480,GY+30,.9,t,{expr:'happy',ph:1,flip:-1});},{zoom:.02});
 S(45.5,50.5,(t,u,p)=>{skyGrad('#FFF0CC','#FFF9EA');bokeh(t,12,4,.35);mdance('orange',380,GY+60,1.9,t,{expr:'happy'});
  const pc=back(prog(u,.1,.6));ctx.save();ctx.translate(1180,470);ctx.scale(pc,pc);ctx.shadowColor='rgba(74,50,38,.22)';ctx.shadowBlur=20;ctx.shadowOffsetY=10;ctx.beginPath();rr(-560,-340,1120,720,44);outl('#FFF9EA',6);ctx.shadowColor='transparent';
@@ -139,13 +139,13 @@ S(45.5,50.5,(t,u,p)=>{skyGrad('#FFF0CC','#FFF9EA');bokeh(t,12,4,.35);mdance('ora
  const mq=prog(u,1.7,2.4);text('甜度 10–11 度',1180,490,{size:64,col:C.tomato,alpha:mq});
  ctx.beginPath();rr(700,540,960,56,28);outl('#fff4de',6);ctx.save();ctx.beginPath();rr(702,542,956*easeOut(mq)*.74,52,26);ctx.clip();const gg=ctx.createLinearGradient(700,0,1660,0);gg.addColorStop(0,'#ffd27a');gg.addColorStop(1,C.orange);ctx.fillStyle=gg;ctx.fillRect(700,540,960,56);ctx.restore();
  [['酸甜平衡',672],['皮薄多汁、果肉厚實',730],['富含維他命 C、熱量低',788]].forEach(([s2,y],i)=>{const q=prog(u,2.3+i*.4,2.8+i*.4);text('✔ '+s2,780,y-10,{size:46,align:'left',col:INKC,alpha:q,stroke:false})});
- text('資料：自由時報',1700,826,{size:30,col:'#8a7a66',stroke:false,align:'right',alpha:prog(u,3.4,3.9)});},{zoom:.02});
+},{zoom:.02});
 S(50.5,55.2,(t,u,p)=>{skyGrad('#FFE3DA','#FFF6EE');bokeh(t,12,9,.35);mdance('red',380,GY+60,1.9,t,{expr:'happy'});
  const pc=back(prog(u,.1,.6));ctx.save();ctx.translate(1180,470);ctx.scale(pc,pc);ctx.shadowColor='rgba(74,50,38,.22)';ctx.shadowBlur=20;ctx.shadowOffsetY=10;ctx.beginPath();rr(-560,-340,1120,720,44);outl('#FFF9EA',6);ctx.shadowColor='transparent';
  ctx.beginPath();rr(-290,-392,580,104,52);outl(C.tomato,6);text('玉女小番茄',0,-338,{size:78,col:'#FFF6E0',stroke:false});ctx.restore();text('皮薄香甜',1180,222,{size:42,col:'#A8372A',stroke:false,alpha:prog(u,.5,1)});
  [['農友種苗 2000 年選育',310],['長橢球形・果皮薄、肉質細緻',420],['糖度通常可達 10 度以上',530],['適合日夜溫差大的秋冬季',640]].forEach(([s2,y],i)=>{const q=back(prog(u,.7+i*.55,1.2+i*.55));if(q<=0)return;ctx.save();ctx.translate(1180,y+10);ctx.scale(q,q);ctx.beginPath();rr(-500,-44,1000,88,32);outl('#fff1ee',5);text(s2,0,0,{size:50,stroke:false});ctx.restore()});
  text('怕雨、容易裂果，所以更需要細心照顧',1180,760,{size:40,col:'#a05a3a',alpha:prog(u,3.0,3.5),stroke:false});
- text('資料：聯合新聞網・農糧署',1700,838,{size:30,col:'#8a7a66',stroke:false,align:'right',alpha:prog(u,3.6,4.1)});},{zoom:.02});
+},{zoom:.02});
 S(55.2,58.0,(t,u,p)=>{stageBG(t,'#b8e2ff','#F4F8DD');spot(960,500,950,.45);confetti(t,50,11);curtains(prog(u,0,.8),t);
  mdance('red',420,GY+30,1.3,t,{expr:'sing'});mdance('orange',1500,GY+30,1.3,t,{expr:'sing',flip:-1,ph:2});dancer('dad',700,GY+20,.78,t,{ph:0});dancer('mom',960,GY+20,.78,t,{ph:1});dancer('girl',1220,GY+20,.78,t,{ph:2});},{zoom:.05});
 
@@ -215,6 +215,6 @@ S(104.7,120.84,(t,u,p)=>{farm(t,{sky1:'#ff9a7a',sky2:'#ffe0a8',sx:960,sy:560+p*1
  logo(960,160,.85,prog(u,.2,.9),t,{rib:'好運一直來'});
  const qp=back(prog(u,1.6,2.4));if(qp>0){const card=(cx,M,label,lc,l1)=>{ctx.save();ctx.translate(cx,640);ctx.scale(qp*.78,qp*.78);ctx.shadowColor='rgba(74,50,38,.25)';ctx.shadowBlur=16;ctx.beginPath();rr(-210,-300,420,560,26);outl('#fffdf4',5);ctx.shadowColor='transparent';text(label,0,-250,{size:38,col:lc,stroke:false});const n=M.length,cell=290/n,ox=-145,oy=-195;ctx.fillStyle='#fff';ctx.fillRect(ox-12,oy-12,314,314);ctx.fillStyle='#1c1c1c';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(M[r][c])ctx.fillRect(ox+c*cell,oy+r*cell,cell+.6,cell+.6);text(l1,0,165,{size:30,stroke:false});ctx.restore()};
   card(290,QR,'LINE 官方帳號訂購','#06a24a','lin.ee/NIcBKDs');card(1630,QR2,'追蹤 Facebook 粉專','#1877f2','好運來蕃茄園');}
- const cr=prog(u,6,6.6);if(cr>0){ctx.globalAlpha=cr*(1-dim);ctx.beginPath();rr(160,905,1600,130,26);ctx.fillStyle='rgba(255,250,236,.92)';ctx.fill();ctx.strokeStyle=INKC;ctx.lineWidth=4;ctx.stroke();ctx.globalAlpha=1;
+ const cr=0;if(cr>0){ctx.globalAlpha=cr*(1-dim);ctx.beginPath();rr(160,905,1600,130,26);ctx.fillStyle='rgba(255,250,236,.92)';ctx.fill();ctx.strokeStyle=INKC;ctx.lineWidth=4;ctx.stroke();ctx.globalAlpha=1;
   ctx.globalAlpha=cr*(1-dim);text('資料來源：好運來蕃茄園 Facebook 粉專／自由時報（美濃橙蜜香）／聯合新聞網・農糧署（玉女小番茄）',960,950,{size:26,stroke:false});text('歌曲：〈好運來小番茄〉　插畫與動畫：Claude',960,1000,{size:26,stroke:false,col:'#7a6a56'});ctx.globalAlpha=1}
  if(dim>0){ctx.fillStyle=`rgba(255,243,214,${dim})`;ctx.fillRect(0,0,W,H)}},{zoom:.0});
