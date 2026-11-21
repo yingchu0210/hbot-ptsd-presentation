@@ -2,18 +2,20 @@
 import os
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rig3')
 INK = '#2d1c0f'; SKIN = '#fcc4a5'; OW = 8
+GLOVE = '#87859f'; HINK = '#1c110c'   # 手：沿用原角色包畫的灰紫工作手套與描線
 def ln(d, w, op=1): return f'<path d="{d}" fill="none" stroke="{INK}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round" opacity="{op}"/>'
-def parts_svg(parts):
+def parts_svg(parts, fill=None, ink=None):
     o = f = ''
     for p in parts:
+        ink_ = ink or INK; fill_ = fill or SKIN
         if p['t'] == 'cap':
-            o += f'<line x1="{p["x1"]}" y1="{p["y1"]}" x2="{p["x2"]}" y2="{p["y2"]}" stroke="{INK}" stroke-width="{p["w"]+2*OW}" stroke-linecap="round"/>'
-            f += f'<line x1="{p["x1"]}" y1="{p["y1"]}" x2="{p["x2"]}" y2="{p["y2"]}" stroke="{SKIN}" stroke-width="{p["w"]}" stroke-linecap="round"/>'
+            o += f'<line x1="{p["x1"]}" y1="{p["y1"]}" x2="{p["x2"]}" y2="{p["y2"]}" stroke="{ink_}" stroke-width="{p["w"]+2*OW}" stroke-linecap="round"/>'
+            f += f'<line x1="{p["x1"]}" y1="{p["y1"]}" x2="{p["x2"]}" y2="{p["y2"]}" stroke="{fill_}" stroke-width="{p["w"]}" stroke-linecap="round"/>'
         else:
-            o += f'<ellipse cx="{p["cx"]}" cy="{p["cy"]}" rx="{p["rx"]}" ry="{p["ry"]}" fill="{INK}" stroke="{INK}" stroke-width="{2*OW}"/>'
-            f += f'<ellipse cx="{p["cx"]}" cy="{p["cy"]}" rx="{p["rx"]}" ry="{p["ry"]}" fill="{SKIN}"/>'
+            o += f'<ellipse cx="{p["cx"]}" cy="{p["cy"]}" rx="{p["rx"]}" ry="{p["ry"]}" fill="{ink_}" stroke="{ink_}" stroke-width="{2*OW}"/>'
+            f += f'<ellipse cx="{p["cx"]}" cy="{p["cy"]}" rx="{p["rx"]}" ry="{p["ry"]}" fill="{fill_}"/>'
     return o + f
-def hand(kind, wy, sd, k=1.12):
+def hand(kind, wy, sd, k=1.15):
     P = []
     C = lambda x1, y1, x2, y2, w: P.append(dict(t='cap', x1=x1*k, y1=wy+y1*k, x2=x2*k, y2=wy+y2*k, w=w*k))
     E = lambda cx, cy, rx, ry: P.append(dict(t='ell', cx=cx*k, cy=wy+cy*k, rx=rx*k, ry=ry*k))
@@ -23,9 +25,11 @@ def hand(kind, wy, sd, k=1.12):
         for x, l in ((-27, 104), (-9, 118), (9, 118), (27, 104)): C(x, 52, x*1.1, l, 18)
         C(sd*30, 28, sd*70, 76, 21)
     elif kind == 'thumb': E(0, 38, 38, 32); C(sd*16, 24, sd*84, 6, 25)
-    o = parts_svg(P)
+    o = parts_svg(P, GLOVE, HINK)
+    def hl(d, w, op=1): return f'<path d="{d}" fill="none" stroke="{HINK}" stroke-width="{w}" stroke-linecap="round" stroke-linejoin="round" opacity="{op}"/>'
     if kind in ('fist', 'thumb'):
-        for x in (-14, 0, 14): o += ln(f'M {x*k} {wy+44*k} L {x*k} {wy+64*k}', 4*k, .9)
+        for x in (-14, 0, 14): o += hl(f'M {x*k} {wy+44*k} L {x*k} {wy+64*k}', 4*k, .9)
+    o += hl(f'M {-22*k} {wy+46*k} l {12*k} {14*k}', 4*k) + hl(f'M {-4*k} {wy+46*k} l {12*k} {14*k}', 4*k)   # 手套縫線
     return o
 def arm(side, kind):
     sd = -1 if side == 'L' else 1; wy = 235
