@@ -16,7 +16,7 @@
 | `characters.json` | **角色設定檔**：畫布大小、肩膀／脖子樞紐座標、配色色碼、外型特徵、故事背景 |
 | `code/puppet.js` | 免函式庫的角色拼裝程式（純 DOM），複製即可用 |
 | `code/rig2.js` | 我在 MV 裡用的 canvas 版拼裝程式（依賴 MV 專案的 `ctx`、`TAU`，僅供參考） |
-| `code/gen*.py` | 產生分層素材的 Python 腳本（`gen.py` 手臂與手勢、`gen2.py` 表情、`gen3.py` 頭／身體分層與補畫） |
+| `code/gen*.py`、`code/intermediate/` | 產生分層素材的 Python 腳本與它讀取的中間檔（`gen.py` 手臂與手勢、`gen2.py` 表情、`gen3.py` 頭／身體分層與補畫） |
 | `viewer.html` | **預覽頁**：用瀏覽器直接開，可選表情、手勢、手臂角度、頭部傾斜 |
 
 ## 快速開始
@@ -91,4 +91,16 @@
 
 ## 重新產生分層素材
 
-需要 Python 3、`numpy`、`Pillow`、`opencv-python-headless`、`vtracer`。腳本檔頭有寫輸入輸出路徑（原圖放在 `reference/`），要改的話請先照路徑調整。
+不需要改路徑。我已實際驗證：從這個資料夾重新產生的 43 個分層檔，和 `rig/` 裡的檔案**逐位元組完全一致**。
+
+```bash
+pip install numpy pillow opencv-python-headless vtracer
+cd code
+python3 gen2.py   # 6 種表情、手臂×手勢
+python3 gen3.py   # 頭／身體分層、補畫被手臂擋住的身體
+# 輸出在 ../rig_rebuilt/
+```
+
+- 輸入是 `code/intermediate/` 裡的三張「去雜訊、降色後的原圖」（`dad_q.png`、`mom_q2.png`、`girl_q2.png`），由 `reference/` 的原圖處理而來。
+- 想改表情或手勢的畫法：改 `gen2.py`（表情）、`gen.py`（手臂與手勢）。想改補畫的身體：改 `gen3.py`。
+- 如果要重新從 `reference/` 做出中間檔，我當時的做法是：雙邊濾波去紙張雜訊 → 把近白色還原成純白 → 中位切割降到 64 色 → 把色塊貼近各角色的固定色票。這一步我沒有寫成獨立腳本。

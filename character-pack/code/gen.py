@@ -1,10 +1,10 @@
 import sys,os,json,re,math
-S='/tmp/claude-0/-home-user-hbot-ptsd-presentation/c2a4fe47-30e5-5535-bfbf-4dee275d6c91/scratchpad'
-sys.path.insert(0,S+'/pylib5');sys.path.insert(0,S+'/pylib3');sys.path.insert(0,S+'/pylib2')
+HERE=os.path.dirname(os.path.abspath(__file__))
 import numpy as np, vtracer
 from PIL import Image, ImageDraw
 import cv2
-VEC=S+'/vec/';OUT=S+'/rig/out/';os.makedirs(OUT,exist_ok=True)
+VEC=HERE+'/intermediate/'          # 量化後的原圖（輸入）
+OUT=HERE+'/../rig_rebuilt/';os.makedirs(OUT,exist_ok=True)   # 重新產生的分層素材（輸出）
 EXPR=['smile','happy','laugh','shy','sad','wow']
 
 def hexrgb(h):return tuple(int(h[i:i+2],16) for i in (1,3,5))
