@@ -83,7 +83,7 @@ S(15.45,16.64,(t,u,p)=>{skyGrad('#A9BDD1','#DCE6EE');for(let i=0;i<30;i++){const
  ctx.save();ctx.translate(0,Math.sin(t*3)*3-28);ctx.strokeStyle=INKC;ctx.lineWidth=9;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(960,150);ctx.lineTo(960,700);ctx.stroke();
  ctx.beginPath();ctx.moveTo(500,235);ctx.quadraticCurveTo(960,-70,1420,235);for(let i=0;i<5;i++)ctx.quadraticCurveTo(500+i*184+92,200,500+(i+1)*184,235);ctx.closePath();outl('#ff6f6f',8);
  for(const dx of[-300,-150,0,150,300]){ctx.beginPath();ctx.moveTo(960,52);ctx.quadraticCurveTo(960+dx*.9,110,960+dx*1.5,228);ctx.strokeStyle='#c24b4b';ctx.lineWidth=4;ctx.stroke()}ctx.restore();
- person('dad',{x:740,y:GY+20,s:.64,expr:'smile',aL:[0,'relaxed'],aR:[0,'relaxed']});person('mom',{x:1180,y:GY+20,s:.64,expr:'sad'});},{zoom:.04});
+ person('dad',{x:740,y:GY+20,s:.64,expr:'sad',aL:[0,'relaxed'],aR:[0,'relaxed']});person('mom',{x:1180,y:GY+20,s:.64,expr:'sad'});},{zoom:.04});
 S(16.64,17.76,(t,u,p)=>{skyGrad('#FFE9A8','#FFF6E0');sunDraw(960,250,120,t);ground('#cfe8a0','#a8d57a',790);
  person('dad',{x:700,y:GY+20,s:.8,expr:'laugh',aL:[0,'relaxed'],aR:[0,'relaxed']});person('mom',{x:1220,y:GY+20,s:.8,expr:'laugh'});
  for(let i=0;i<4;i++){const y=520+((u*160+i*80)%260);ctx.fillStyle='#8fd3ff';ctx.beginPath();ctx.ellipse(640+i*18,y,8,12,0,0,TAU);ctx.fill()}
