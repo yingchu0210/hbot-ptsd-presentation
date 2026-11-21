@@ -1,5 +1,5 @@
 // ===== MV scenes (timed to the song) =====
-const GY=800; // ground line for characters
+const IMG={};const GY=800; // ground line for characters
 const mixc=(a,b,t)=>{const pa=[1,3,5].map(i=>parseInt(a.substr(i,2),16)),pb=[1,3,5].map(i=>parseInt(b.substr(i,2),16));return '#'+pa.map((v,i)=>Math.round(v+(pb[i]-v)*t).toString(16).padStart(2,'0')).join('')};
 function skyGrad(c1,c2){const g=ctx.createLinearGradient(0,0,0,H*.75);g.addColorStop(0,c1);g.addColorStop(1,c2);ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
 function ground(col1='#bfe6a0',col2='#8fcf7a',y=790){const g=ctx.createLinearGradient(0,y,0,H);g.addColorStop(0,col1);g.addColorStop(1,col2);ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(0,y+8);for(let x=0;x<=W;x+=40)ctx.lineTo(x,y+Math.sin(x*.01)*8);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fill()}
@@ -78,9 +78,12 @@ S(12.73,15.45,(t,u,p)=>{farm(t,{sx:360,sy:240,sr:70,vcol:[C.orange]});
 
 // 3 pre-chorus quick scenes
 S(15.45,16.64,(t,u,p)=>{skyGrad('#A9BDD1','#DCE6EE');for(let i=0;i<30;i++){const x=hash(i)*W,y=(hash(i+.5)*H+u*1400)%H;ctx.strokeStyle='#e6f2ff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-10,y+40);ctx.stroke()}
- cloud(500,160,1.8,'#7b86a0');cloud(1400,150,1.8,'#6e7a96');ground('#9bbf9a','#7fa88a',790);
- person('dad',{x:760,y:GY+20,s:.8,expr:'smile',aL:[0,'relaxed'],aR:[0,'relaxed']});person('mom',{x:1140,y:GY+20,s:.8,expr:'sad'});
- ctx.beginPath();ctx.moveTo(560,420);ctx.quadraticCurveTo(960,170,1360,420);for(let i=0;i<5;i++)ctx.quadraticCurveTo(560+i*160+80,380,560+(i+1)*160,420);outl('#ff6f6f',8);ctx.strokeStyle=INKC;ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(960,300);ctx.lineTo(960,760);ctx.stroke();text('雨',960,260,{size:1,alpha:0});},{zoom:.04});
+ cloud(300,150,1.6,'#7b86a0');cloud(1620,140,1.6,'#6e7a96');ground('#9bbf9a','#7fa88a',790);
+ /* umbrella sits ABOVE and BEHIND the two people so it never covers their faces */
+ ctx.save();ctx.translate(0,Math.sin(t*3)*3-28);ctx.strokeStyle=INKC;ctx.lineWidth=9;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(960,150);ctx.lineTo(960,700);ctx.stroke();
+ ctx.beginPath();ctx.moveTo(500,235);ctx.quadraticCurveTo(960,-70,1420,235);for(let i=0;i<5;i++)ctx.quadraticCurveTo(500+i*184+92,200,500+(i+1)*184,235);ctx.closePath();outl('#ff6f6f',8);
+ for(const dx of[-300,-150,0,150,300]){ctx.beginPath();ctx.moveTo(960,52);ctx.quadraticCurveTo(960+dx*.9,110,960+dx*1.5,228);ctx.strokeStyle='#c24b4b';ctx.lineWidth=4;ctx.stroke()}ctx.restore();
+ person('dad',{x:740,y:GY+20,s:.64,expr:'smile',aL:[0,'relaxed'],aR:[0,'relaxed']});person('mom',{x:1180,y:GY+20,s:.64,expr:'sad'});},{zoom:.04});
 S(16.64,17.76,(t,u,p)=>{skyGrad('#FFE9A8','#FFF6E0');sunDraw(960,250,120,t);ground('#cfe8a0','#a8d57a',790);
  person('dad',{x:700,y:GY+20,s:.8,expr:'laugh',aL:[0,'relaxed'],aR:[0,'relaxed']});person('mom',{x:1220,y:GY+20,s:.8,expr:'laugh'});
  for(let i=0;i<4;i++){const y=520+((u*160+i*80)%260);ctx.fillStyle='#8fd3ff';ctx.beginPath();ctx.ellipse(640+i*18,y,8,12,0,0,TAU);ctx.fill()}
@@ -109,7 +112,7 @@ S(26.68,28.92,(t,u,p)=>{stageBG(t,'#e7d6ff','#ffe9d6');person('mom',{x:960,y:GY+
  for(let i=0;i<8;i++){const q=((u*.5+i/8)%1);sparkle(960+Math.sin(i*2)*320,520-q*420,16+hash(i)*14,['#ffd84a','#ff9ab4','#fff'][i%3])}
  text('嘴裡還留香',480,260,{size:70,col:'#a96bd6',rot:-.1});heart(1500,280,40);},{zoom:.04});
 S(28.92,30.65,(t,u,p)=>{stageBG(t,'#d9f6c9','#fff6d8');mdance('red',640,GY+30,1.0,t,{expr:'happy'});mdance('orange',1280,GY+30,1.0,t,{expr:'happy',ph:2,flip:-1});
- const items=[['C','維他命 C',C.orange],['♥','健康','#ff6f86'],['葉','低熱量','#5aab55']];items.forEach(([s,l,c],i)=>{const q=back(prog(u,.1+i*.25,.6+i*.25));if(q<=0)return;ctx.save();ctx.translate(380+i*580,330+Math.sin(t*3+i)*12);ctx.scale(q,q);ctx.beginPath();ctx.arc(0,0,130,0,TAU);outl(c,8);text(s,0,-6,{size:130,col:'#fff',stroke:INKC});ctx.restore();text(l,380+i*580,520,{size:68,col:INKC,alpha:q})})});
+ const items=[['C','維他命 C',C.orange],['♥','健康','#ff6f86'],['葉','低熱量','#5aab55']];items.forEach(([s,l,c],i)=>{const q=back(prog(u,.1+i*.25,.6+i*.25));if(q<=0)return;ctx.save();ctx.translate(380+i*580,330+Math.sin(t*3+i)*12);ctx.scale(q,q);if(i===2&&IMG.kcal){const bw=IMG.kcal.width,k=(2*130+14)/(bw*.70);ctx.drawImage(IMG.kcal,-bw*k/2,-IMG.kcal.height*k/2+2,bw*k,IMG.kcal.height*k)}else{ctx.beginPath();ctx.arc(0,0,130,0,TAU);outl(c,8);text(s,0,-6,{size:130,col:'#fff',stroke:INKC})}ctx.restore();text(l,380+i*580,520,{size:68,col:INKC,alpha:q})})});
 S(30.65,33.1,(t,u,p)=>{stageBG(t,'#fff0a8','#ffd1b8');spot(960,500,800,.4);confetti(t,60,1);
  logo(960,150,.95,prog(u,0,.5),t);clover(960,440,52,Math.sin(t*2)*.2);
  mdance('red',420,GY+30,1.05,t,{expr:'sing'});mdance('orange',1500,GY+30,1.05,t,{expr:'sing',flip:-1,ph:2});dancer('girl',700,GY+20,.57,t,{ph:1});dancer('mom',1220,GY+20,.57,t,{ph:2});stamp(1660,180,80,prog(u,.8,1.3));});
@@ -125,8 +128,8 @@ S(37.8,40.2,(t,u,p)=>{const day=p;const c1=lerp(0,1,Math.sin(p*Math.PI));{const 
  ctx.save();ctx.translate(960,250);ctx.beginPath();rr(-150,-110,300,220,20);outl('#fffdf4',6);ctx.beginPath();rr(-150,-110,300,60,20);outl(C.tomato,6);text('每一天',0,-80,{size:44,col:'#fff',stroke:false});text(String(1+Math.floor(p*6)),0,30,{size:120,col:C.tomato,stroke:false});ctx.restore()});
 
 // 5 interlude: facts
-S(40.2,45.5,(t,u,p)=>{skyGrad('#bfe9ff','#e8ffe0');ctx.save();ctx.translate(560,520);const pc=prog(u,0,.6);ctx.scale((.9+pc*.1)*1.7,.9+pc*.1);ctx.beginPath();const pts=[[.55,0],[.68,.1],[.7,.25],[.62,.4],[.6,.55],[.52,.72],[.45,.88],[.38,1],[.3,.9],[.28,.72],[.3,.55],[.38,.35],[.42,.2],[.5,.05]];pts.forEach(([x,y],i)=>{const X=(x-.5)*420,Y=(y-.5)*720;i?ctx.lineTo(X,Y):ctx.moveTo(X,Y)});ctx.closePath();outl('#9fdc8a',9);
- const pin=back(prog(u,.7,1.2));ctx.save();ctx.translate(-45,230);ctx.scale(pin,pin);ctx.beginPath();ctx.moveTo(0,0);ctx.bezierCurveTo(-34,-44,-30,-84,0,-84);ctx.bezierCurveTo(30,-84,34,-44,0,0);outl('#ff5a5a',5);ctx.beginPath();ctx.arc(0,-56,12,0,TAU);outl('#fff',3);ctx.restore();ctx.restore();
+S(40.2,45.5,(t,u,p)=>{skyGrad('#bfe9ff','#e8ffe0');const pc=back(prog(u,0,.6));
+ if(IMG.tw){const h=780,w=IMG.tw.width/IMG.tw.height*h;ctx.save();ctx.translate(560,520);ctx.scale(.9+pc*.1,.9+pc*.1);ctx.shadowColor='rgba(74,50,38,.2)';ctx.shadowBlur=18;ctx.shadowOffsetY=8;ctx.drawImage(IMG.tw,-w/2,-h/2,w,h);ctx.restore()}
  text('高雄・美濃',1300,230,{size:100,col:C.tomato,alpha:prog(u,.9,1.4)});
  infoCard(1300,520,820,340,'美濃小檔案',['全高雄最大的小番茄產區','種植面積約 130 公頃'],prog(u,1.4,2),{col:C.leaf,ts:56,ls:46,lh:66,top:112});
 
