@@ -436,24 +436,24 @@ SC.chorus=function(t,variant=0){
   // 音符
   for(let i=0;i<10;i++){const a=((t*.35+i/10)%1);note(160+hash(i)*960,640-a*600,1.1,[HOT,TEAL,RED,ORCHID][i%4],Math.sin(t*2+i)*.3,i%3===0)}
   // 亮晃晃（L3）
-  if(k===2){const f=Math.abs(Math.sin((t-T[2])*3))*.25*ease((t-T[2])/.2);c.fillStyle=`rgba(255,255,255,${f})`;c.fillRect(0,0,W,H)}
+  if(k===2){const f=Math.abs(Math.sin((t-T[2])*3))*.12*ease((t-T[2])/.5);c.fillStyle=`rgba(255,255,255,${f})`;c.fillRect(0,0,W,H)}
   // 美蘭
   const base=k===2||k===3?'laugh':'happy';let ex=mouth(t,base);
   const o={x:640,y:612+bounce(t,14),s:.44,expr:ex,L:[40+sway(t,2)*10,'open'],R:[40-sway(t,2)*10,'open'],tilt:sway(t,2)*5};
   // 女兒在「美蘭啊，我為妳唱」與「願妳笑得像陽光」兩句出現：從旁跑進來一起唱，第三句前跑出去
-  const dIn=runIn(t,T[0]-.15,.9), dOut=ease((t-(T[2]-.15))/.7), dv=dIn*(1-dOut), side=variant===1?-1:1;
+  const dIn=runIn(t,T[0]-.15,.9), dOut=ease((t-(T[2]-.3))/1.0), dv=dIn*(1-dOut), side=variant===1?-1:1;
   const dx=lerp(side>0?1480:-200,640+side*270,dv>0?(dOut>0?1-dOut:dIn):0);
-  const showD=t>T[0]-.2&&t<T[2]+.6;
+  const showD=t>T[0]-.2&&t<T[2]+.9;
   const shift=showD?-side*130*(dOut>0?1-dOut:dIn):0;                       // 她來了，媽媽往旁邊讓一點
   if(k===0){Object.assign(o,danceArms(t,105,22,'open',2));o.x=640+shift+stepX(t,26,4)}                         // 美蘭啊：雙手張開邊唱邊踏步
   if(k===1){const up=145+Math.sin(t*6)*8;o.L=[up,'open'];o.R=[up,'open'];o.x=640+shift;o.y+=hopY(t,10);o.tilt=GS(t,2)*7} // 笑得像陽光：高舉雙手
-  if(k===2){o.L=[50,'thumb'];o.R=[130+Math.sin(t*7)*10,'open'];o.tilt=Math.sin(t*3)*6;o.x=640+stepX(t,30,4)}   // 臉就亮：比讚加揮手
-  if(k===3){Object.assign(o,danceArms(t,95,30,'open',1));o.tilt=GS(t,2)*8;o.x=640+stepX(t,36,4);o.y+=hopY(t,10)} // 嘴角揚：左右擺動
+  if(k===2){o.L=[50,'thumb'];o.R=[130+Math.sin(t*7)*10,'open'];o.tilt=Math.sin(t*3)*6;o.x=640+shift+stepX(t,30,4)}   // 臉就亮：比讚加揮手
+  if(k===3){Object.assign(o,danceArms(t,95,30,'open',1));o.tilt=GS(t,2)*8;o.x=640+shift+stepX(t,36,4);o.y+=hopY(t,10)} // 嘴角揚：左右擺動
   if(variant===2&&k===1){o.L=[160,'open'];o.R=[160,'open']}
   mom(o);
   if(showD){const dEx=mouth(t,'laugh');const dyb=hopY(t,k===0?12:16);
     const dp=k===0?danceArms(t,100,26,'open',2,1):{L:[150+Math.sin(t*6+1)*8,'open'],R:[150-Math.sin(t*6+1)*8,'open']};
-    if(variant===2){const pa=back((t-T[0]+.1)/.5);pup('girl',Object.assign({x:640+270,y:612+dyb,s:.36*pa*(1-dOut),expr:dEx,flip:true,tilt:GS(t,2)*6},dp))}
+    if(variant===2){const pa=back((t-T[0]+.1)/.5);pup('girl',Object.assign({x:lerp(640+270,1520,dOut),y:612+dyb,s:.36*pa,expr:dEx,flip:true,tilt:GS(t,2)*6},dp))}
     else pup('girl',Object.assign({x:dx,y:612+dyb,s:.36,expr:dEx,flip:side>0,tilt:GS(t,2)*6},dp))}
   if(k===0)ring(640,190,t,T[0],4,'#FFFFFF',380,8);
   if(k===3){for(let i=0;i<5;i++){const a=((t-T[3])*.8+i*.2)%1;heart(640+Math.sin(i*2.1)*300,400-a*360,1+.4*hash(i),HOT)}}
