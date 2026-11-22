@@ -30,8 +30,10 @@ function mix(a,b,x){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));const
 /* ---------- 素材載入：把圖層先轉成點陣（加速）---------- */
 const RS=0.7, LAY={};
 const OUTFITS=['daily','hakka','apron','redtang','mint','stripe','dress'];
-const GIRL_OUTFITS=['tomato','sky','sun'];
-let CUR_GIRL='tomato';
+const GIRL_OUTFITS=['cardi','cardi2','overall','overall2'];
+// 女兒各套服裝：肩膀樞紐、手臂是否在身體後面（短袖款：手臂從袖子下伸出）
+const GIRL_PIV={cardi:{L:[307,655],R:[597,655],behind:false},cardi2:{L:[307,655],R:[597,655],behind:false},overall:{L:[308,770],R:[596,770],behind:true},overall2:{L:[308,770],R:[596,770],behind:true}};
+let CUR_GIRL='overall';
 async function rasterURL(key,url,w,h){
   const img=new Image(); img.src=url; await img.decode();
   const o=document.createElement('canvas'); o.width=Math.round(w*RS); o.height=Math.round(h*RS);
@@ -134,10 +136,13 @@ function pup(key,o){
   if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(o.x,o.y+4,170*s*Math.abs(o.sx||1),22*s,0,0,TAU);c.fill()}
   c.translate(o.x,o.y);c.scale(s*(o.flip?-1:1)*(o.sx||1),s*(o.sy||1));c.rotate((o.rot||0)*PI/180);c.translate(-D.feet[0],-D.feet[1]);
   const k=1/RS,draw=(n)=>c.drawImage(LAY[n],0,0,LAY[n].width*k,LAY[n].height*k);
-  const pre=key==='girl'?`girl_${o.outfit||CUR_GIRL}`:key;                    // 女兒：夏季短袖
+  const oid=key==='girl'?(o.outfit||CUR_GIRL):null, pre=key==='girl'?`girl_${oid}`:key, PIVS=key==='girl'?GIRL_PIV[oid]:D.piv;
+  const arms=()=>{for(const side of ['L','R']){const a=o[side]||[0,'fist'];c.save();c.translate(PIVS[side][0],PIVS[side][1]);c.rotate((side==='L'?a[0]:-a[0])*PI/180);
+    c.drawImage(LAY[`${pre}_arm${side}_${a[1]}`],-170,-110,340,760);c.restore()}};
+  const behind=key==='girl'&&GIRL_PIV[oid].behind;
+  if(behind)arms();
   draw(pre+'_body');
-  for(const side of ['L','R']){const a=o[side]||[0,'fist'];c.save();c.translate(D.piv[side][0],D.piv[side][1]);c.rotate((side==='L'?a[0]:-a[0])*PI/180);
-    c.drawImage(LAY[`${pre}_arm${side}_${a[1]}`],-170,-110,340,760);c.restore()}
+  if(!behind)arms();
   c.save();c.translate(D.neck[0],D.neck[1]);c.rotate((o.tilt||0)*PI/180);c.translate(-D.neck[0],-D.neck[1]);
   draw(key+'_head');draw(`${key}_face_${o.expr||'smile'}`);c.restore();
   c.restore();
@@ -692,9 +697,9 @@ function subtitle(t){
 /* ---------- 主繪製：換場 + 鏡頭 ---------- */
 const OUTFIT_BY={intro:'daily',v1:'hakka',v2:'apron',chorus:'stripe',bridge:'redtang',v1r:'dress',v2r:'apron',chorus2:'stripe',bridge2:'redtang',final:'dress',refrain:'redtang',outro:'daily',dance:'mint'};
 const EYES_BY={intro:'open',v1:'open',v2:'open',chorus:'arc',bridge:'arc',v1r:'open',v2r:'open',chorus2:'arc',bridge2:'arc',final:'arc',refrain:'arc',outro:'open',dance:'arc'};
-const GIRL_BY={intro:'tomato',v1:'tomato',v2:'tomato',chorus:'tomato',bridge:'sky',dance:'sun',v1r:'tomato',v2r:'tomato',chorus2:'sky',bridge2:'tomato',final:'sun',refrain:'sky',outro:'tomato'};
+const GIRL_BY={intro:'overall',v1:'overall',v2:'overall',chorus:'overall',bridge:'cardi',dance:'overall2',v1r:'overall',v2r:'overall',chorus2:'cardi2',bridge2:'overall',final:'cardi',refrain:'overall2',outro:'cardi'};
 function drawScene(i,t){
-  CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';CUR_T=t;CUR_GIRL=GIRL_BY[SECS[i].k]||'tomato';
+  CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';CUR_T=t;CUR_GIRL=GIRL_BY[SECS[i].k]||'overall';
   CUR_EYES=EYES_BY[SECS[i].k]||'arc';if(SECS[i].k==='outro'&&t>SECS[i].t[3])CUR_EYES='arc';   // 結尾「看到梅蘭，就想到你」起換成笑眼
   c.save();
   const key=SECS[i].k,T=SECS[i].t;
