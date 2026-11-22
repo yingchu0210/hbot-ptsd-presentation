@@ -39,6 +39,12 @@ async function loadAll(){
   const jobs=[rasterURL('head','rig3/head.png',1103,1426)];
   for(const k of OUTFITS) jobs.push(rasterURL('body_'+k,`rig3/body_${k}.png`,1103,1426));
   for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`arm${sd}_${h}`,`rig3/arm${sd}_${h}.svg`,340,760));
+  for(const [k,W_,H_,scarf] of [['dad',1056,1490,0],['girl',1116,1410,1]]){
+    jobs.push(rasterURL(k+'_body',`rig_family/${k}_body.svg`,W_,H_),rasterURL(k+'_head',`rig_family/${k}_head.svg`,W_,H_));
+    if(scarf) jobs.push(rasterURL(k+'_scarf',`rig_family/${k}_scarf.svg`,W_,H_));
+    for(const e of ['smile','happy','laugh','shy','sad','wow']) jobs.push(rasterURL(`${k}_face_${e}`,`rig_family/${k}_face_${e}.svg`,W_,H_));
+    for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`${k}_arm${sd}_${h}`,`rig_family/${k}_arm${sd}_${h}.svg`,340,760));
+  }
   await Promise.all(jobs);
   if(document.fonts){const all=SECS.map(x=>x.L.join('')).join('')+'獻給最愛的媽！開飯囉對啊真的是喔好～';await Promise.all([document.fonts.load(`40px ${FONT}`,all),document.fonts.load(`900 40px ${SERIF}`,'美蘭，我愛你獻給最愛的媽福！'),document.fonts.load(`900 40px ${SERIF}`,'嗓門超嘹亮')]).catch(()=>{});await document.fonts.ready}
 }
@@ -111,6 +117,24 @@ function mom(o){
   draw('body_'+outfit);
   c.save();c.translate(PV.neck[0],PV.neck[1]);c.rotate((o.tilt||0)*PI/180);c.translate(-PV.neck[0],-PV.neck[1]);
   draw('head');faceDraw(o.expr||'smile',o.mopen);c.restore();
+  c.restore();
+}
+/* ---------- 爸爸「運來」、女兒（角色包原圖層）---------- */
+const FAM={
+  dad :{W:1056,H:1490,neck:[455,585],piv:{L:[262,762],R:[638,762]},feet:[450,1441],scarf:false},
+  girl:{W:1116,H:1410,neck:[440,590],piv:{L:[336,700],R:[544,700]},feet:[440,1410],scarf:true}
+};
+function pup(key,o){
+  const D=FAM[key],s=o.s||.38;c.save();
+  if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(o.x,o.y+4,170*s*(o.sx||1),22*s,0,0,TAU);c.fill()}
+  c.translate(o.x,o.y);c.scale(s*(o.flip?-1:1)*(o.sx||1),s*(o.sy||1));c.rotate((o.rot||0)*PI/180);c.translate(-D.feet[0],-D.feet[1]);
+  const k=1/RS,draw=(n)=>c.drawImage(LAY[n],0,0,LAY[n].width*k,LAY[n].height*k);
+  draw(key+'_body');
+  for(const side of ['L','R']){const a=o[side]||[0,'fist'];c.save();c.translate(D.piv[side][0],D.piv[side][1]);c.rotate((side==='L'?a[0]:-a[0])*PI/180);
+    c.drawImage(LAY[`${key}_arm${side}_${a[1]}`],-170,-110,340,760);c.restore()}
+  if(D.scarf)draw(key+'_scarf');
+  c.save();c.translate(D.neck[0],D.neck[1]);c.rotate((o.tilt||0)*PI/180);c.translate(-D.neck[0],-D.neck[1]);
+  draw(key+'_head');draw(`${key}_face_${o.expr||'smile'}`);c.restore();
   c.restore();
 }
 // 唱歌嘴型：依歌詞逐字開合

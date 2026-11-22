@@ -1,0 +1,62 @@
+{
+  "_readme": "好運來蕃茄園 三位角色設定。座標單位＝圖層像素（每個角色的畫布 W×H 內）。所有圖層（body/head/face/scarf）畫布大小相同，直接疊在 (0,0) 即可對位；手臂圖層則以「肩膀樞紐」為原點。",
+  "style": {
+    "look": "Q 版卡通、粗而均勻的深褐色描線、平塗上色、圓圓粉紅腮紅",
+    "note": "原創卡通，只保留外型特徵，非寫實肖像",
+    "arm_layer_viewbox": [-170, -110, 340, 760],
+    "layer_order": ["body", "arm L", "arm R", "scarf (girl only)", "head", "face"],
+    "angle_convention": "角度 0＝手臂自然下垂；90＝向外水平伸直；150＝高舉過頭。左臂用 +角度、右臂用 −角度旋轉（鏡像對稱）。",
+    "expressions": ["smile", "happy", "laugh", "shy", "sad", "wow"],
+    "expressions_zh": {"smile": "微笑", "happy": "開心瞇眼", "laugh": "大笑", "shy": "靦腆", "sad": "擔憂", "wow": "驚喜"},
+    "hands": ["fist", "open", "thumb"],
+    "hands_zh": {"fist": "握拳／自然垂放", "open": "張開／揮手", "thumb": "豎大拇指／比讚"},
+    "mv_name_mapping": {"relaxed": "fist", "hold": "fist", "wave": "open", "thumbsup": "thumb"}
+  },
+  "characters": {
+    "dad": {
+      "name": "爸爸「運來」", "en": "Dad", "role": "番茄園主人，「好運來」名字的由來",
+      "canvas": {"W": 1056, "H": 1490},
+      "feet_anchor": [450, 1441], "neck_pivot": [455, 585],
+      "shoulder_pivot": {"L": [262, 762], "R": [638, 762]},
+      "mv_scale": 0.575,
+      "has_scarf_layer": false,
+      "ink": "#3d2216",
+      "palette": {"T 恤藍": "#4e739e", "長褲灰": "#807874", "膚色": "#fbbc8d", "銀白髮": "#bdb3af", "工作鞋棕": "#774f3b", "眉毛灰": "#8c837e"},
+      "features": ["頭頂光亮，兩側與耳後留毛茸茸的銀白短髮", "灰色粗眉、小眼睛，眼角有魚尾紋", "圓潤臉頰帶紅暈，笑起來露出牙齒", "藍色寬鬆圓領 T 恤、灰色長褲、棕色工作鞋"],
+      "signature": "摘下番茄在衣服上擦一擦就直接吃"
+    },
+    "mom": {
+      "name": "媽媽", "en": "Mom", "role": "用鮮牛奶加自家配方澆灌小番茄的人",
+      "canvas": {"W": 1103, "H": 1426},
+      "feet_anchor": [560, 1384], "neck_pivot": [560, 565],
+      "shoulder_pivot": {"L": [455, 650], "R": [665, 650]},
+      "mv_scale": 0.61,
+      "has_scarf_layer": false,
+      "ink": "#1c110c",
+      "palette": {"帽子粉": "#f9a2b8", "上衣青綠": "#37bcb3", "袖套藍": "#2364b6", "手套灰紫": "#87859f", "長褲淺藍": "#a9d8ef", "捲髮": "#debd93", "膚色": "#fdd0a8"},
+      "features": ["粉紅寬簷遮陽帽，白色下巴繫帶，兩側粉紅布簾", "帽下露出淺棕色捲髮，笑瞇瞇", "青綠長袖衫配蝴蝶圖案，深藍防曬袖套、灰紫色工作手套", "淺藍花葉紋長褲、白色球鞋"],
+      "signature": "提著鮮奶瓶澆灌小番茄"
+    },
+    "girl": {
+      "name": "女兒", "en": "Daughter", "role": "從台北回高雄當後援、架起 LINE 官方帳號的人",
+      "canvas": {"W": 1116, "H": 1410},
+      "feet_anchor": [440, 1410], "neck_pivot": [440, 590],
+      "shoulder_pivot": {"L": [336, 700], "R": [544, 700]},
+      "mv_scale": 0.60,
+      "has_scarf_layer": true,
+      "ink": "#33211a",
+      "palette": {"外套粉": "#fc7aa1", "圍巾橘": "#fc640c", "髮色": "#594234", "長褲": "#403e50", "球鞋白": "#ffffff", "膚色": "#fcceab", "領口帽": "#f98db1", "袖口": "#c8ccd6", "斜背包": "#2c2c32"},
+      "features": ["深褐色及下巴鮑伯，中分、細瀏海，耳朵露出", "臉型寬而圓，粉紅腮紅，眼睛圓圓的", "粉紅羽絨外套（格子絎縫）、橘紅流蘇圍巾", "黑色斜背小包、深色長褲、白色球鞋"],
+      "signature": "手指向前介紹、單手比讚、拿手機（LINE）",
+      "known_limit": "眉毛是原圖自帶的細線，夾在瀏海裡，表情圖層不會動眉毛"
+    }
+  },
+  "brand_story": {
+    "farm": "好運來蕃茄園（高雄美濃），專賣橙蜜香與玉女小番茄",
+    "name_origin": "爸爸的名字叫「運來」，所以叫「好運來」",
+    "slogan": "吃顆好運來，好運一直來",
+    "line": "https://lin.ee/NIcBKDs",
+    "facebook": "https://www.facebook.com/share/1DknhYVL9y/"
+  },
+  "mascots": {"note": "紅色玉女、橙黃橙蜜香兩隻番茄吉祥物以程式繪製，程式在 lucky-tomato-mv-src/kit.js（mascotSVG 函式），不在本角色包內。"}
+}
