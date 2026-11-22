@@ -52,6 +52,7 @@ async function loadAll(){
   // 女兒的夏季短袖服裝（取代原本的羽絨外套＋圍巾）
   for(const g of GIRL_OUTFITS){jobs.push(rasterURL(`girl_${g}_body`,`rig3/girl_${g}_body.png`,1116,1410));
     for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`girl_${g}_arm${sd}_${h}`,`rig3/girl_${g}_arm${sd}_${h}.svg`,340,760));}
+  jobs.push((async()=>{CAISHEN=new Image();CAISHEN.src='assets/caishen_'+(new URLSearchParams(location.search).get('cs')||'a')+'.png';await CAISHEN.decode()})());
   jobs.push((async()=>{BOUQUET=new Image();BOUQUET.src='assets/bouquet.png';await BOUQUET.decode()})());
   await Promise.all(jobs);
   if(document.fonts){const all=SECS.map(x=>x.L.join('')).join('')+'獻給最愛的媽！開飯囉對啊真的是喔好～';await Promise.all([document.fonts.load(`40px ${FONT}`,all),document.fonts.load(`900 40px ${SERIF}`,'美蘭，我愛你獻給最愛的媽福！'),document.fonts.load(`900 40px ${SERIF}`,'嗓門超嘹亮')]).catch(()=>{});await document.fonts.ready}
@@ -475,7 +476,7 @@ SC.bridge=function(t,variant=0){
   // 財神：L2 探頭 → L3 登場鼓掌
   const ca=k===0?0:k===1?ease((t-T[1])/.7)*.7:1;
   if(k>=1){const cx=lerp(1280+120,k>=3?1100:980,easeOut((t-T[1])/(k===1?1.6:.8)));const cy=330+Math.sin(t*3)*8+(k===1?60:0)-(k>=2?0:0);
-    c.save();cloud(cx,cy+190,2.4,'#FFF2D6',.95);caishen(cx,cy,1.05,t);c.restore()}
+    caishenImg(cx,cy+270+Math.sin(t*2.2)*8,t,400)}
   // 金幣雨（L4 最盛）
   const rain=k===3?1:k===2?.35:0;
   const N=Math.floor(60*rain);
@@ -522,6 +523,10 @@ SC.refrain=function(t){
 function pupHand(key,o,side){const D=FAM[key],a=((o[side]||[0])[0])*PI/180,th=side==='L'?a:-a,d=key==='dad'?340:440,sc=o.s||.38;
   const lx=D.piv[side][0]-D.feet[0]-d*Math.sin(th),ly=D.piv[side][1]-D.feet[1]+d*Math.cos(th);
   return [o.x+lx*sc*(o.flip?-1:1),o.y+ly*sc]}
+let CAISHEN=null;   // 財神（使用者提供的圖，自帶雲朵與元寶）
+function caishenImg(x,y,t,hgt=400){const sx=223,sy=133,sw=785,sh=1010,w=hgt*sw/sh;
+  c.save();c.translate(x,y);c.rotate(Math.sin(t*2.4)*.035);const sq=1+pulse(t)*.03;c.scale(sq,2-sq);
+  c.drawImage(CAISHEN,sx,sy,sw,sh,-w/2,-hgt,w,hgt);c.restore()}
 let BOUQUET=null;   // 爸爸送的花束（使用者提供的圖）
 function bouquet(x,y,sc,t){if(!BOUQUET)return;const w=250*sc,h=w*BOUQUET.height/BOUQUET.width;
   c.save();c.translate(x,y);c.rotate(.22+Math.sin(t*3)*.04);c.drawImage(BOUQUET,-.31*w,-.88*h,w,h);c.restore()}
