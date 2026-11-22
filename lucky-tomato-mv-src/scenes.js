@@ -37,8 +37,10 @@ function stageBG(t,c1,c2){const pal=STAGE[STAGEMAP[c1]||'warm'];skyGrad(pal[0],p
 function bigWord(s,x,y,p,col,sz=150,rot=0){if(p<=0)return;ctx.save();ctx.translate(x,y);ctx.rotate(rot);const sc=back(p);ctx.scale(sc,sc);text(s,0,0,{size:sz,col,stroke:'#fff',sw:sz*.2});ctx.restore()}
 function windowFrame(x,y,w,h,active,pr){ctx.save();ctx.translate(x,y);ctx.beginPath();rr(-w/2,-h/2,w,h,28);ctx.fillStyle=active?'#fff6d8':'#ffe6c9';ctx.fill();ctx.lineWidth=active?10:6;ctx.strokeStyle=active?'#ff8a3d':INKC;ctx.stroke();ctx.restore()}
 
-function logo(x,y,sc0,p,t,o={}){if(p<=0)return;ctx.save();ctx.translate(x,y);const sc=back(p)*sc0*(1+pulse(t)*.025);ctx.scale(sc,sc);text('好運來小番茄',0,0,{size:150,col:C.tomato});
- if(o.rib!==false){const tx=o.rib||'美濃・玉女 × 橙蜜香';ctx.font=`42px ${FONT}`;const w=ctx.measureText(tx).width+130;ctx.save();ctx.translate(0,118);ctx.beginPath();rr(-w/2,-36,w,72,36);outl(C.leaf,5);text(tx,0,3,{size:42,col:'#FFF6E0',stroke:false});ctx.restore()}ctx.restore()}
+function logo(x,y,sc0,p,t,o={}){if(p<=0)return;ctx.save();ctx.translate(x,y);const sc=back(p)*sc0*(1+pulse(t)*.025);ctx.scale(sc,sc);text('好運來小番茄',0,0,{size:150,col:C.tomato,sp:2});
+ if(o.rib!==false){const tx=o.rib||'美濃・玉女 × 橙蜜香';ctx.font=`700 42px ${FONT}`;ctx.save();ctx.letterSpacing='5px';const w=ctx.measureText(tx).width+120;ctx.restore();ctx.save();ctx.translate(0,122);ctx.beginPath();rr(-w/2,-37,w,74,37);outl(C.leafTx,5);
+  ctx.save();ctx.clip();const g=ctx.createLinearGradient(0,-37,0,37);g.addColorStop(0,'rgba(255,255,255,.22)');g.addColorStop(.5,'rgba(255,255,255,0)');ctx.fillStyle=g;ctx.fillRect(-w/2,-37,w,74);ctx.restore();
+  text(tx,0,2,{size:42,col:C.paper,stroke:false,w:700,sp:5});ctx.restore()}ctx.restore()}
 function basket(x,y,sc,n,t,fc){fc=fc||C.tomato;ctx.save();ctx.translate(x,y);ctx.scale(sc,sc);
  // back rim
  ctx.beginPath();ctx.ellipse(0,-6,150,34,0,0,TAU);outl('#9a6a38',6);
@@ -56,7 +58,7 @@ const SCENES=[];
 const S=(a,b,f,o={})=>SCENES.push(Object.assign({a,b,f},o));
 
 // 0 intro
-S(0,2.04,(t,u,p)=>{farm(t,{sky1:'#9CC7F0',sky2:'#FFE0C2',sy:560-p*300,sx:960,sr:70,rows:true,mtn:['#8a9cc8','#7aa6a8','#68a58a']});
+S(0,2.04,(t,u,p)=>{farm(t,{sky1:'#9CC7F0',sky2:'#FFE0C2',sy:540-p*260,sx:1700,sr:70,rows:true,mtn:['#9CC4C8','#82B7A0','#6EAB84']});
  logo(960,330,1.05,prog(u,.4,1.2),t);
  mdance('red',420,GY+30,.9,t,{expr:'happy'});mdance('orange',1500,GY+30,.9,t,{expr:'happy',flip:-1,ph:1.5});},{zoom:.02,iris:false});
 
@@ -129,9 +131,9 @@ S(24.41,26.68,(t,u,p)=>{stageBG(t,'#ffe7a8','#fff3d6');person('dad',{x:700,y:GY+
 S(26.68,28.92,(t,u,p)=>{stageBG(t,'#e7d6ff','#ffe9d6');person('mom',{x:960,y:GY+30,s:.86,expr:'happy',aL:[70,'relaxed'],aR:[70,'relaxed'],tilt:Math.sin(t*2)*.05,bob:-pulse(t)*8});
  for(let k=0;k<3;k++){ctx.strokeStyle=['#ff9ab4','#ffd84a','#8fd3b0'][k];ctx.lineWidth=14;ctx.lineCap='round';ctx.beginPath();for(let i=0;i<=40;i++){const q=i/40,yy=500-q*360-((t*60)%0),xx=960+Math.sin(q*9+k*2+t*2)*(60+q*180)*(k-1?1:-1);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)}ctx.globalAlpha=.8;ctx.stroke();ctx.globalAlpha=1}
  for(let i=0;i<8;i++){const q=((u*.5+i/8)%1);sparkle(960+Math.sin(i*2)*320,520-q*420,16+hash(i)*14,['#ffd84a','#ff9ab4','#fff'][i%3])}
- text('嘴裡還留香',480,260,{size:70,col:'#a96bd6',rot:-.1});heart(1500,280,40);},{zoom:.04});
+ text('嘴裡還留香',500,250,{size:84,col:'#E04F7A',rot:-.08});heart(1500,280,40);},{zoom:.04});
 S(28.92,30.65,(t,u,p)=>{stageBG(t,'#d9f6c9','#fff6d8');mdance('red',640,GY+30,1.0,t,{expr:'happy'});mdance('orange',1280,GY+30,1.0,t,{expr:'happy',ph:2,flip:-1});
- const items=[['C','維他命 C',C.orange],['♥','健康','#ff6f86'],['葉','低熱量','#5aab55']];items.forEach(([s,l,c],i)=>{const q=back(prog(u,.1+i*.25,.6+i*.25));if(q<=0)return;ctx.save();ctx.translate(380+i*580,330+Math.sin(t*3+i)*12);ctx.scale(q,q);if(i===2&&IMG.kcal){const bw=IMG.kcal.width,k=(2*130+14)/(bw*.70);ctx.drawImage(IMG.kcal,-bw*k/2,-IMG.kcal.height*k/2+2,bw*k,IMG.kcal.height*k)}else{ctx.beginPath();ctx.arc(0,0,130,0,TAU);outl(c,8);text(s,0,-6,{size:130,col:'#fff',stroke:INKC})}ctx.restore();text(l,380+i*580,520,{size:68,col:INKC,alpha:q})})});
+ const items=[['C','維他命 C',C.orange],['♥','健康','#ff6f86'],['葉','低熱量','#5aab55']];items.forEach(([s,l,c],i)=>{const q=back(prog(u,.1+i*.25,.6+i*.25));if(q<=0)return;ctx.save();ctx.translate(380+i*580,330+Math.sin(t*3+i)*12);ctx.scale(q,q);if(i===2&&IMG.kcal){const bw=IMG.kcal.width,k=(2*130+14)/(bw*.70);ctx.drawImage(IMG.kcal,-bw*k/2,-IMG.kcal.height*k/2+2,bw*k,IMG.kcal.height*k)}else{ctx.beginPath();ctx.arc(0,0,130,0,TAU);outl(c,8);text(s,0,-6,{size:130,col:'#fff',stroke:INKC})}ctx.restore();text(l,380+i*580,524,{size:62,col:INKT,alpha:q,stroke:false,w:900,sp:3})})});
 S(30.65,33.1,(t,u,p)=>{stageBG(t,'#fff0a8','#ffd1b8');spot(960,500,800,.4);confetti(t,60,1);
  logo(960,150,.95,prog(u,0,.5),t);clover(960,440,52,Math.sin(t*2)*.2);
  mdance('red',420,GY+30,1.05,t,{expr:'sing'});mdance('orange',1500,GY+30,1.05,t,{expr:'sing',flip:-1,ph:2});dancer('girl',700,GY+20,.57,t,{ph:1});dancer('mom',1220,GY+20,.57,t,{ph:2});stamp(1660,180,80,prog(u,.8,1.3));});
@@ -144,7 +146,7 @@ S(35.0,37.8,(t,u,p)=>{stageBG(t,'#ffb8d4','#fff0a8');spot(960,520,900,.4);
 S(37.8,40.2,(t,u,p)=>{const day=p;const c1=lerp(0,1,Math.sin(p*Math.PI));{const e=ease(prog(p,.2,.95));const a1=e<.5?mixc('#A9DDFF','#FFD9B8',e*2):mixc('#FFD9B8','#FFB38F',(e-.5)*2),a2=e<.5?mixc('#F4F8DD','#FFF1CF',e*2):mixc('#FFF1CF','#FFE9C2',(e-.5)*2);skyGrad(a1,a2)}const a=p*Math.PI;sunDraw(300+p*1300,700-Math.sin(a)*500,70,t);cloud(500,200,1.2);ground('#bfe6a0','#8fcf7a',790);
  ctx.fillStyle='#ffe0b0';ctx.beginPath();rr(640,720,640,40,10);outl('#ffcf8a',6);carton(960,690,.7);
  dancer('dad',500,GY+20,.6,t,{ph:1,aL:30,aR:30,hand:'relaxed'});dancer('girl',1420,GY+20,.6,t,{ph:2,aL:30,aR:30,hand:'relaxed',flip:-1});
- ctx.save();ctx.translate(960,250);ctx.beginPath();rr(-150,-110,300,220,20);outl('#fffdf4',6);ctx.beginPath();rr(-150,-110,300,60,20);outl(C.tomato,6);text('每一天',0,-80,{size:44,col:'#fff',stroke:false});text(String(1+Math.floor(p*6)),0,30,{size:120,col:C.tomato,stroke:false});ctx.restore()});
+ ctx.save();ctx.translate(960,250);ctx.beginPath();rr(-150,-110,300,220,20);outl('#fffdf4',6);ctx.beginPath();rr(-150,-110,300,60,20);outl(C.tomato,6);text('每一天',0,-80,{size:44,col:C.paper,stroke:false,w:900,sp:4});text(String(1+Math.floor(p*6)),0,30,{size:120,col:C.tomatoTx,stroke:false,w:900});ctx.restore()});
 
 // 5 interlude: facts
 S(40.2,45.5,(t,u,p)=>{skyGrad('#bfe9ff','#e8ffe0');const pc=back(prog(u,0,.6));
@@ -155,18 +157,18 @@ S(40.2,45.5,(t,u,p)=>{skyGrad('#bfe9ff','#e8ffe0');const pc=back(prog(u,0,.6));
  mdance('red',1240,GY+30,.9,t,{expr:'happy'});mdance('orange',1480,GY+30,.9,t,{expr:'happy',ph:1,flip:-1});},{zoom:.02});
 S(45.5,50.5,(t,u,p)=>{skyGrad('#FFF0CC','#FFF9EA');bokeh(t,12,4,.35);mdance('orange',380,GY+60,1.9,t,{expr:'happy'});
  const pc=back(prog(u,.1,.6));ctx.save();ctx.translate(1180,470);ctx.scale(pc,pc);ctx.shadowColor='rgba(74,50,38,.22)';ctx.shadowBlur=20;ctx.shadowOffsetY=10;ctx.beginPath();rr(-560,-340,1120,720,44);outl('#FFF9EA',6);ctx.shadowColor='transparent';
- ctx.beginPath();rr(-270,-392,540,104,52);outl(C.orange,6);text('橙蜜香',0,-338,{size:78,col:'#FFF6E0',stroke:false});ctx.restore();text('美濃招牌小番茄',1180,222,{size:42,col:'#C76A14',stroke:false,alpha:prog(u,.5,1)});
- const a1=prog(u,.6,1.1);text('盛產期　12 月 ～ 4 月',1180,288,{size:58,col:'#c76a14',alpha:a1});
- for(let i=0;i<12;i++){const m=String(i+1),q=back(prog(u,.8+i*.05,1.2+i*.05));if(q<=0)continue;const on=(i+1<=4)||(i+1===12);ctx.save();ctx.translate(lerp(690,1670,i/11),380);ctx.scale(q,q);ctx.beginPath();rr(-33,-33,66,66,15);outl(on?C.orange:'#f1e6d0',5);text(m,0,0,{size:34,col:on?'#fff':'#a89878',stroke:false});ctx.restore()}
- const mq=prog(u,1.7,2.4);text('甜度 10–11 度',1180,490,{size:64,col:C.tomato,alpha:mq});
+ ctx.beginPath();rr(-270,-392,540,104,52);outl(C.orange,6);text('橙蜜香',0,-338,{size:78,col:C.paper,stroke:false,w:900,sp:6});ctx.restore();text('美濃招牌小番茄',1180,222,{size:42,col:C.brownTx,stroke:false,alpha:prog(u,.5,1),w:700,sp:2});
+ const a1=prog(u,.6,1.1);text('盛產期　12月～4月',1180,288,{size:60,col:C.orangeTx,alpha:a1,stroke:false,w:900,sp:3});
+ for(let i=0;i<12;i++){const m=String(i+1),q=back(prog(u,.8+i*.05,1.2+i*.05));if(q<=0)continue;const on=(i+1<=4)||(i+1===12);ctx.save();ctx.translate(lerp(690,1670,i/11),380);ctx.scale(q,q);ctx.beginPath();rr(-33,-33,66,66,15);outl(on?C.orange:'#f1e6d0',5);text(m,0,0,{size:34,col:on?C.paper:'#A8967A',stroke:false,w:on?900:700});ctx.restore()}
+ const mq=prog(u,1.7,2.4);text('甜度 10–11 度',1180,490,{size:66,col:C.tomatoTx,alpha:mq,stroke:false,w:900,sp:2});
  ctx.beginPath();rr(700,540,960,56,28);outl('#fff4de',6);ctx.save();ctx.beginPath();rr(702,542,956*easeOut(mq)*.74,52,26);ctx.clip();const gg=ctx.createLinearGradient(700,0,1660,0);gg.addColorStop(0,'#ffd27a');gg.addColorStop(1,C.orange);ctx.fillStyle=gg;ctx.fillRect(700,540,960,56);ctx.restore();
- [['酸甜平衡',672],['皮薄多汁、果肉厚實',730],['富含維他命 C、熱量低',788]].forEach(([s2,y],i)=>{const q=prog(u,2.3+i*.4,2.8+i*.4);text('✔ '+s2,780,y-10,{size:46,align:'left',col:INKC,alpha:q,stroke:false})});
+ [['酸甜平衡',672],['皮薄多汁、果肉厚實',730],['富含維他命 C、熱量低',788]].forEach(([s2,y],i)=>{const q=prog(u,2.3+i*.4,2.8+i*.4);ctx.save();ctx.globalAlpha=q;ctx.translate(806,y-10);ctx.beginPath();ctx.arc(0,0,22,0,TAU);outl(C.leaf,4);ctx.strokeStyle=C.paper;ctx.lineWidth=6;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();ctx.moveTo(-9,1);ctx.lineTo(-2,9);ctx.lineTo(11,-8);ctx.stroke();ctx.restore();text(s2,846,y-10,{size:46,align:'left',col:INKT,alpha:q,stroke:false,w:700})});
 },{zoom:.02});
 S(50.5,55.2,(t,u,p)=>{skyGrad('#FFE3DA','#FFF6EE');bokeh(t,12,9,.35);mdance('red',380,GY+60,1.9,t,{expr:'happy'});
  const pc=back(prog(u,.1,.6));ctx.save();ctx.translate(1180,470);ctx.scale(pc,pc);ctx.shadowColor='rgba(74,50,38,.22)';ctx.shadowBlur=20;ctx.shadowOffsetY=10;ctx.beginPath();rr(-560,-340,1120,720,44);outl('#FFF9EA',6);ctx.shadowColor='transparent';
- ctx.beginPath();rr(-290,-392,580,104,52);outl(C.tomato,6);text('玉女小番茄',0,-338,{size:78,col:'#FFF6E0',stroke:false});ctx.restore();text('皮薄香甜',1180,222,{size:42,col:'#A8372A',stroke:false,alpha:prog(u,.5,1)});
+ ctx.beginPath();rr(-290,-392,580,104,52);outl(C.tomato,6);text('玉女小番茄',0,-338,{size:78,col:C.paper,stroke:false,w:900,sp:6});ctx.restore();text('皮薄香甜',1180,222,{size:42,col:C.brownTx,stroke:false,alpha:prog(u,.5,1),w:700,sp:2});
  [['農友種苗 2000 年選育',310],['長橢球形・果皮薄、肉質細緻',420],['糖度通常可達 10 度以上',530],['適合日夜溫差大的秋冬季',640]].forEach(([s2,y],i)=>{const q=back(prog(u,.7+i*.55,1.2+i*.55));if(q<=0)return;ctx.save();ctx.translate(1180,y+10);ctx.scale(q,q);ctx.beginPath();rr(-500,-44,1000,88,32);outl('#fff1ee',5);text(s2,0,0,{size:50,stroke:false});ctx.restore()});
- text('怕雨、容易裂果，所以更需要細心照顧',1180,760,{size:40,col:'#a05a3a',alpha:prog(u,3.0,3.5),stroke:false});
+ text('怕雨、容易裂果，所以更需要細心照顧',1180,760,{size:40,col:C.brownTx,alpha:prog(u,3.0,3.5),stroke:false,w:700});
 },{zoom:.02});
 S(55.2,58.0,(t,u,p)=>{stageBG(t,'#b8e2ff','#F4F8DD');spot(960,500,950,.45);confetti(t,50,11);curtains(prog(u,0,.8),t);
  mdance('red',420,GY+30,1.3,t,{expr:'sing'});mdance('orange',1500,GY+30,1.3,t,{expr:'sing',flip:-1,ph:2});dancer('dad',700,GY+20,.78,t,{ph:0});dancer('mom',960,GY+20,.78,t,{ph:1});dancer('girl',1220,GY+20,.78,t,{ph:2});},{zoom:.05});
@@ -241,11 +243,11 @@ S(102.02,104.7,(t,u,p)=>{skyGrad('#FFE3B8','#FFD3B5');sunDraw(1640,250,150,t,tru
  dancer('dad',380,GY+20,.8,t,{ph:0,hand:'relaxed',aL:100,handL:'thumbsup',aR:34,expr:'happy'});dancer('mom',700,GY+20,.8,t,{ph:1,hand:'relaxed',aL:30,aR:30,expr:'laugh'});dancer('girl',1020,GY+20,.8,t,{ph:2,hand:'relaxed',aL:34,aR:100,handR:'thumbsup',expr:'happy'});mdance('red',1330,GY+30,.9,t,{expr:'happy'});mdance('orange',1510,GY+30,.9,t,{expr:'happy',flip:-1,ph:1});for(let i=0;i<7;i++){const q=((u*.6+i/7)%1);heart(560+i*140,620-q*420,18+q*12,'#ff6f86')}});
 
 // 9 credits
-S(104.7,120.84,(t,u,p)=>{farm(t,{sky1:'#ff9a7a',sky2:'#ffe0a8',sx:960,sy:560+p*120,sr:130,mtn:['#c8a0a8','#a89aa8','#8a9a98'],rows:true});
+S(104.7,120.84,(t,u,p)=>{farm(t,{sky1:'#ff9a7a',sky2:'#ffe0a8',sx:960,sy:560+p*120,sr:130,mtn:['#E3B29B','#C9A08F','#9DAE8F'],rows:true});
  const dim=prog(u,14.6,16.1);
  dancer('dad',720,GY+20,.55,t,{ph:0});dancer('mom',910,GY+20,.55,t,{ph:1,expr:'happy'});dancer('girl',1100,GY+20,.55,t,{ph:2});mdance('red',1260,GY+30,.7,t,{expr:'happy'});mdance('orange',1410,GY+30,.7,t,{expr:'happy',flip:-1,ph:1});
  logo(960,160,.85,prog(u,.2,.9),t,{rib:'好運一直來'});
- const qp=back(prog(u,1.6,2.4));if(qp>0){const card=(cx,M,label,lc,l1)=>{ctx.save();ctx.translate(cx,640);ctx.scale(qp*.78,qp*.78);ctx.shadowColor='rgba(74,50,38,.25)';ctx.shadowBlur=16;ctx.beginPath();rr(-210,-300,420,560,26);outl('#fffdf4',5);ctx.shadowColor='transparent';text(label,0,-250,{size:38,col:lc,stroke:false});const n=M.length,cell=290/n,ox=-145,oy=-195;ctx.fillStyle='#fff';ctx.fillRect(ox-12,oy-12,314,314);ctx.fillStyle='#1c1c1c';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(M[r][c])ctx.fillRect(ox+c*cell,oy+r*cell,cell+.6,cell+.6);text(l1,0,165,{size:30,stroke:false});ctx.restore()};
+ const qp=back(prog(u,1.6,2.4));if(qp>0){const card=(cx,M,label,lc,l1)=>{ctx.save();ctx.translate(cx,640);ctx.scale(qp*.78,qp*.78);ctx.shadowColor='rgba(74,50,38,.25)';ctx.shadowBlur=16;ctx.beginPath();rr(-210,-300,420,560,26);outl('#fffdf4',5);ctx.shadowColor='transparent';text(label,0,-250,{size:36,col:lc,stroke:false,w:900,sp:1});const n=M.length,cell=290/n,ox=-145,oy=-195;ctx.fillStyle='#fff';ctx.fillRect(ox-12,oy-12,314,314);ctx.fillStyle='#1c1c1c';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(M[r][c])ctx.fillRect(ox+c*cell,oy+r*cell,cell+.6,cell+.6);text(l1,0,165,{size:30,stroke:false,w:700,col:INKT});ctx.restore()};
   card(290,QR,'LINE 官方帳號訂購','#06a24a','lin.ee/NIcBKDs');card(1630,QR2,'追蹤 Facebook 粉專','#1877f2','好運來蕃茄園');}
  const cr=0;if(cr>0){ctx.globalAlpha=cr*(1-dim);ctx.beginPath();rr(160,905,1600,130,26);ctx.fillStyle='rgba(255,250,236,.92)';ctx.fill();ctx.strokeStyle=INKC;ctx.lineWidth=4;ctx.stroke();ctx.globalAlpha=1;
   ctx.globalAlpha=cr*(1-dim);text('資料來源：好運來蕃茄園 Facebook 粉專／自由時報（美濃橙蜜香）／聯合新聞網・農糧署（玉女小番茄）',960,950,{size:26,stroke:false});text('歌曲：〈好運來小番茄〉　插畫與動畫：Claude',960,1000,{size:26,stroke:false,col:'#7a6a56'});ctx.globalAlpha=1}

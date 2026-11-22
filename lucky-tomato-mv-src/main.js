@@ -7,12 +7,13 @@ function lyricsOverlay(t){let cur=null;for(const l of TIMING.lyrics){if(t>=l.s-.
  const a=Math.min(prog(t,cur.s-.18,cur.s+.05),prog(t,cur.e+.3,cur.e+.08));const p=cl((t-cur.s)/(cur.e-cur.s-.15));
  ctx.save();ctx.globalAlpha=ease(a)*.9;const sg=ctx.createLinearGradient(0,820,0,H);sg.addColorStop(0,'rgba(255,246,224,0)');sg.addColorStop(.55,'rgba(255,246,224,.62)');sg.addColorStop(1,'rgba(255,246,224,.9)');ctx.fillStyle=sg;ctx.fillRect(0,820,W,H-820);ctx.restore();
  ctx.save();ctx.globalAlpha=ease(a);ctx.translate(0,(1-ease(a))*16);
- const sz=Math.min(90,1500/cur.t.length);ctx.font=`${sz}px ${FONT}`;const w=ctx.measureText(cur.t).width,x0=960-w/2,pw=w+210,ph=126,px=960-pw/2,py=915;
- ctx.shadowColor='rgba(74,50,38,.28)';ctx.shadowBlur=22;ctx.shadowOffsetY=10;ctx.beginPath();rr(px,py,pw,ph,ph/2);ctx.fillStyle='#FFF9EA';ctx.fill();ctx.shadowColor='transparent';ctx.lineWidth=5;ctx.strokeStyle=INKC;ctx.stroke();
- ctx.save();ctx.translate(px+66,py+ph/2+2);ctx.scale(.62,.62);tomatoDraw(0,0,40,C.tomato,{rot:-.3});ctx.restore();ctx.save();ctx.translate(px+pw-66,py+ph/2+2);ctx.scale(.62,.62);tomatoDraw(0,0,40,C.orange,{rot:.3});ctx.restore();
- ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineJoin='round';const ty=py+ph/2+3;ctx.font=`${sz}px ${FONT}`;
- ctx.fillStyle=INKC;ctx.strokeStyle=INKC;ctx.lineWidth=sz*.03;ctx.fillText(cur.t,x0,ty);ctx.strokeText(cur.t,x0,ty);
- ctx.save();ctx.beginPath();ctx.rect(x0-10,py,(w+20)*p,ph);ctx.clip();ctx.fillStyle=C.tomato;ctx.strokeStyle=C.tomato;ctx.fillText(cur.t,x0,ty);ctx.strokeText(cur.t,x0,ty);ctx.restore();
+ const sz=Math.min(88,1400/cur.t.length),SP=3;ctx.font=`700 ${sz}px ${FONT}`;ctx.letterSpacing=SP+'px';const w=ctx.measureText(cur.t).width-SP,x0=960-w/2,pw=w+220,ph=128,px=960-pw/2,py=914;
+ ctx.shadowColor='rgba(59,42,34,.30)';ctx.shadowBlur=24;ctx.shadowOffsetY=11;ctx.beginPath();rr(px,py,pw,ph,ph/2);ctx.fillStyle=C.paper;ctx.fill();ctx.shadowColor='transparent';ctx.lineWidth=5;ctx.strokeStyle=INKC;ctx.stroke();
+ ctx.save();ctx.beginPath();rr(px+6,py+6,pw-12,ph/2-4,(ph/2-4)/2);ctx.clip();const hg=ctx.createLinearGradient(0,py,0,py+ph/2);hg.addColorStop(0,'rgba(255,255,255,.7)');hg.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=hg;ctx.fillRect(px,py,pw,ph/2);ctx.restore();
+ ctx.save();ctx.translate(px+68,py+ph/2+2);ctx.scale(.64,.64);tomatoDraw(0,0,40,C.tomato,{rot:-.3});ctx.restore();ctx.save();ctx.translate(px+pw-68,py+ph/2+2);ctx.scale(.64,.64);tomatoDraw(0,0,40,C.orange,{rot:.3});ctx.restore();
+ ctx.textAlign='left';ctx.textBaseline='middle';ctx.lineJoin='round';const ty=py+ph/2+4;ctx.font=`700 ${sz}px ${FONT}`;ctx.letterSpacing=SP+'px';
+ ctx.fillStyle=INKT;ctx.fillText(cur.t,x0,ty);
+ ctx.save();ctx.beginPath();ctx.rect(x0-10,py,(w+20)*p,ph);ctx.clip();ctx.fillStyle=C.tomatoTx;ctx.fillText(cur.t,x0,ty);ctx.restore();
  ctx.restore()}
 function render(t){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;ctx.fillStyle='#fff3d6';ctx.fillRect(0,0,W,H);
  let sc=SCENES[SCENES.length-1];for(const s of SCENES){if(t>=s.a&&t<s.b){sc=s;break}}

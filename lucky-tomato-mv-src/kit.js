@@ -1,8 +1,11 @@
 // ===== MV kit: sprites + drawing helpers =====
 const W=1920,H=1080;
 const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
-const FONT='"Huninn","WenQuanYi Zen Hei","Noto Sans CJK TC",sans-serif';
-const C={ink:'#4A3226',cream:'#FFF6E0',butter:'#FFE9A8',peach:'#FFD9B8',tomato:'#E8513D',orange:'#F6A43A',leaf:'#5AAB55',leafLt:'#BFE6A0',mint:'#DDF3D2',sky:'#BDE7FF',blush:'#FF8FA3'};
+const FONT='"Zen Maru Gothic","Huninn","WenQuanYi Zen Hei","Noto Sans CJK TC",sans-serif';
+const C={ink:'#4A3226',cream:'#FFF6E0',paper:'#FFF9EA',butter:'#FFE9A8',peach:'#FFD9B8',tomato:'#E5473A',orange:'#F59E2B',leaf:'#4F9E48',leafLt:'#BFE6A0',mint:'#DDF3D2',sky:'#BDE7FF',blush:'#FF8FA3',
+ /* 文字專用色：與填色同色相，但在奶油底上對比 ≥ 4.5:1 */ tomatoTx:'#CF3A2C',orangeTx:'#B85E0C',leafTx:'#2E7D3A',brownTx:'#8A6A52'};
+const INKT='#3B2A22';   // 文字用墨色（比描線棕略深）
+function _mix(a,b,t){const pa=[1,3,5].map(i=>parseInt(a.substr(i,2),16)),pb=[1,3,5].map(i=>parseInt(b.substr(i,2),16));return '#'+pa.map((v,i)=>Math.round(v+(pb[i]-v)*t).toString(16).padStart(2,'0')).join('')}
 const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)),lerp=(a,b,t)=>a+(b-a)*t,prog=(t,a,b)=>cl((t-a)/(b-a));
 const ease=x=>{x=cl(x);return x*x*(3-2*x)},easeOut=x=>{x=cl(x);return 1-Math.pow(1-x,3)},back=x=>{x=cl(x);const c1=1.70158,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2)};
 const hash=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};
@@ -26,7 +29,7 @@ function armSVG(kind,type){const skin=SKIN[kind],glove=kind==='mom'?'#8d86a2':nu
  else{items=[cap(0,216,0,240,46,'#c8ccd6'),cap(0,0,0,222,50,'#e58aa0')];wrist=238}
  const hd=type==='relaxed'?`<g transform="translate(0,${wrist-6})">${hand('relaxed',skin,glove)}</g>`:`<g transform="translate(0,${wrist+34}) rotate(180)">${hand(type==='wave'?'wave':type,skin,glove)}</g>`;
  return hd+stack(items)}
-function mascotSVG(kind,expr){const red=kind==='red',body=red?'#e8513d':'#f6a43a',dk=red?'#a62d22':'#c76a14',lt=red?'#ff8a74':'#ffd07a';
+function mascotSVG(kind,expr){const red=kind==='red',body=red?'#E5473A':'#F59E2B',dk=red?'#a62d22':'#c76a14',lt=red?'#ff8a74':'#ffd07a';
  const rx=red?62:70,ry=red?98:86,cy=176,cx=110;
  const d=`M ${cx},${cy-ry} C ${cx+rx*1.32},${cy-ry} ${cx+rx*1.32},${cy+ry} ${cx},${cy+ry} C ${cx-rx*1.32},${cy+ry} ${cx-rx*1.32},${cy-ry} ${cx},${cy-ry} Z`;
  let leaves='';for(const [a,l] of [[-1.15,40],[-.6,48],[0,54],[.6,48],[1.15,40]]){const x=cx+Math.sin(a)*8,y=cy-ry+8;leaves+=blob(`M ${x},${y} C ${x+Math.sin(a)*l*.9+10},${y-l*.3} ${x+Math.sin(a)*l+4},${y-l*.8} ${x+Math.sin(a)*l*.9},${y-l*.62} C ${x+Math.sin(a)*l*.6-10},${y-l*.2} ${x},${y} ${x},${y} Z`,'#5aab55',{ow:7}).fill.length?'':''}
@@ -74,7 +77,7 @@ function person(k,o){const {x,y,s=1,expr='smile',aL=[0,'relaxed'],aR=[0,'relaxed
 // mascot with procedural arms/legs
 function mascot(kind,o){const {x,y,s=1,expr='smile',rot=0,squash=0,armA=0,legA=0,flip=1}=o;
  ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.scale(s*flip,s);
- const body=kind==='red'?'#e8513d':'#f6a43a';const lw=14;
+ const body=kind==='red'?'#E5473A':'#F59E2B';const lw=14;
  const limb=(x1,y1,x2,y2,w)=>{ctx.lineCap='round';ctx.strokeStyle=INKC;ctx.lineWidth=w+7;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.strokeStyle=body;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()};
  // legs (feet at origin bottom)
  limb(-24,-24,-30+Math.sin(legA)*16,10,12);limb(24,-24,30-Math.sin(legA)*16,10,12);
@@ -86,7 +89,7 @@ function mascot(kind,o){const {x,y,s=1,expr='smile',rot=0,squash=0,armA=0,legA=0
  ctx.restore();ctx.restore()}
 // since mascot sprite origin: place so that feet are at (x,y): sprite height 300, bottom body at ~270
 function mascotAt(kind,o){const oo=Object.assign({},o);ctx.save();ctx.translate(oo.x,oo.y);ctx.scale(oo.s||1,oo.s||1);ctx.rotate(oo.rot||0);
- const s=SPR['m_'+kind+'_'+(oo.expr||'smile')];const body=kind==='red'?'#e8513d':'#f6a43a';
+ const s=SPR['m_'+kind+'_'+(oo.expr||'smile')];const body=kind==='red'?'#E5473A':'#F59E2B';
  const limb=(x1,y1,x2,y2,w)=>{ctx.lineCap='round';ctx.strokeStyle=INKC;ctx.lineWidth=w+7;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.strokeStyle=body;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()};
  const la=oo.legA||0,aa=oo.armA||0,sq=oo.squash||0,fl=oo.flip||1;ctx.scale(fl,1);
  // legs
@@ -100,11 +103,22 @@ function mascotAt(kind,o){const oo=Object.assign({},o);ctx.save();ctx.translate(
 /* ---------- misc draw helpers ---------- */
 function rr(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
 function outl(fill,lw=6,stroke=INKC){ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=lw;ctx.strokeStyle=stroke;ctx.lineJoin='round';ctx.stroke()}
-function text(s,x,y,o={}){const sz=o.size||60;ctx.save();ctx.translate(x,y);if(o.rot)ctx.rotate(o.rot);if(o.sc)ctx.scale(o.sc,o.sc);ctx.font=`${sz}px ${FONT}`;ctx.textAlign=o.align||'center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.miterLimit=2;ctx.globalAlpha*=o.alpha??1;const col=o.col||INKC;
- if(o.stroke!==false){const band=typeof o.stroke==='string'?o.stroke:'#FFF6E0';
-  ctx.save();ctx.translate(0,sz*.05);ctx.strokeStyle='rgba(74,50,38,.26)';ctx.lineWidth=sz*.26;ctx.strokeText(s,0,0);ctx.restore();
-  ctx.strokeStyle=INKC;ctx.lineWidth=sz*.26;ctx.strokeText(s,0,0);ctx.strokeStyle=band;ctx.lineWidth=sz*.155;ctx.strokeText(s,0,0);ctx.fillStyle=col;ctx.fillText(s,0,0)}
- else{ctx.fillStyle=col;ctx.fillText(s,0,0);ctx.strokeStyle=col;ctx.lineWidth=sz*.035;ctx.strokeText(s,0,0)}
+/* 文字配方
+   貼紙字（預設）：奶油光暈＋細深褐邊線＋漸層填色，用於標題與大字，字重 900
+   純色字（stroke:false）：卡片內文字／小標籤，不描邊，字重 700
+   選項：w 字重、sp 字距(px)、stroke 為色碼時＝光暈顏色（深色光暈則只畫粗外框） */
+function text(s,x,y,o={}){const sz=o.size||60,plain=o.stroke===false,w=o.w||(plain?700:900);
+ ctx.save();ctx.translate(x,y);if(o.rot)ctx.rotate(o.rot);if(o.sc)ctx.scale(o.sc,o.sc);
+ ctx.font=`${w} ${sz}px ${FONT}`;ctx.textAlign=o.align||'center';ctx.textBaseline='middle';ctx.lineJoin='round';ctx.miterLimit=2;ctx.globalAlpha*=o.alpha??1;
+ if(o.sp&&('letterSpacing' in ctx))ctx.letterSpacing=o.sp+'px';
+ const col=o.col||INKT;
+ if(plain){ctx.fillStyle=col;ctx.fillText(s,0,0)}
+ else{const halo=typeof o.stroke==='string'?o.stroke:'#FFFBEF',dark=(halo==='#4A3226'||halo==='#3B2A22'),hw=dark?sz*.17:sz*.23;
+  ctx.save();ctx.translate(0,sz*.055);ctx.strokeStyle='rgba(59,42,34,.30)';ctx.lineWidth=hw;ctx.strokeText(s,0,0);ctx.restore();
+  ctx.strokeStyle=halo;ctx.lineWidth=hw;ctx.strokeText(s,0,0);
+  if(!dark){ctx.strokeStyle='#4A3226';ctx.lineWidth=sz*.085;ctx.strokeText(s,0,0)}
+  let fill=col;if(o.grad!==false&&sz>=56&&typeof col==='string'&&/^#[0-9a-fA-F]{6}$/.test(col)){const g=ctx.createLinearGradient(0,-sz*.5,0,sz*.5);g.addColorStop(0,_mix(col,'#FFFFFF',.2));g.addColorStop(.55,col);g.addColorStop(1,_mix(col,'#000000',.1));fill=g}
+  ctx.fillStyle=fill;ctx.fillText(s,0,0)}
  ctx.restore()}
 function sparkle(x,y,r,col='#ffd84a',rot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.beginPath();for(let i=0;i<8;i++){const a=i*Math.PI/4,rad=i%2?r*.28:r;ctx.lineTo(Math.cos(a)*rad,Math.sin(a)*rad)}ctx.closePath();outl(col,3);ctx.restore()}
 function heart(x,y,r,col='#ff6f86'){ctx.save();ctx.translate(x,y);ctx.beginPath();ctx.moveTo(0,r*.9);ctx.bezierCurveTo(-r*1.5,-r*.1,-r*.7,-r*1.2,0,-r*.4);ctx.bezierCurveTo(r*.7,-r*1.2,r*1.5,-r*.1,0,r*.9);ctx.closePath();outl(col,4);ctx.restore()}
@@ -118,7 +132,7 @@ function mountains(y,layers,t,cols){for(let L=0;L<layers;L++){ctx.beginPath();ct
 function tomatoDraw(x,y,r,col,o={}){const long=o.long!==false,rot=o.rot||0;ctx.save();ctx.translate(x,y);ctx.rotate(rot);const rx=long?r*.72:r,ry=long?r*1.15:r;ctx.beginPath();ctx.ellipse(0,0,rx,ry,0,0,TAU);outl(col,Math.max(3,r*.14));
  ctx.fillStyle='rgba(255,255,255,.6)';ctx.beginPath();ctx.ellipse(-rx*.42,-ry*.35,rx*.16,ry*.28,.3,0,TAU);ctx.fill();
  ctx.fillStyle='#4f9e4a';ctx.strokeStyle=INKC;ctx.lineWidth=Math.max(2,r*.08);for(let k=-2;k<=2;k++){ctx.save();ctx.translate(0,-ry+r*.12);ctx.rotate(k*.55);ctx.beginPath();ctx.ellipse(0,-r*.2,r*.13,r*.3,0,0,TAU);ctx.fill();ctx.stroke();ctx.restore()}ctx.restore()}
-function vine(x,y,h,t,o={}){const n=o.n||5,col=o.col||'#e8513d';ctx.save();ctx.translate(x,y);ctx.lineCap='round';
+function vine(x,y,h,t,o={}){const n=o.n||5,col=o.col||'#E5473A';ctx.save();ctx.translate(x,y);ctx.lineCap='round';
  ctx.strokeStyle='#3f8a4a';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(0,0);for(let i=1;i<=10;i++)ctx.lineTo(Math.sin(i*.9+x*.01+t*.8)*10*(i/10),-h*i/10);ctx.stroke();
  for(let i=1;i<10;i+=2){const yy=-h*i/10,xx=Math.sin(i*.9+x*.01+t*.8)*10*(i/10);ctx.save();ctx.translate(xx,yy);ctx.rotate((i%4?1:-1)*(.5+.1*Math.sin(t*1.5+i)));ctx.beginPath();ctx.ellipse(i%4?26:-26,0,28,12,0,0,TAU);outl('#6dbb62',4);ctx.restore()}
  for(let i=0;i<n;i++){const yy=-h*(.25+.65*hash(i+x))+ (o.drop||0),xx=(i%2?1:-1)*(12+10*hash(i*3+x));const rr=o.r||15;tomatoDraw(xx,yy+14,rr,Array.isArray(col)?col[i%col.length]:col,{rot:(i%2?.15:-.15)})}
@@ -128,15 +142,15 @@ function carton(x,y,s,o={}){ctx.save();ctx.translate(x,y);ctx.scale(s,s);if(o.ro
  ctx.beginPath();ctx.moveTo(-150,-80);ctx.lineTo(-110,-130);ctx.lineTo(110,-130);ctx.lineTo(150,-80);ctx.closePath();outl('#f48f78',6);
  ctx.beginPath();rr(-110,-150,220,30,12);ctx.fillStyle='#ff9d85';ctx.fill();ctx.strokeStyle=INKC;ctx.lineWidth=6;ctx.stroke();
  text('美濃',-60,-30,{size:54,col:'#2e9e5b',stroke:'#fffbe9'});text('小番茄',50,-30,{size:46,col:'#f5a623',stroke:'#fffbe9'});text('LUSCIOUS TOMATO',0,28,{size:22,col:'#8a3d22',stroke:false});
- for(let i=0;i<6;i++){tomatoDraw(-110+i*44,-104+(i%2)*6,18,i%2?'#e8513d':'#f6a43a',{rot:(i%2?.2:-.2)})}
+ for(let i=0;i<6;i++){tomatoDraw(-110+i*44,-104+(i%2)*6,18,i%2?'#E5473A':'#F59E2B',{rot:(i%2?.2:-.2)})}
  ctx.restore()}
 function phoneDraw(x,y,s,rot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.scale(s,s);ctx.beginPath();rr(-48,-84,96,168,16);outl('#2b2b30',6);ctx.beginPath();rr(-38,-68,76,132,8);ctx.fillStyle='#06c755';ctx.fill();text('LINE',0,-12,{size:28,col:'#fff',stroke:false});heart(0,22,14,'#fff');ctx.restore()}
 function infoCard(x,y,w,h,title,lines,p,o={}){if(p<=0)return;ctx.save();ctx.translate(x,y);const sc=back(p);ctx.scale(sc,sc);ctx.rotate(o.rot||0);
- ctx.shadowColor='rgba(74,50,38,.22)';ctx.shadowBlur=22;ctx.shadowOffsetY=10;ctx.beginPath();rr(-w/2,-h/2,w,h,34);outl('#FFF9EA',5);ctx.shadowColor='transparent';
- const ts=o.ts||46;ctx.font=`${ts}px ${FONT}`;const tw=ctx.measureText(title).width+110;ctx.beginPath();rr(-tw/2,-h/2-36,tw,72,36);outl(o.col||C.orange,5);text(title,0,-h/2+2,{size:ts,col:'#FFF6E0',stroke:false});
- lines.forEach((l,i)=>text(l,0,-h/2+(o.top||96)+i*(o.lh||52),{size:o.ls||40,stroke:false,col:INKC}));ctx.restore()}
+ ctx.shadowColor='rgba(59,42,34,.24)';ctx.shadowBlur=26;ctx.shadowOffsetY=12;ctx.beginPath();rr(-w/2,-h/2,w,h,36);outl(C.paper,5);ctx.shadowColor='transparent';
+ const ts=o.ts||50;ctx.font=`900 ${ts}px ${FONT}`;ctx.save();ctx.letterSpacing='3px';const tw=ctx.measureText(title).width+120;ctx.restore();ctx.beginPath();rr(-tw/2,-h/2-38,tw,76,38);outl(o.col||C.orange,5);text(title,0,-h/2+1,{size:ts,col:C.paper,stroke:false,w:900,sp:3});
+ lines.forEach((l,i)=>text(l,0,-h/2+(o.top||100)+i*(o.lh||56),{size:o.ls||42,stroke:false,col:INKT,w:700}));ctx.restore()}
 function confetti(t,n,seed=0,cols=['#E8513D','#F6A43A','#5AAB55','#BDE7FF','#FFE9A8']){for(let i=0;i<n;i++){const x=hash(i+seed)*W,sp=80+hash(i*3+seed)*160,y=((hash(i*7+seed)*H+t*sp)%(H+60))-30;ctx.save();ctx.translate(x+Math.sin(t*2+i)*30,y);ctx.rotate(t*3+i);ctx.fillStyle=cols[i%cols.length];ctx.fillRect(-7,-4,14,8);ctx.restore()}}
 function bokeh(t,n=18,seed=3,alpha=.3){for(let i=0;i<n;i++){const x=hash(i+seed)*W,y=hash(i*5+seed)*H,r=30+hash(i*9)*70;ctx.globalAlpha=alpha*(.5+.5*Math.sin(t*.8+i));ctx.fillStyle=['#FFF6C9','#FFE2B8','#FFFFFF','#E3F6D6'][i%4];ctx.beginPath();ctx.arc(x,y+Math.sin(t*.4+i)*12,r,0,TAU);ctx.fill()}ctx.globalAlpha=1}
-function stamp(x,y,r,p,col='#d8432f'){if(p<=0)return;ctx.save();ctx.translate(x,y);ctx.rotate(-.18);const sc=back(p);ctx.scale(sc,sc);ctx.globalAlpha=.95;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fillStyle='#fff1c9';ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=9;ctx.stroke();ctx.lineWidth=3.5;ctx.beginPath();ctx.arc(0,0,r*.84,0,TAU);ctx.stroke();text('好運來',0,-r*.06,{size:r*.62,col,stroke:false});text('LUCKY TOMATO',0,r*.56,{size:r*.17,col,stroke:false});ctx.restore()}
+function stamp(x,y,r,p,col='#d8432f'){if(p<=0)return;ctx.save();ctx.translate(x,y);ctx.rotate(-.18);const sc=back(p);ctx.scale(sc,sc);ctx.globalAlpha=.95;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fillStyle='#fff1c9';ctx.fill();ctx.strokeStyle=col;ctx.lineWidth=9;ctx.stroke();ctx.lineWidth=3.5;ctx.beginPath();ctx.arc(0,0,r*.84,0,TAU);ctx.stroke();text('好運來',0,-r*.06,{size:r*.62,col,stroke:false,w:900});text('LUCKY TOMATO',0,r*.56,{size:r*.17,col,stroke:false,w:700,sp:1});ctx.restore()}
 function clover(x,y,r,rot=0){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.strokeStyle='#3f8a4a';ctx.lineWidth=7;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(0,r*.6);ctx.quadraticCurveTo(r*.2,r*1.4,-r*.1,r*2.1);ctx.stroke();
  for(let k=0;k<4;k++){const a=k*Math.PI/2+Math.PI/4;ctx.save();ctx.translate(Math.cos(a)*r*.55,Math.sin(a)*r*.55);ctx.rotate(a);ctx.beginPath();ctx.ellipse(0,0,r*.55,r*.42,0,0,TAU);outl('#7cc46a',4);ctx.restore()}ctx.restore()}
