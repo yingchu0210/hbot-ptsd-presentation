@@ -508,6 +508,26 @@ SC.refrain=function(t){
     sunFace(1040,230,110,t);for(let i=0;i<10;i++)heart(100+i*120,640-((t*.3+i/10)%1)*400,1,HOT);
     mom({x:640,y:612+bounce(t,10),s:.44,expr:'happy',L:[30,'fist'],R:[120+Math.sin(t*5)*12,'open'],tilt:sway(t,2)*4});confetti(t,24)}
 };
+function pupHand(key,o,side){const D=FAM[key],a=((o[side]||[0])[0])*PI/180,th=side==='L'?a:-a,d=key==='dad'?340:440,sc=o.s||.38;
+  const lx=D.piv[side][0]-D.feet[0]-d*Math.sin(th),ly=D.piv[side][1]-D.feet[1]+d*Math.cos(th);
+  return [o.x+lx*sc*(o.flip?-1:1),o.y+ly*sc]}
+function bouquet(x,y,sc,t){c.save();c.translate(x,y);c.rotate(Math.sin(t*3)*.05);c.scale(sc,sc);
+  c.strokeStyle='#5E9B5A';c.lineWidth=7;c.lineCap='round';for(const a of[-.5,0,.5]){c.beginPath();c.moveTo(0,60);c.lineTo(Math.sin(a)*40,-10);c.stroke()}
+  orchid(-34,-34,30,-.3,0);orchid(34,-34,30,.3,1);plum(0,-58,26,.2);orchid(0,-14,26,0,0);plum(-18,-8,16,.4);
+  c.beginPath();c.moveTo(-22,56);c.lineTo(22,56);c.lineTo(10,86);c.lineTo(-10,86);c.closePath();fillStroke('#F58AA8',4);c.restore()}
+// 衣架上的衣服（從角色的衣服圖層裁出上衣＋裙擺）
+function garment(x,y,w,outfit,rot=0){const L_=LAY['body_'+outfit];if(!L_)return;const sx=330,sy=588,sw=460,sh=outfit==='dress'?600:410,h=w*sh/sw;
+  c.save();c.translate(x,y);c.rotate(rot);c.strokeStyle='#8A8A92';c.lineWidth=4;c.lineCap='round';c.beginPath();c.moveTo(0,0);c.lineTo(0,-16);c.arc(0,-26,10,PI*.5,PI*1.8);c.stroke();
+  c.beginPath();c.moveTo(-w*.45,w*.12);c.lineTo(0,-6);c.lineTo(w*.45,w*.12);c.stroke();
+  c.drawImage(L_,sx*RS,sy*RS,sw*RS,sh*RS,-w/2,2,w,h);c.restore()}
+function screenFold(x,y,wPanel,h,t){ // 三折屏風
+  for(let i=0;i<3;i++){const px=x+(i-1)*wPanel;c.save();c.translate(px,y);
+    c.beginPath();c.moveTo(-wPanel/2,0);c.lineTo(wPanel/2,0);c.lineTo(wPanel/2,-h);c.quadraticCurveTo(0,-h-26,-wPanel/2,-h);c.closePath();fillStroke(i===1?'#F6E7CF':'#FBEFD9',6);
+    c.save();c.clip();inkStyle(3);c.strokeStyle='rgba(120,80,50,.55)';c.beginPath();c.moveTo(-wPanel*.3,-h*.15);c.quadraticCurveTo(0,-h*.4,wPanel*.25,-h*.7);c.stroke();c.restore();
+    plum(wPanel*.12,-h*.62,wPanel*.14,i);plum(-wPanel*.1,-h*.38,wPanel*.11,i*2);if(i!==1)orchid(-wPanel*.05,-h*.82,wPanel*.15,.2,i);
+    c.beginPath();c.moveTo(-wPanel/2,0);c.lineTo(-wPanel/2,-h);c.lineWidth=8;c.strokeStyle='#B07C44';c.stroke();c.restore()}
+  rrect(x-1.5*wPanel-4,y-8,3*wPanel+8,12,4,'#B07C44',4)}
+
 /* ---------- 間奏（約 25 秒）：全家一起跳舞 ---------- */
 SC.dance=function(t){
   const T=SECS[SI('dance')].t;let ph=0;for(let i=0;i<4;i++)if(t>=T[i])ph=i;
@@ -527,24 +547,50 @@ SC.dance=function(t){
   // 地板
   hills(612,8,'#5A2748',t*.3);c.fillStyle='#43183A';c.fillRect(0,650,W,80);
   for(let i=0;i<12;i++){c.fillStyle=`rgba(255,230,160,${.07+.05*Math.sin(t*3+i)})`;c.fillRect(i*110,650,55,80)}
-  // 站位：爸爸、媽媽、女兒（階段 2 交換位置、階段 3 回到舞台中央）
+  // ====== 時間表：跳舞 → 女兒幫媽媽換衣服 → 拍手 → 再換一次 → 全家大跳 ======
+  const CH=[{t0:70.7,from:'mint',to:'hakka'},{t0:77.0,from:'hakka',to:'dress'}], CHD=4.8;
+  let outfit='mint',chg=null;
+  for(const c_ of CH){if(t>=c_.t0+2.6)outfit=c_.to;else if(t>=c_.t0-.5&&!chg)outfit=c_.from;if(t>=c_.t0-.6&&t<c_.t0+CHD)chg=c_}
+  if(!chg&&t>=CH[1].t0+CHD)outfit='dress';
   const P0=[320,640,960],S=[960,320,640],P3=[380,640,900];
-  let xs=P0;
-  if(ph===2||ph===3){const e=ease((t-T[2])/1.3);xs=P0.map((v,i)=>lerp(v,S[i],e))}
-  if(ph===3){const e=ease((t-T[3])/1.3);xs=S.map((v,i)=>lerp(v,P3[i],e))}
+  let xs=P0.slice();
+  if(t>=81.8){const e=ease((t-81.8)/1.3);xs=P0.map((v,i)=>lerp(v,S[i],e))}
+  if(t>=85.6){const e=ease((t-85.6)/1.3);xs=S.map((v,i)=>lerp(v,P3[i],e))}
   const bx=GS(t,4)>0, ex1=bx?'laugh':'happy', ex2=bx?'happy':'laugh';
-  // 各階段動作
-  const mo={x:xs[1],y:612+hopY(t,14),s:.44,expr:'laugh',tilt:GS(t,2)*8};
+  const mo={x:xs[1],y:612+hopY(t,14),s:.44,expr:'laugh',tilt:GS(t,2)*8,outfit};
   const dd={x:xs[0],y:612+hopY(t,14),s:.40,expr:ex1,tilt:-GS(t,2)*7};
   const gg={x:xs[2],y:612+hopY(t,14),s:.37,expr:ex2,flip:true,tilt:GS(t,2)*7};
-  if(ph===0){Object.assign(mo,danceArms(t,55,42,'open',2));Object.assign(dd,danceArms(t,45,40,'open',2,1.6));Object.assign(gg,danceArms(t,55,40,'open',2,.8));mo.x+=stepX(t,30,4);dd.x+=stepX(t,24,4);gg.x-=stepX(t,24,4)}
-  if(ph===1){const cl=95+Math.abs(Math.sin(PI*beatPh(t)))*55;Object.assign(mo,{L:[cl,'open'],R:[cl,'open']});Object.assign(dd,{L:[cl-10,'open'],R:[cl-10,'open']});Object.assign(gg,{L:[cl,'open'],R:[cl,'open']});mo.y+=hopY(t,10);dd.y+=hopY(t,8);gg.y+=hopY(t,10)}
-  if(ph===2){const tw=(t-T[2])/1.2;if(tw>0&&tw<1)mo.sx=Math.cos(tw*TAU);Object.assign(mo,danceArms(t,120,30,'open',1));Object.assign(dd,{L:[50,'fist'],R:[90+GS(t,1)*40,'thumb']});Object.assign(gg,danceArms(t,100,40,'open',1,2))}
-  if(ph===3){const up=148+Math.sin(t*9)*8;Object.assign(mo,{L:[up,'open'],R:[up,'open']});Object.assign(dd,{L:[up,'open'],R:[up,'open']});Object.assign(gg,{L:[up,'open'],R:[up,'open']});mo.y+=hopY(t,16);dd.y+=hopY(t,14);gg.y+=hopY(t,16)}
-  // 由 x 小到大依序畫，不會互相蓋到
+  if(t<70.7){Object.assign(mo,danceArms(t,55,42,'open',2));Object.assign(dd,danceArms(t,45,40,'open',2,1.6));Object.assign(gg,danceArms(t,55,40,'open',2,.8));mo.x+=stepX(t,30,4);dd.x+=stepX(t,24,4);gg.x-=stepX(t,24,4)}
+  else if(t>=75.5&&t<77.0-.6){const cl=95+Math.abs(Math.sin(PI*beatPh(t)))*55;Object.assign(mo,{L:[cl,'open'],R:[cl,'open']});Object.assign(dd,{L:[cl-10,'open'],R:[cl-10,'open']});Object.assign(gg,{L:[cl,'open'],R:[cl,'open']});mo.y+=hopY(t,10);dd.y+=hopY(t,8);gg.y+=hopY(t,10)}
+  else if(t>=81.8&&t<85.6){const tw=(t-81.8)/1.2;if(tw>0&&tw<1)mo.sx=Math.cos(tw*TAU);Object.assign(mo,danceArms(t,120,30,'open',1));Object.assign(dd,{L:[50,'fist'],R:[90+GS(t,1)*40,'thumb']});Object.assign(gg,danceArms(t,100,40,'open',1,2))}
+  else if(t>=85.6){const up=148+Math.sin(t*9)*8;Object.assign(mo,{L:[up,'open'],R:[up,'open']});Object.assign(dd,{L:[up,'open'],R:[up,'open']});Object.assign(gg,{L:[up,'open'],R:[up,'open']});mo.y+=hopY(t,16);dd.y+=hopY(t,14);gg.y+=hopY(t,16)}
+  else Object.assign(mo,danceArms(t,60,35,'open',2));
+  let overlay=null;
+  if(chg){ // 女兒幫媽媽換衣服
+    const u=t-chg.t0;mo.x=640;dd.x=330;Object.assign(dd,danceArms(t,45,30,'open',1));
+    const run=runIn(t,chg.t0-.6,.9)*(1-ease((u-3.9)/.9));gg.x=lerp(1500,850,run);mo.y=612;
+    Object.assign(gg,{L:[24,'fist'],R:[150,'fist'],tilt:GS(t,2)*5});gg.y=612+hopY(t,6);
+    const screenIn=ease((u-.1)/.7)*(1-ease((u-3.3)/.7));      // 屏風滑進來／滑出去
+    const behind=screenIn>.85;
+    if(behind){mo.L=[20,'fist'];mo.R=[20,'fist'];mo.y+=hopY(t,10);mo.expr='shy'}
+    if(u>3.3&&u<4.4){const tw=(u-3.3)/1.0;mo.sx=Math.cos(tw*TAU);mo.outfit=chg.to;Object.assign(mo,danceArms(t,140,15,'open',1))}
+    else mo.outfit=u<2.5?chg.from:chg.to;
+    overlay={u,screenIn,behind,chg,gg};
+  }
   [['dad',dd],['mom',mo],['girl',gg]].sort((a,b)=>a[1].x-b[1].x).forEach(([n,o])=>n==='mom'?mom(o):pup(n,o));
+  if(overlay){const {u,screenIn,chg,gg:g2}=overlay;
+    // 女兒手上的新衣服（換好之後掛在原處消失）
+    if(u<2.6){const [hx,hy]=pupHand('girl',g2,'R');garment(hx,hy-8,120,chg.to,Math.sin(t*4)*.06)}
+    // 屏風
+    if(screenIn>.01){const sx_=lerp(1500,640,screenIn);screenFold(sx_,612,125,300,t)}
+    // 屏風後：舊衣服飛出、星星與小煙霧
+    if(u>1.5&&u<3.4){for(let i=0;i<5;i++){const a=((u-1.5)*.7+i*.19)%1;sparkle(640+Math.sin(i*2.3)*150,300-a*160,18*(1-a)+5,GOLD2,t*2+i)}
+      const fl=ease((u-2.5)/.7);if(fl>0&&fl<1){garment(lerp(640,300,fl),lerp(330,250,Math.sin(fl*PI))-0+fl*220,110,chg.from,fl*2.4)}}
+    if(u>2.4&&u<3.2){for(let i=0;i<7;i++){const a=(u-2.4)/.8,an=i*TAU/7;c.save();c.globalAlpha=1-a;circle(640+Math.cos(an)*(30+a*90),330+Math.sin(an)*(20+a*60),22+a*20,'#FFFFFF',0);c.restore()}}
+    if(u>3.4&&u<4.8){for(let i=0;i<10;i++){const a=((u-3.4)*.9+i/10)%1,an=i*TAU/10;sparkle(640+Math.cos(an)*(130+a*160),300+Math.sin(an)*(110+a*90),20*(1-a)+4,'#FFF6B0',t+i)}}
+  }
   for(let i=0;i<10;i++){const a=((t*.4+i/10)%1);note(100+hash(i)*1080,650-a*620,1.2,[HOT,GOLD2,TEAL,'#FFFFFF'][i%4],Math.sin(t*2+i)*.3,i%3===0)}
-  confetti(t,ph===3?60:30);
+  confetti(t,t>=85.6?60:30);
 };
 SC.v1r=function(t){
   const T=SECS[SI('v1r')].t,L=LN(t,'v1r'),k=L.l;
@@ -575,7 +621,7 @@ SC.outro=function(t){
   const ox=lerp(640,330,ease((t-T[3]-.2)/1.4));
   c.fillStyle=grad(0,H,mix('#FFF3D6','#5A3F6E',dark*.85),mix('#FBD9C4','#E58C8A',dark*.7));c.fillRect(0,0,W,H);
   for(let i=0;i<40;i++){c.globalAlpha=dark*(.4+.6*Math.abs(Math.sin(t*2+i)));sparkle(hash(i)*W,hash(i+5)*360,3+hash(i+2)*7);c.globalAlpha=1}
-  c.globalAlpha=dark;moonFace(150,130,62);c.globalAlpha=1;
+  c.globalAlpha=dark;moonFace(1190,100,60);c.globalAlpha=1;
   hills(600,14,mix('#B4D68E','#3C5A52',dark),t*.2);
   // 蘭花與梅花環繞
   const orb=(i,n)=>{const a=i*TAU/n+t*.25;return[ox+Math.cos(a)*(250+i%2*40),330+Math.sin(a)*(200+i%2*20)]};
@@ -584,12 +630,29 @@ SC.outro=function(t){
   const fin=ease((t-T[3]-.2)/1.2);
   const ex=mouth(t,'happy');
   const oo={x:ox,y:612+bounce(t,t>T[4]?3:8),s:.42,expr:t>T[4]?'happy':ex,L:[10,'fist'],R:[t>T[4]?125+Math.sin(t*4)*12:100+Math.sin(t*4)*10,'open'],tilt:sway(t,2)*4};
-  if(t<T[4]){const k=L.l;                                              // 尾聲前四句：像是在慢慢說再見
-    if(k===0){Object.assign(oo,danceArms(t,120,18,'open',2));oo.x=ox+stepX(t,20,4)}
-    else if(k===1){Object.assign(oo,danceArms(t,70,22,'open',2));oo.tilt=GS(t,2)*7}
+  const famIn=t>T[0]-.6&&t<T[2]+.7;                                     // 爸爸女兒一左一右來告白（前兩句）
+  if(t<T[4]){const k=L.l;
+    if(k===0){Object.assign(oo,danceArms(t,120,18,'open',2));oo.x=ox+stepX(t,20,4);if(famIn){oo.L=[148,'open'];oo.R=[148,'open'];oo.tilt=GS(t,2)*9}}
+    else if(k===1){Object.assign(oo,danceArms(t,70,22,'open',2));oo.tilt=GS(t,2)*7;if(famIn){oo.L=[148+GS(t,1)*6,'open'];oo.R=[148-GS(t,1)*6,'open'];oo.y+=hopY(t,10)}}
     else if(k===2){Object.assign(oo,danceArms(t,40,35,'open',1));oo.rot=GS(t,2)*3}
     else{oo.L=[135+Math.sin(t*4)*10,'open'];oo.R=[135-Math.sin(t*4)*10,'open'];oo.y+=hopY(t,10)}}
   mom(oo);
+  if(famIn){
+    const ent=runIn(t,T[0]-.5,1.0), ext=1-ease((t-(T[2]-.2))/.7), f=ent*ext;
+    const bl=(t-T[0]);const sp=GS(t,1)>0;
+    const dad={x:lerp(-230,335,f),y:612+hopY(t,8)*f,s:.38,expr:(bl>1.2&&bl<5.4)?(sp?'laugh':'happy'):'smile',L:[24,'fist'],R:[74+GS(t,1)*4,'open'],tilt:-GS(t,2)*5};
+    const girl={x:lerp(1510,945,f),y:612+hopY(t,8)*f,s:.35,expr:(bl>2.3&&bl<5.4)?(sp?'happy':'laugh'):'smile',flip:true,L:[24,'fist'],R:[74-GS(t,1)*4,'open'],tilt:GS(t,2)*5};
+    pup('dad',dad);pup('girl',girl);
+    const [dhx,dhy]=pupHand('dad',dad,'R'),[ghx,ghy]=pupHand('girl',girl,'R');
+    if(f>.7){bouquet(dhx,dhy-4,.7,t);heart(ghx,ghy-6,2.0+pulse(t)*.3,HOT,Math.sin(t*3)*.1,5)}
+    // 告白對話框（放在畫面上方角落，不蓋到人物）
+    const bd=back((t-T[0]-1.0)/.4),bg=back((t-T[0]-2.1)/.4);
+    if(f>.7&&bd>0&&t<T[2]-.3){c.save();c.translate(215,62);c.scale(bd,bd);bubble(0,0,300,68,'美蘭，我愛你！',-1);c.restore()}
+    if(f>.7&&bg>0&&t<T[2]-.3){c.save();c.translate(905,62);c.scale(bg,bg);bubble(0,0,300,68,'媽媽，我愛你！',-1);c.restore()}
+    // 愛心從兩邊飛向美蘭
+    if(f>.7)for(let i=0;i<8;i++){const a=((t-T[0])*.55+i/8)%1,fromL=i%2===0,[sx0,sy0]=fromL?[dhx,dhy]:[ghx,ghy];
+      heart(lerp(sx0,ox+(fromL?-60:60),a*.8),lerp(sy0,330,a*.8)-Math.sin(a*PI)*80,.5+.4*Math.sin(a*PI),i%3?HOT:'#FF8FA8')}
+  }
   // 愛心
   for(let i=0;i<6;i++){const a=((t*.35+i/6)%1);heart(300+i*140,650-a*480,.9+.3*hash(i),HOT)}
   // 結語
