@@ -10,7 +10,7 @@
   await loadAll();
   window.ready=true;
   if(location.search.includes('play')){
-    const a=new Audio('meilan.mp3');a.play();
+    const a=new Audio('meilan2.mp3');a.play();
     (function loop(){renderFrame(a.currentTime);requestAnimationFrame(loop)})();
   } else renderFrame(+(new URLSearchParams(location.search).get('t')||0));
 })();

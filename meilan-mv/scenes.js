@@ -1,7 +1,7 @@
 /* 美蘭 MV — 場景與角色動畫（Canvas 2D，全部由程式繪製，t＝音樂秒數）*/
 const W=1280,H=720,TAU=Math.PI*2,PI=Math.PI;
 const INK='#3B2A24',CREAM='#FFF7E8',RED='#D8523F',PINK='#F9A2B8',HOT='#E8708F',TEAL='#5FA8A0',GOLD='#F0B340',GOLD2='#FBE29A',SKIN='#FDD0A8',ORCHID='#9B6BB5',PLUMD='#8E3F5A';
-const BEAT=0.496, BEAT0=0.366;               // 拍點：每 0.496 秒一拍
+const BEAT=0.545, BEAT0=0.515;               // 拍點：每 0.545 秒一拍（新歌約 110 BPM）
 const FONT='"JF OpenHuninn","WenQuanYi Zen Hei","Noto Sans CJK TC",sans-serif';   // 內文：粉圓體（圓潤，呼應 Q 版角色）
 const SERIF='"Noto Serif TC","Songti TC",serif';                                        // 標題：思源宋體 Black（高對比、優雅）
 const cv=document.getElementById('c'), c=cv.getContext('2d');
@@ -107,7 +107,7 @@ function faceDraw(name,mopen){
 function mom(o){
   const s=(o.s||0.42)*SCALE_ADJ, x=o.x, y=o.y, outfit=o.outfit||CUR_OUTFIT;
   c.save();
-  if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(x,y+4,175*s*(o.sx||1),22*s*1.1,0,0,TAU);c.fill()}
+  if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(x,y+4,175*s*Math.abs(o.sx||1),22*s*1.1,0,0,TAU);c.fill()}
   c.translate(x,y);c.scale(s*(o.flip?-1:1)*(o.sx||1),s*(o.sy||1));c.rotate((o.rot||0)*PI/180);c.translate(-PV.feet[0],-PV.feet[1]);
   const k=1/RS, draw=(n)=>c.drawImage(LAY[n],0,0,LAY[n].width*k,LAY[n].height*k);
   for(const side of ['L','R']){                       // 手臂在身體後面（從袖子下面伸出來）
@@ -126,7 +126,7 @@ const FAM={
 };
 function pup(key,o){
   const D=FAM[key],s=o.s||.38;c.save();
-  if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(o.x,o.y+4,170*s*(o.sx||1),22*s,0,0,TAU);c.fill()}
+  if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(o.x,o.y+4,170*s*Math.abs(o.sx||1),22*s,0,0,TAU);c.fill()}
   c.translate(o.x,o.y);c.scale(s*(o.flip?-1:1)*(o.sx||1),s*(o.sy||1));c.rotate((o.rot||0)*PI/180);c.translate(-D.feet[0],-D.feet[1]);
   const k=1/RS,draw=(n)=>c.drawImage(LAY[n],0,0,LAY[n].width*k,LAY[n].height*k);
   draw(key+'_body');
@@ -149,6 +149,12 @@ function mouth(t,base){
 // 基本動作：踩拍彈跳
 function bounce(t,amp=9){return -Math.abs(Math.sin(PI*beatPh(t)))*amp}
 function sway(t,period=2){return Math.sin(TAU*t/(BEAT*period))}
+const GS=(t,per=2)=>Math.sin(PI*beatPh(t)*2/per);              // 每 per 拍來回一次的擺動（-1..1），跟著歌的拍子
+const stepX=(t,amp,per=8)=>GS(t,per)*amp;                       // 左右踏步
+const hopY=(t,amp)=>-Math.abs(Math.sin(PI*beatPh(t)))*amp;      // 每拍一次的跳躍
+// 全家（爸爸、女兒）舞蹈小動作
+function danceArms(t,a,amp,hand='open',per=2,ph=0){const sw=Math.sin(PI*beatPh(t)*2/per+ph);return{L:[a+amp*sw,hand],R:[a-amp*sw,hand]}}
+const runIn=(t,t0,dur=.9)=>easeOut((t-t0)/dur);                  // 跑進來 0→1
 
 /* ---------- 道具：花、星、錢幣 ---------- */
 function orchid(x,y,r,rot=0,tone=0){
@@ -277,7 +283,7 @@ const SC={};
 const LN=(t,k)=>lineAt(t,SECS.findIndex(s=>s.k===k));
 
 SC.intro=function(t){
-  const L=LN(t,'intro'),I=SECS[0];
+  const L=LN(t,'intro'),I=SECS[SI('intro')];
   c.fillStyle=grad(0,H,'#FFF6E4','#F8D9D0');c.fillRect(0,0,W,H);
   rays(W/2,330,t,18,'rgba(255,255,255,.35)',0,1500,.05);
   // 左右花枝
@@ -301,7 +307,13 @@ SC.intro=function(t){
   const en=easeOut((t-3.8)/2.4); const mx=lerp(W+200,W/2,en);
   const exp=mouth(t,'happy')==='smile'&&activeLyric(t)==null?'happy':mouth(t,'happy');
   const wave=Math.sin(t*5)*14;
-  mom({x:mx,y:612+bounce(t,10*en),s:.36,expr:t<3.8?'smile':exp,L:[8,'fist'],R:[en>.9?130+wave:20,'open'],tilt:sway(t,2)*4});
+  const oi={x:mx,y:612+bounce(t,10*en),s:.36,expr:t<3.8?'smile':exp,L:[8,'fist'],R:[en>.9?130+wave:20,'open'],tilt:sway(t,2)*4};
+  if(en>.9){const I=SECS[SI('intro')].t,k=L.l;
+    if(t<I[0]+.5||k===0){Object.assign(oi,danceArms(t,135,16,'open',1));oi.y+=hopY(t,10);oi.x=W/2+stepX(t,24,4)}                       // 美蘭美蘭：雙手大揮
+    else if(k===1){Object.assign(oi,danceArms(t,75,22,'open',2));oi.x=W/2+stepX(t,60,4);oi.tilt=GS(t,2)*7}                                    // 蘭花：像捧花般左右晃
+    else if(k===2){Object.assign(oi,danceArms(t,45,45,'open',1));oi.rot=GS(t,2)*3;oi.x=W/2+stepX(t,40,4)}                                      // 梅花：甩手搖擺
+    else{oi.L=[28+GS(t,1)*10,'fist'];oi.R=[28-GS(t,1)*10,'fist'];oi.y+=hopY(t,18);oi.tilt=GS(t,2)*9;oi.sy=1+pulse(t)*.03}}                    // 就想到你：抱胸小跳
+  mom(oi);
   // 愛心
   if(L.l>=0&&t>1.6){for(let i=0;i<4;i++){const a=((t-1.6)*.5+i/4)%1;heart(W/2+Math.sin(i*2+t)*260,690-a*420,.8+.5*hash(i),HOT);}}
 };
@@ -309,7 +321,7 @@ SC.intro=function(t){
 SC.v1=function(t){
   const L=LN(t,'v1'),k=L.l;
   // 天色：L2 變黃昏有月亮
-  const dusk=ease((t-SECS[1].t[1]+.3)/.6)*(1-ease((t-SECS[1].t[2]+.2)/.6));
+  const dusk=ease((t-SECS[SI('v1')].t[1]+.3)/.6)*(1-ease((t-SECS[SI('v1')].t[2]+.2)/.6));
   c.fillStyle=grad(0,H*.7,mix('#BFE3EA','#6A5E9C',dusk),mix('#FFF4DC','#F4B8A0',dusk));c.fillRect(0,0,W,H);
   if(dusk>.05){c.globalAlpha=dusk;for(let i=0;i<30;i++)sparkle(hash(i)*W,hash(i+5)*300,4+hash(i+2)*6);c.globalAlpha=1}
   mountain(300,430,560,230,mix('#9CC5AF','#4A5A8E',dusk));mountain(780,430,640,160,mix('#B3D6BD','#56679E',dusk));mountain(1130,430,520,260,mix('#86B79F','#44548A',dusk));
@@ -319,13 +331,13 @@ SC.v1=function(t){
   const mx=1040+Math.sin(t*.8)*3,my=170;
   if(dusk>.02){c.globalAlpha=dusk;const r=92+Math.sin(t*3)*2;moonFace(mx,my,r);c.globalAlpha=1}
   // 風
-  const windA=k===0?ease((t-SECS[1].t[0]+.2)/.3)*(1-ease((t-SECS[1].t[1]+.5)/.4)):0;
+  const windA=k===0?ease((t-SECS[SI('v1')].t[0]+.2)/.3)*(1-ease((t-SECS[SI('v1')].t[1]+.5)/.4)):0;
   const wf=k===0?1.7:.5;
   grassBlades(660,t,14,64,'#6AA46A',wf);
   // 美濃紙傘
-  if(k>=2){const a=ease((t-SECS[1].t[2])/.8);[[200,230,.8,-.4,'#E4604A'],[1070,240,.9,.4,'#5C9BC4'],[330,380,.6,-.15,'#F0B340'],[950,380,.65,.2,ORCHID]].forEach(([x,y,s,r,col],i)=>{umbrella(x,y+Math.sin(t*2+i)*8+(1-a)*-300,s*a,r+Math.sin(t*1.5+i)*.08,col,t)})}
+  if(k>=2){const a=ease((t-SECS[SI('v1')].t[2])/.8);[[200,230,.8,-.4,'#E4604A'],[1070,240,.9,.4,'#5C9BC4'],[330,380,.6,-.15,'#F0B340'],[950,380,.65,.2,ORCHID]].forEach(([x,y,s,r,col],i)=>{umbrella(x,y+Math.sin(t*2+i)*8+(1-a)*-300,s*a,r+Math.sin(t*1.5+i)*.08,col,t)})}
   // 招牌
-  if(k===2){const a=back((t-SECS[1].t[2]-.4)/.5);c.save();c.translate(1000,560);c.scale(a,a);rrect(-110,-70,220,80,12,'#E9B876',5);rrect(-12,10,24,90,6,'#B07C44',5);txt('美濃',0,-30,54,INK,{});c.restore()}
+  if(k===2){const a=back((t-SECS[SI('v1')].t[2]-.4)/.5);c.save();c.translate(1000,560);c.scale(a,a);rrect(-110,-70,220,80,12,'#E9B876',5);rrect(-12,10,24,90,6,'#B07C44',5);txt('美濃',0,-30,54,INK,{});c.restore()}
   // 風線
   if(windA>0||k===0){c.save();c.strokeStyle='rgba(255,255,255,.9)';c.lineWidth=6;c.lineCap='round';for(let i=0;i<6;i++){const x=((t*500+i*260)%1700)-300,y=170+i*70;c.beginPath();c.moveTo(x,y);c.bezierCurveTo(x+60,y-30,x+120,y+30,x+180,y-6);c.stroke()}c.restore()}
   // 葉子飄
@@ -333,14 +345,14 @@ SC.v1=function(t){
   // 美蘭
   const base=k===3?'wow':'happy';let ex=mouth(t,base);
   let o={x:640,y:612+bounce(t,9),s:.42,expr:ex,L:[10+sway(t,2)*6,'fist'],R:[10-sway(t,2)*6,'fist'],tilt:sway(t,4)*4};
-  if(k===0){o.tilt=Math.sin(t*3)*6;o.L=[14+Math.sin(t*3)*10,'open'];o.R=[14+Math.sin(t*3+1)*10,'open'];o.rot=Math.sin(t*1.8)*2}
-  if(k===1){o.tilt=Math.sin(t*2)*5;o.expr=ex==='smile'?'shy':ex}
-  if(k===2){const sp=ease((t-SECS[1].t[2])/.5);o.sx=Math.cos(t*4)*0+1;o.L=[110,'open'];o.R=[35,'open'];o.tilt=Math.sin(t*4)*6;}
-  if(k===3){const wob=Math.sin(t*22)*1.5;o.rot=wob;o.L=[55+Math.sin(t*20)*6,'open'];o.R=[55-Math.sin(t*20)*6,'open'];o.s=.46*(1+pulse(t)*.03)}
+  if(k===0){o.tilt=Math.sin(t*3)*6;Object.assign(o,danceArms(t,32,34,'open',2));o.rot=Math.sin(t*1.8)*3;o.x=640+stepX(t,50,6)}          // 風吹髮：邊走邊甩手
+  if(k===1){o.tilt=GS(t,2)*9;o.expr=ex==='smile'?'shy':ex;Object.assign(o,danceArms(t,145,8,'open',2));o.y+=hopY(t,8)}                     // 圓臉蛋：雙手舉到臉旁害羞
+  if(k===2){const T2=SECS[SI('v1')].t[2],tw=(t-T2)/1.15;if(tw>0&&tw<1)o.sx=Math.cos(tw*TAU);o.L=[110,'open'];o.R=[40+GS(t,1)*14,'open'];o.tilt=Math.sin(t*4)*6;o.x=640+stepX(t,30,4)}   // 美濃姑娘：轉圈後指向招牌
+  if(k===3){const wob=Math.sin(t*22)*1.5;o.rot=wob;o.L=[150+Math.sin(t*14)*6,'open'];o.R=[150-Math.sin(t*14)*6,'open'];o.y+=hopY(t,10);o.s=.42*(1+pulse(t)*.03)}
   mom(o);
-  if(k===3){ring(640,175,t,SECS[1].t[3],5,'#FFFFFF',420,9);ring(640,175,t,SECS[1].t[3]+.4,5,'#FFE27A',420,9);
-    for(let i=0;i<5;i++){const a=((t-SECS[1].t[3])*.9+i*.2)%1;bird(200+i*220+a*(i%2?-1:1)*300,300-a*260+Math.sin(i)*40,.9,t)}
-    for(let i=0;i<6;i++){const a=((t-SECS[1].t[3])*1.1+i/6)%1;sparkle(640+Math.cos(i*1.3)*(160+a*200),175+Math.sin(i*1.9)*(60+a*90),20*(1-a)+4,'#FFF6B0',t*2+i)}}
+  if(k===3){ring(640,175,t,SECS[SI('v1')].t[3],5,'#FFFFFF',420,9);ring(640,175,t,SECS[SI('v1')].t[3]+.4,5,'#FFE27A',420,9);
+    for(let i=0;i<5;i++){const a=((t-SECS[SI('v1')].t[3])*.9+i*.2)%1;bird(200+i*220+a*(i%2?-1:1)*300,300-a*260+Math.sin(i)*40,.9,t)}
+    for(let i=0;i<6;i++){const a=((t-SECS[SI('v1')].t[3])*1.1+i/6)%1;sparkle(640+Math.cos(i*1.3)*(160+a*200),175+Math.sin(i*1.9)*(60+a*90),20*(1-a)+4,'#FFF6B0',t*2+i)}}
   // 月光暈（L2）加粉紅臉紅
 };
 
@@ -363,7 +375,7 @@ function counter(t,dark=0){ // 前景流理台（擋住身體下半）
   for(let i=0;i<7;i++){rrect(i*190-10,580,170,130,12,'#E9D3AE',5)}
 }
 SC.v2=function(t,rep=false){
-  const key=rep?'v2r':'v2',L=LN(t,key),k=L.l,T=SECS[rep?6:2].t;
+  const key=rep?'v2r':'v2',L=LN(t,key),k=L.l,T=SECS[SI(key)].t;
   kitchenBG(t,rep?.5:0);
   const my=800+(rep?0:0);
   // 磚牆 + 飄香（L2）
@@ -371,10 +383,10 @@ SC.v2=function(t,rep=false){
   // 美蘭
   const base=k===3?'laugh':'happy';let ex=mouth(t,base);
   const o={x:640,y:815+bounce(t,8),s:.56,expr:ex,L:[30+sway(t,2)*8,'fist'],R:[30-sway(t,2)*8,'fist'],tilt:sway(t,4)*4};
-  if(k===0){o.R=[125,'thumb'];o.L=[20,'fist'];o.tilt=sway(t,2)*5}
-  if(k===1){o.L=[60+Math.sin(t*4)*12,'open'];o.R=[60-Math.sin(t*4)*12,'open'];}
-  if(k===2){o.L=[45+Math.sin(t*5)*8,'fist'];o.R=[40-Math.sin(t*5)*8,'fist'];o.tilt=Math.sin(t*3)*7}
-  if(k===3){o.L=[95,'open'];o.R=[95,'open'];o.expr=mouth(t,'laugh');o.rot=Math.sin(t*20)*1.2;o.s=.5*(1+pulse(t)*.03)}
+  if(k===0){o.R=[125+GS(t,1)*14,'thumb'];o.L=[20,'fist'];o.tilt=GS(t,2)*7;o.x=640+stepX(t,30,4)}                  // 廚藝就是強：比讚加搖擺
+  if(k===1){Object.assign(o,danceArms(t,72,28,'open',1));o.tilt=GS(t,2)*6;o.y+=hopY(t,6)}                          // 香飄過牆：雙手把香氣搧向牆
+  if(k===2){o.L=[48+Math.sin(t*6)*18,'fist'];o.R=[42-Math.sin(t*6)*18,'fist'];o.tilt=Math.sin(t*3)*8;o.x=640+stepX(t,36,4)}   // 燉湯：攪拌
+  if(k===3){o.L=[132+Math.sin(t*12)*5,'open'];o.R=[132-Math.sin(t*12)*5,'open'];o.expr=mouth(t,'laugh');o.rot=Math.sin(t*20)*1.2;o.y+=hopY(t,10);o.s=.56*(1+pulse(t)*.03)}  // 喊開飯：雙手圈嘴大喊
   mom(o);
   counter(t);
   // 爐上鍋子
@@ -409,7 +421,7 @@ SC.chorus=function(t,variant=0){
   else{for(let i=0;i<14;i++){daisy(30+i*92+hash(i)*20,590+(i%3)*18,22+hash(i)*8,i%3?'#FFFFFF':'#FFE6F0',GOLD,Math.sin(t*2+i)*.2)}}
   // 大太陽（L2 升起）
   const sunA=variant===2?1:ease((t-T[1]+.2)/.9)+(k>=1?0:0);
-  const sx=variant===1?W-210:W-200,sy=lerp(560,190,easeOut(sunA)) ;
+  const sx=variant===1?W-190:190,sy=lerp(560,190,easeOut(sunA)) ;
   if(k>=1||variant>0){c.save();const s=1+pulse(t)*.03;c.translate(sx,sy);c.scale(s,s);sunFace(0,0,100,t);c.restore()}
   // 音符
   for(let i=0;i<10;i++){const a=((t*.35+i/10)%1);note(160+hash(i)*960,640-a*600,1.1,[HOT,TEAL,RED,ORCHID][i%4],Math.sin(t*2+i)*.3,i%3===0)}
@@ -418,12 +430,21 @@ SC.chorus=function(t,variant=0){
   // 美蘭
   const base=k===2||k===3?'laugh':'happy';let ex=mouth(t,base);
   const o={x:640,y:612+bounce(t,14),s:.44,expr:ex,L:[40+sway(t,2)*10,'open'],R:[40-sway(t,2)*10,'open'],tilt:sway(t,2)*5};
-  if(k===0){o.L=[110+Math.sin(t*4)*10,'open'];o.R=[110-Math.sin(t*4)*10,'open']}
-  if(k===1){o.L=[145+Math.sin(t*6)*8,'open'];o.R=[145-Math.sin(t*6)*8,'open']}
-  if(k===2){o.L=[50,'thumb'];o.R=[130+Math.sin(t*7)*10,'open'];o.tilt=Math.sin(t*3)*6}
-  if(k===3){o.L=[90,'open'];o.R=[90,'open'];o.tilt=Math.sin(t*2)*8}
+  // 女兒在「美蘭啊，我為妳唱」與「願妳笑得像陽光」兩句出現：從旁跑進來一起唱，第三句前跑出去
+  const dIn=runIn(t,T[0]-.15,.9), dOut=ease((t-(T[2]-.15))/.7), dv=dIn*(1-dOut), side=variant===1?-1:1;
+  const dx=lerp(side>0?1480:-200,640+side*270,dv>0?(dOut>0?1-dOut:dIn):0);
+  const showD=t>T[0]-.2&&t<T[2]+.6;
+  const shift=showD?-side*130*(dOut>0?1-dOut:dIn):0;                       // 她來了，媽媽往旁邊讓一點
+  if(k===0){Object.assign(o,danceArms(t,105,22,'open',2));o.x=640+shift+stepX(t,26,4)}                         // 美蘭啊：雙手張開邊唱邊踏步
+  if(k===1){const up=145+Math.sin(t*6)*8;o.L=[up,'open'];o.R=[up,'open'];o.x=640+shift;o.y+=hopY(t,10);o.tilt=GS(t,2)*7} // 笑得像陽光：高舉雙手
+  if(k===2){o.L=[50,'thumb'];o.R=[130+Math.sin(t*7)*10,'open'];o.tilt=Math.sin(t*3)*6;o.x=640+stepX(t,30,4)}   // 臉就亮：比讚加揮手
+  if(k===3){Object.assign(o,danceArms(t,95,30,'open',1));o.tilt=GS(t,2)*8;o.x=640+stepX(t,36,4);o.y+=hopY(t,10)} // 嘴角揚：左右擺動
   if(variant===2&&k===1){o.L=[160,'open'];o.R=[160,'open']}
   mom(o);
+  if(showD){const dEx=mouth(t,'laugh');const dyb=hopY(t,k===0?12:16);
+    const dp=k===0?danceArms(t,100,26,'open',2,1):{L:[150+Math.sin(t*6+1)*8,'open'],R:[150-Math.sin(t*6+1)*8,'open']};
+    if(variant===2){const pa=back((t-T[0]+.1)/.5);pup('girl',Object.assign({x:640+270,y:612+dyb,s:.36*pa*(1-dOut),expr:dEx,flip:true,tilt:GS(t,2)*6},dp))}
+    else pup('girl',Object.assign({x:dx,y:612+dyb,s:.36,expr:dEx,flip:side>0,tilt:GS(t,2)*6},dp))}
   if(k===0)ring(640,190,t,T[0],4,'#FFFFFF',380,8);
   if(k===3){for(let i=0;i<5;i++){const a=((t-T[3])*.8+i*.2)%1;heart(640+Math.sin(i*2.1)*300,400-a*360,1+.4*hash(i),HOT)}}
   if(k===2){for(let i=0;i<10;i++){const a=((t-T[2])*1.2+i*.1)%1;sparkle(640+Math.cos(i*TAU/10)*(150+a*320),300+Math.sin(i*TAU/10)*(120+a*220),22*(1-a)+4)}}
@@ -433,7 +454,7 @@ SC.chorus2=t=>SC.chorus(t,1);
 SC.final=t=>SC.chorus(t,2);
 
 SC.bridge=function(t,variant=0){
-  const key=variant?'bridge2':'bridge',L=LN(t,key),k=L.l,T=SECS[SECS.findIndex(s=>s.k===key)].t;
+  const key=['bridge','bridge2','refrain'][variant],L=LN(t,key),k=L.l,T=SECS[SI(key)].t;
   c.fillStyle=variant?grad(0,H,'#33224C','#873656'):grad(0,H,'#A93232','#DE6B3F');c.fillRect(0,0,W,H);
   rays(W/2,300,t,20,'rgba(255,214,102,.18)',0,1500,.1);
   for(let i=0;i<5;i++)lantern(120+i*260,70+(i%2)*10,1,t);
@@ -442,7 +463,7 @@ SC.bridge=function(t,variant=0){
   hills(612,10,'#6E2430',t*.4);c.fillStyle='#521A26';c.fillRect(0,650,W,80);
   // 財神：L2 探頭 → L3 登場鼓掌
   const ca=k===0?0:k===1?ease((t-T[1])/.7)*.7:1;
-  if(k>=1){const cx=lerp(1280+120,980,easeOut((t-T[1])/(k===1?1.6:.8)));const cy=330+Math.sin(t*3)*8+(k===1?60:0)-(k>=2?0:0);
+  if(k>=1){const cx=lerp(1280+120,k>=3?1100:980,easeOut((t-T[1])/(k===1?1.6:.8)));const cy=330+Math.sin(t*3)*8+(k===1?60:0)-(k>=2?0:0);
     c.save();cloud(cx,cy+190,2.4,'#FFF2D6',.95);caishen(cx,cy,1.05,t);c.restore()}
   // 金幣雨（L4 最盛）
   const rain=k===3?1:k===2?.35:0;
@@ -450,12 +471,19 @@ SC.bridge=function(t,variant=0){
   for(let i=0;i<N;i++){const sp=260+hash(i)*220;const x=hash(i+11)*W,y=(((t-T[2])*sp+hash(i+5)*H*2)%(H+120))-60;if(i%4===0)ingot(x,y,.8+hash(i)*.4,Math.sin(t*3+i)*.4);else coin(x,y,16+hash(i)*10,t,i)}
   // 美蘭
   const ex=mouth(t,'laugh');
-  const o={x:k>=1?430:640,y:612+bounce(t,12),s:.44,expr:ex,L:[60,'open'],R:[60,'open'],tilt:sway(t,2)*5};
-  if(k===0){o.L=[150+Math.sin(t*8)*8,'open'];o.R=[150-Math.sin(t*8)*8,'open'];o.tilt=Math.sin(t*10)*4}
-  if(k===1){o.L=[25,'fist'];o.R=[120,'open'];o.expr=mouth(t,'laugh');o.tilt=Math.sin(t*10)*5}
-  if(k===2){o.L=[150+Math.sin(t*8)*10,'open'];o.R=[150-Math.sin(t*8)*10,'open']}
-  if(k===3){o.L=[160,'open'];o.R=[160,'open'];o.tilt=Math.sin(t*3)*6}
+  const mx3=k===3?lerp(430,540,ease((t-T[3])/.6)):(k>=1?430:640);
+  const o={x:mx3,y:612+bounce(t,12),s:.44,expr:ex,L:[60,'open'],R:[60,'open'],tilt:sway(t,2)*5};
+  if(k===0){Object.assign(o,danceArms(t,150,14,'open',1));o.tilt=Math.sin(t*10)*4;o.y+=hopY(t,12);o.x=640+stepX(t,26,4)}                    // 福氣旺：笑到雙手亂揮
+  if(k===1){o.L=[25,'fist'];o.R=[120+Math.sin(t*5)*12,'open'];o.expr=mouth(t,'laugh');o.tilt=Math.sin(t*10)*5;o.x=430+stepX(t,20,4)}        // 財神聽見：手比著耳朵
+  if(k===2){const cl=60+Math.abs(Math.sin(PI*beatPh(t)))*40;o.L=[cl,'open'];o.R=[cl,'open'];o.y+=hopY(t,10);o.x=430+stepX(t,20,4)}        // 捧場：拍手
+  if(k===3){const up=155+Math.sin(t*9)*6;o.L=[up,'open'];o.R=[up,'open'];o.tilt=Math.sin(t*3)*6;o.y+=hopY(t,18)}                           // 添滿堂：舉手接金幣
   mom(o);
+  if(k===3){ // 爸爸跟女兒衝進來一起接金幣
+    const ed=runIn(t,T[3]-.1,.8),eg=runIn(t,T[3]+.1,.8);
+    const dexp=mouth(t,'laugh'),gexp=mouth(t,'happy');
+    pup('dad',{x:lerp(-220,270,ed),y:612+hopY(t,16),s:.40,expr:dexp,L:[150+Math.sin(t*8)*8,'open'],R:[150-Math.sin(t*8)*8,'open'],tilt:GS(t,2)*7});
+    pup('girl',{x:lerp(1500,805,eg),y:612+hopY(t,18),s:.37,expr:gexp,flip:true,L:[150-Math.sin(t*8)*8,'open'],R:[150+Math.sin(t*8)*8,'open'],tilt:-GS(t,2)*7});
+  }
   // 福氣旺：哈哈字
   if(k===0){ring(640,190,t,T[0],4,'#FFE7A8',300,6);
     for(let i=0;i<8;i++){const a=((t-T[0])*.8+i/8)%1,an=i*TAU/8+t*.6;sparkle(640+Math.cos(an)*(150+a*120),215+Math.sin(an)*(110+a*70),16*(1-a)+3,GOLD2,t+i)}
@@ -467,10 +495,11 @@ SC.bridge=function(t,variant=0){
     for(let i=0;i<10;i++)ingot(80+i*125,704-h*.5,.9,Math.sin(i)*.2)}
 };
 SC.bridge2=t=>SC.bridge(t,1);
+SC.refrainA=t=>SC.bridge(t,2);
 SC.refrain=function(t){
   // 終曲：結合煙火、金幣、五彩紙花
-  const T=SECS[10].t;
-  if(t<T[4]+.2){SC.bridge(t,1);confetti(t,24,T[0]);
+  const T=SECS[SI('refrain')].t;
+  if(t<T[4]+.2){SC.bridge(t,2);confetti(t,24,T[0]);
     c.save();const a=ease((t-T[0])/1)*.0;c.restore();
     // 比讚金句
     if(t>T[3]){for(let i=0;i<8;i++){const a=((t-T[3])*.9+i/8)%1;sparkle(640+Math.cos(i*TAU/8)*(180+a*160),240+Math.sin(i*TAU/8)*(120+a*90),18*(1-a)+3,GOLD2,t+i)}}
@@ -479,8 +508,46 @@ SC.refrain=function(t){
     sunFace(1040,230,110,t);for(let i=0;i<10;i++)heart(100+i*120,640-((t*.3+i/10)%1)*400,1,HOT);
     mom({x:640,y:612+bounce(t,10),s:.44,expr:'happy',L:[30,'fist'],R:[120+Math.sin(t*5)*12,'open'],tilt:sway(t,2)*4});confetti(t,24)}
 };
+/* ---------- 間奏（約 25 秒）：全家一起跳舞 ---------- */
+SC.dance=function(t){
+  const T=SECS[SI('dance')].t;let ph=0;for(let i=0;i<4;i++)if(t>=T[i])ph=i;
+  c.fillStyle=grad(0,H,'#3E2A5C','#C2587A');c.fillRect(0,0,W,H);
+  rays(W/2,250,t,22,'rgba(255,230,160,.13)',0,1500,.12);
+  // 彩色舞台燈束
+  for(let i=0;i<5;i++){const x=120+i*260,a=Math.sin(t*1.3+i*1.7)*.35;c.save();c.translate(x,-20);c.rotate(a);
+    const g=c.createLinearGradient(0,0,0,700);const col=['255,214,102','255,143,168','143,227,255','190,160,255','160,240,190'][i];g.addColorStop(0,`rgba(${col},.30)`);g.addColorStop(1,`rgba(${col},0)`);
+    c.fillStyle=g;c.beginPath();c.moveTo(-14,0);c.lineTo(14,0);c.lineTo(110,720);c.lineTo(-110,720);c.closePath();c.fill();c.restore()}
+  // 旗串
+  c.strokeStyle='#E9D6B8';c.lineWidth=4;c.beginPath();c.moveTo(-10,70);c.quadraticCurveTo(W/2,190,W+10,70);c.stroke();
+  for(let i=0;i<14;i++){const u=(i+.5)/14,x=lerp(-10,W+10,u),y=70+(1-(2*u-1)**2)*60;c.save();c.translate(x,y);c.rotate(Math.sin(t*3+i)*.08);c.beginPath();c.moveTo(-22,0);c.lineTo(22,0);c.lineTo(0,48);c.closePath();fillStroke([HOT,GOLD,TEAL,ORCHID,RED][i%5],3);c.restore()}
+  // 迪斯可球
+  c.strokeStyle=INK;c.lineWidth=4;c.beginPath();c.moveTo(W/2,0);c.lineTo(W/2,120);c.stroke();
+  c.save();c.translate(W/2,160);circle(0,0,42,'#D8DEE8',5);c.strokeStyle='rgba(74,50,38,.5)';c.lineWidth=2;for(let i=-3;i<=3;i++){c.beginPath();c.moveTo(i*12,-40);c.lineTo(i*12,40);c.moveTo(-40,i*12);c.lineTo(40,i*12);c.stroke()}
+  for(let i=0;i<6;i++){const a=t*1.5+i;sparkle(Math.cos(a)*30,Math.sin(a*1.3)*30,6,'#FFFFFF',a)}c.restore();
+  // 地板
+  hills(612,8,'#5A2748',t*.3);c.fillStyle='#43183A';c.fillRect(0,650,W,80);
+  for(let i=0;i<12;i++){c.fillStyle=`rgba(255,230,160,${.07+.05*Math.sin(t*3+i)})`;c.fillRect(i*110,650,55,80)}
+  // 站位：爸爸、媽媽、女兒（階段 2 交換位置、階段 3 回到舞台中央）
+  const P0=[320,640,960],S=[960,320,640],P3=[380,640,900];
+  let xs=P0;
+  if(ph===2||ph===3){const e=ease((t-T[2])/1.3);xs=P0.map((v,i)=>lerp(v,S[i],e))}
+  if(ph===3){const e=ease((t-T[3])/1.3);xs=S.map((v,i)=>lerp(v,P3[i],e))}
+  const bx=GS(t,4)>0, ex1=bx?'laugh':'happy', ex2=bx?'happy':'laugh';
+  // 各階段動作
+  const mo={x:xs[1],y:612+hopY(t,14),s:.44,expr:'laugh',tilt:GS(t,2)*8};
+  const dd={x:xs[0],y:612+hopY(t,14),s:.40,expr:ex1,tilt:-GS(t,2)*7};
+  const gg={x:xs[2],y:612+hopY(t,14),s:.37,expr:ex2,flip:true,tilt:GS(t,2)*7};
+  if(ph===0){Object.assign(mo,danceArms(t,55,42,'open',2));Object.assign(dd,danceArms(t,45,40,'open',2,1.6));Object.assign(gg,danceArms(t,55,40,'open',2,.8));mo.x+=stepX(t,30,4);dd.x+=stepX(t,24,4);gg.x-=stepX(t,24,4)}
+  if(ph===1){const cl=95+Math.abs(Math.sin(PI*beatPh(t)))*55;Object.assign(mo,{L:[cl,'open'],R:[cl,'open']});Object.assign(dd,{L:[cl-10,'open'],R:[cl-10,'open']});Object.assign(gg,{L:[cl,'open'],R:[cl,'open']});mo.y+=hopY(t,10);dd.y+=hopY(t,8);gg.y+=hopY(t,10)}
+  if(ph===2){const tw=(t-T[2])/1.2;if(tw>0&&tw<1)mo.sx=Math.cos(tw*TAU);Object.assign(mo,danceArms(t,120,30,'open',1));Object.assign(dd,{L:[50,'fist'],R:[90+GS(t,1)*40,'thumb']});Object.assign(gg,danceArms(t,100,40,'open',1,2))}
+  if(ph===3){const up=148+Math.sin(t*9)*8;Object.assign(mo,{L:[up,'open'],R:[up,'open']});Object.assign(dd,{L:[up,'open'],R:[up,'open']});Object.assign(gg,{L:[up,'open'],R:[up,'open']});mo.y+=hopY(t,16);dd.y+=hopY(t,14);gg.y+=hopY(t,16)}
+  // 由 x 小到大依序畫，不會互相蓋到
+  [['dad',dd],['mom',mo],['girl',gg]].sort((a,b)=>a[1].x-b[1].x).forEach(([n,o])=>n==='mom'?mom(o):pup(n,o));
+  for(let i=0;i<10;i++){const a=((t*.4+i/10)%1);note(100+hash(i)*1080,650-a*620,1.2,[HOT,GOLD2,TEAL,'#FFFFFF'][i%4],Math.sin(t*2+i)*.3,i%3===0)}
+  confetti(t,ph===3?60:30);
+};
 SC.v1r=function(t){
-  const T=SECS[5].t,L=LN(t,'v1r'),k=L.l;
+  const T=SECS[SI('v1r')].t,L=LN(t,'v1r'),k=L.l;
   c.fillStyle=grad(0,H,'#D4EAEE','#FFF6E2');c.fillRect(0,0,W,H);
   mountain(260,440,560,200,'#A9CDB4');mountain(900,440,700,170,'#B3D6BD');cloud((t*12)%1500-100,130,1.1);
   hills(470,18,'#B4D68E',t*.2);hills(560,14,'#9CC67F',2+t*.2);
@@ -491,10 +558,10 @@ SC.v1r=function(t){
     const bt=Math.floor(t*3)%3;c.save();c.globalAlpha=a;bubble(240,330,150,64,['對啊','真的？','是喔'][bt],1);c.restore();c.save();c.globalAlpha=a;bubble(1040,330,150,64,['好啊','是啊','喔～'][(bt+1)%3],-1);c.restore()}
   const ex=mouth(t,'happy');
   const o={x:640,y:612+bounce(t,10),s:.42,expr:ex,L:[20+sway(t,2)*6,'fist'],R:[20-sway(t,2)*6,'fist'],tilt:sway(t,4)*4};
-  if(k===0){const sp=Math.sin((t-T[0])*3);o.sx=1;o.rot=sp*3;o.L=[70+sp*20,'open'];o.R=[70-sp*20,'open']}
-  if(k===1){o.L=[100+Math.sin(t*5)*10,'open'];o.R=[30,'fist'];o.tilt=Math.sin(t*3)*6}
-  if(k===2){o.L=[35,'fist'];o.R=[35,'fist'];o.expr=mouth(t,'happy')}
-  if(k===3){o.expr=mouth(t,'wow');o.L=[55,'open'];o.R=[55,'open'];o.rot=Math.sin(t*22)*1.4}
+  if(k===0){const tw=(t-T[0])/1.2;if(tw>0&&tw<1)o.sx=Math.cos(tw*TAU);Object.assign(o,danceArms(t,70,25,'open',2));o.rot=GS(t,2)*3;o.y+=hopY(t,8)}                // 花衣：轉一圈秀裙子
+  if(k===1){o.L=[100+Math.sin(t*5)*10,'open'];o.R=[30+GS(t,1)*10,'fist'];o.tilt=Math.sin(t*3)*6;o.x=640+stepX(t,36,4)}                                   // 聊天：揮手比劃
+  if(k===2){o.L=[30+GS(t,2)*8,'fist'];o.R=[30-GS(t,2)*8,'fist'];o.expr=mouth(t,'happy');o.y+=hopY(t,12);o.tilt=GS(t,2)*7}                              // 好心腸：手放胸前輕跳
+  if(k===3){o.expr=mouth(t,'wow');o.L=[150+Math.sin(t*14)*6,'open'];o.R=[150-Math.sin(t*14)*6,'open'];o.rot=Math.sin(t*22)*1.4;o.y+=hopY(t,10)}
   mom(o);
   if(k===0){for(let i=0;i<14;i++){const a=((t-T[0])*.9+i/14)%1;const an=i*TAU/14+t;daisy(640+Math.cos(an)*(100+a*300),420+Math.sin(an)*(90+a*220),14+10*(1-a),['#FFFFFF','#FFB3C7','#FFE27A'][i%3],GOLD,t*3)}}
   if(k===2){const s=1+pulse(t)*.25+Math.sin((t-T[2])*2)*.05;heart(640,345,2.2*s,HOT,0,5);for(let i=0;i<6;i++){const a=((t-T[2])*.7+i/6)%1;heart(640+Math.sin(i*2.7)*200,360-a*280,.8,'#FF8FA8')}}
@@ -503,7 +570,7 @@ SC.v1r=function(t){
 SC.v2r=function(t){SC.v2(t,true)};
 
 SC.outro=function(t){
-  const T=SECS[11].t,L=LN(t,'outro');
+  const T=SECS[SI('outro')].t,L=LN(t,'outro');
   const dark=ease((t-T[0]+1)/3);
   const ox=lerp(640,330,ease((t-T[3]-.2)/1.4));
   c.fillStyle=grad(0,H,mix('#FFF3D6','#5A3F6E',dark*.85),mix('#FBD9C4','#E58C8A',dark*.7));c.fillRect(0,0,W,H);
@@ -516,7 +583,13 @@ SC.outro=function(t){
   petalsFall(t,20,['#FFFFFF','#F7A0B8','#F6E3FF'],40,1);
   const fin=ease((t-T[3]-.2)/1.2);
   const ex=mouth(t,'happy');
-  mom({x:ox,y:612+bounce(t,t>T[4]?3:8),s:.42,expr:t>T[4]?'happy':ex,L:[10,'fist'],R:[t>T[4]?125+Math.sin(t*4)*12:100+Math.sin(t*4)*10,'open'],tilt:sway(t,2)*4});
+  const oo={x:ox,y:612+bounce(t,t>T[4]?3:8),s:.42,expr:t>T[4]?'happy':ex,L:[10,'fist'],R:[t>T[4]?125+Math.sin(t*4)*12:100+Math.sin(t*4)*10,'open'],tilt:sway(t,2)*4};
+  if(t<T[4]){const k=L.l;                                              // 尾聲前四句：像是在慢慢說再見
+    if(k===0){Object.assign(oo,danceArms(t,120,18,'open',2));oo.x=ox+stepX(t,20,4)}
+    else if(k===1){Object.assign(oo,danceArms(t,70,22,'open',2));oo.tilt=GS(t,2)*7}
+    else if(k===2){Object.assign(oo,danceArms(t,40,35,'open',1));oo.rot=GS(t,2)*3}
+    else{oo.L=[135+Math.sin(t*4)*10,'open'];oo.R=[135-Math.sin(t*4)*10,'open'];oo.y+=hopY(t,10)}}
+  mom(oo);
   // 愛心
   for(let i=0;i<6;i++){const a=((t*.35+i/6)%1);heart(300+i*140,650-a*480,.9+.3*hash(i),HOT)}
   // 結語
@@ -529,10 +602,10 @@ function subtitle(t){
   const a=activeLyric(t); let sec=-1,l=-1,line='',u=0;
   if(a){sec=a.i;l=a.l;line=a.text;u=clamp((t-a.a)/(a.b-a.a-.1))}
   else{
-    for(let i=SECS.length-1;i>=0&&sec<0;i--)for(let j=3;j>=0;j--){const e=SECS[i].t[j+1]-0.25;if(t>=e&&t<e+.9){sec=i;l=j;line=SECS[i].L[j];u=1;break}}
+    for(let i=SECS.length-1;i>=0&&sec<0;i--)for(let j=3;j>=0;j--){const e=lineEnd(i,j);if(SECS[i].L[j]&&t>=e&&t<e+.9){sec=i;l=j;line=SECS[i].L[j];u=1;break}}
     if(sec<0)return;
   }
-  const alpha=a?clamp((t-a.a+.1)/.2):1-clamp((t-(SECS[sec].t[l+1]-.25)-.4)/.5);
+  const alpha=a?clamp((t-a.a+.1)/.2):1-clamp((t-lineEnd(sec,l)-.4)/.5);
   const rise=a?(1-easeOut((t-a.a+.1)/.3))*10:0;
   const fs=line.length>10?44:50;
   c.save();c.globalAlpha=alpha;c.translate(0,rise);c.font=`${fs}px ${FONT}`;c.letterSpacing='4px';c.textAlign='left';c.textBaseline='middle';
@@ -549,8 +622,8 @@ function subtitle(t){
 }
 
 /* ---------- 主繪製：換場 + 鏡頭 ---------- */
-const OUTFIT_BY={intro:'daily',v1:'hakka',v2:'apron',chorus:'stripe',bridge:'redtang',v1r:'dress',v2r:'apron',chorus2:'mint',bridge2:'redtang',final:'dress',refrain:'redtang',outro:'daily'};
-const EYES_BY={intro:'open',v1:'open',v2:'open',chorus:'arc',bridge:'arc',v1r:'open',v2r:'open',chorus2:'arc',bridge2:'arc',final:'arc',refrain:'arc',outro:'open'};
+const OUTFIT_BY={intro:'daily',v1:'hakka',v2:'apron',chorus:'stripe',bridge:'redtang',v1r:'dress',v2r:'apron',chorus2:'stripe',bridge2:'redtang',final:'dress',refrain:'redtang',outro:'daily',dance:'mint'};
+const EYES_BY={intro:'open',v1:'open',v2:'open',chorus:'arc',bridge:'arc',v1r:'open',v2r:'open',chorus2:'arc',bridge2:'arc',final:'arc',refrain:'arc',outro:'open',dance:'arc'};
 function drawScene(i,t){
   CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';CUR_T=t;
   CUR_EYES=EYES_BY[SECS[i].k]||'arc';if(SECS[i].k==='outro'&&t>SECS[i].t[3])CUR_EYES='arc';   // 結尾「看到梅蘭，就想到你」起換成笑眼
