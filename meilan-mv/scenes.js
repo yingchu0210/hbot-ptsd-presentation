@@ -52,7 +52,7 @@ async function loadAll(){
   // 女兒的夏季短袖服裝（取代原本的羽絨外套＋圍巾）
   for(const g of GIRL_OUTFITS){jobs.push(rasterURL(`girl_${g}_body`,`rig3/girl_${g}_body.png`,1116,1410));
     for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`girl_${g}_arm${sd}_${h}`,`rig3/girl_${g}_arm${sd}_${h}.svg`,340,760));}
-  jobs.push((async()=>{CAISHEN=new Image();CAISHEN.src='assets/caishen_'+(new URLSearchParams(location.search).get('cs')||'a')+'.png';await CAISHEN.decode()})());
+  jobs.push((async()=>{CAISHEN=new Image();CAISHEN.src='assets/caishen_'+(new URLSearchParams(location.search).get('cs')||'c')+'.png';await CAISHEN.decode()})());
   jobs.push((async()=>{BOUQUET=new Image();BOUQUET.src='assets/bouquet.png';await BOUQUET.decode()})());
   await Promise.all(jobs);
   if(document.fonts){const all=SECS.map(x=>x.L.join('')).join('')+'獻給最愛的媽！開飯囉對啊真的是喔好～';await Promise.all([document.fonts.load(`40px ${FONT}`,all),document.fonts.load(`900 40px ${SERIF}`,'美蘭，我愛你獻給最愛的媽福！'),document.fonts.load(`900 40px ${SERIF}`,'嗓門超嘹亮')]).catch(()=>{});await document.fonts.ready}
@@ -524,7 +524,7 @@ function pupHand(key,o,side){const D=FAM[key],a=((o[side]||[0])[0])*PI/180,th=si
   const lx=D.piv[side][0]-D.feet[0]-d*Math.sin(th),ly=D.piv[side][1]-D.feet[1]+d*Math.cos(th);
   return [o.x+lx*sc*(o.flip?-1:1),o.y+ly*sc]}
 let CAISHEN=null;   // 財神（使用者提供的圖，自帶雲朵與元寶）
-function caishenImg(x,y,t,hgt=400){const sx=223,sy=133,sw=785,sh=1010,w=hgt*sw/sh;
+function caishenImg(x,y,t,hgt=400){const sx=104,sy=52,sw=1046,sh=1182,w=hgt*sw/sh;
   c.save();c.translate(x,y);c.rotate(Math.sin(t*2.4)*.035);const sq=1+pulse(t)*.03;c.scale(sq,2-sq);
   c.drawImage(CAISHEN,sx,sy,sw,sh,-w/2,-hgt,w,hgt);c.restore()}
 let BOUQUET=null;   // 爸爸送的花束（使用者提供的圖）
