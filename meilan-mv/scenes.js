@@ -52,6 +52,7 @@ async function loadAll(){
   // 女兒的夏季短袖服裝（取代原本的羽絨外套＋圍巾）
   for(const g of GIRL_OUTFITS){jobs.push(rasterURL(`girl_${g}_body`,`rig3/girl_${g}_body.png`,1116,1410));
     for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`girl_${g}_arm${sd}_${h}`,`rig3/girl_${g}_arm${sd}_${h}.svg`,340,760));}
+  jobs.push((async()=>{BOUQUET=new Image();BOUQUET.src='assets/bouquet.png';await BOUQUET.decode()})());
   await Promise.all(jobs);
   if(document.fonts){const all=SECS.map(x=>x.L.join('')).join('')+'獻給最愛的媽！開飯囉對啊真的是喔好～';await Promise.all([document.fonts.load(`40px ${FONT}`,all),document.fonts.load(`900 40px ${SERIF}`,'美蘭，我愛你獻給最愛的媽福！'),document.fonts.load(`900 40px ${SERIF}`,'嗓門超嘹亮')]).catch(()=>{});await document.fonts.ready}
 }
@@ -521,10 +522,9 @@ SC.refrain=function(t){
 function pupHand(key,o,side){const D=FAM[key],a=((o[side]||[0])[0])*PI/180,th=side==='L'?a:-a,d=key==='dad'?340:440,sc=o.s||.38;
   const lx=D.piv[side][0]-D.feet[0]-d*Math.sin(th),ly=D.piv[side][1]-D.feet[1]+d*Math.cos(th);
   return [o.x+lx*sc*(o.flip?-1:1),o.y+ly*sc]}
-function bouquet(x,y,sc,t){c.save();c.translate(x,y);c.rotate(Math.sin(t*3)*.05);c.scale(sc,sc);
-  c.strokeStyle='#5E9B5A';c.lineWidth=7;c.lineCap='round';for(const a of[-.5,0,.5]){c.beginPath();c.moveTo(0,60);c.lineTo(Math.sin(a)*40,-10);c.stroke()}
-  orchid(-34,-34,30,-.3,0);orchid(34,-34,30,.3,1);plum(0,-58,26,.2);orchid(0,-14,26,0,0);plum(-18,-8,16,.4);
-  c.beginPath();c.moveTo(-22,56);c.lineTo(22,56);c.lineTo(10,86);c.lineTo(-10,86);c.closePath();fillStroke('#F58AA8',4);c.restore()}
+let BOUQUET=null;   // 爸爸送的花束（使用者提供的圖）
+function bouquet(x,y,sc,t){if(!BOUQUET)return;const w=250*sc,h=w*BOUQUET.height/BOUQUET.width;
+  c.save();c.translate(x,y);c.rotate(.22+Math.sin(t*3)*.04);c.drawImage(BOUQUET,-.31*w,-.88*h,w,h);c.restore()}
 // 衣架上的衣服（從角色的衣服圖層裁出上衣＋裙擺）
 function garment(x,y,w,outfit,rot=0){const L_=LAY['body_'+outfit];if(!L_)return;const sx=330,sy=588,sw=460,sh=outfit==='dress'?600:410,h=w*sh/sw;
   c.save();c.translate(x,y);c.rotate(rot);c.strokeStyle='#8A8A92';c.lineWidth=4;c.lineCap='round';c.beginPath();c.moveTo(0,0);c.lineTo(0,-16);c.arc(0,-26,10,PI*.5,PI*1.8);c.stroke();
@@ -654,7 +654,6 @@ SC.outro=function(t){
     const girl={x:lerp(1510,945,f),y:612+hopY(t,8)*f,s:.35,expr:(bl>2.3&&bl<5.4)?(sp?'happy':'laugh'):'smile',flip:true,L:[24,'fist'],R:[74-GS(t,1)*4,'open'],tilt:GS(t,2)*5};
     pup('dad',dad);pup('girl',girl);
     const [dhx,dhy]=pupHand('dad',dad,'R'),[ghx,ghy]=pupHand('girl',girl,'R');
-    if(f>.7){bouquet(dhx,dhy-4,.7,t);heart(ghx,ghy-6,2.0+pulse(t)*.3,HOT,Math.sin(t*3)*.1,5)}
     // 告白對話框（放在畫面上方角落，不蓋到人物）
     const bd=back((t-T[0]-1.0)/.4),bg=back((t-T[0]-2.1)/.4);
     if(f>.7&&bd>0&&t<T[2]-.3){c.save();c.translate(215,62);c.scale(bd,bd);bubble(0,0,300,68,'美蘭，我愛你！',-1);c.restore()}
@@ -662,6 +661,7 @@ SC.outro=function(t){
     // 愛心從兩邊飛向美蘭
     if(f>.7)for(let i=0;i<8;i++){const a=((t-T[0])*.55+i/8)%1,fromL=i%2===0,[sx0,sy0]=fromL?[dhx,dhy]:[ghx,ghy];
       heart(lerp(sx0,ox+(fromL?-60:60),a*.8),lerp(sy0,330,a*.8)-Math.sin(a*PI)*80,.5+.4*Math.sin(a*PI),i%3?HOT:'#FF8FA8')}
+    if(f>.7){bouquet(dhx,dhy-4,.7,t);heart(ghx,ghy-6,2.0+pulse(t)*.3,HOT,Math.sin(t*3)*.1,5)}
   }
   // 愛心
   for(let i=0;i<6;i++){const a=((t*.35+i/6)%1);heart(300+i*140,650-a*480,.9+.3*hash(i),HOT)}
