@@ -62,11 +62,21 @@ function sheet2(){
   });
   txt('穿搭對應 MV：美濃田野＝客家藍衫　廚房＝格紋圍裙　橋段＝喜氣紅唐裝　「一身花衣」＝花洋裝',SW/2,1420,32,INK,{});
 }
-let OUT_JSON='{}';
+function sheet3(){
+  bg();header('女兒夏季服裝','爸爸媽媽穿短袖，女兒也換成夏天的短袖　臉、髮型與表情不變');
+  const info=JSON.parse(GIRL_JSON);const ids=['tomato','sky','sun'];const cw=SW/ids.length;
+  ids.forEach((id,i)=>{const x=cw*i+cw/2;
+    c.save();c.fillStyle='rgba(255,255,255,.5)';c.beginPath();c.roundRect(cw*i+30,250,cw-60,1060,44);c.fill();c.restore();
+    pup('girl',{x,y:1235,s:.68,expr:i%2?'laugh':'happy',outfit:id,L:[6,'fist'],R:i===0?[6,'fist']:[125,'open'],tilt:0,shadow:true});
+    txt(String(i+1).padStart(2,'0'),cw*i+80,296,40,'#B9A794',{align:'left',font:SERIF,weight:900});
+    txt(info[id].zh,x,1342,38,INK,{});txt(info[id].note,x,1394,30,'#8a6a58',{});});
+  txt('原本的粉紅羽絨外套＋橘色圍巾（冬裝）已不再使用',SW/2,1450,30,INK,{});
+}
+let OUT_JSON='{}',GIRL_JSON='{}';
 (async()=>{
   await loadAll();
-  OUT_JSON=await (await fetch('rig3/outfits.json')).text();
-  if(SH==='2')sheet2();else sheet1();
+  OUT_JSON=await (await fetch('rig3/outfits.json')).text();GIRL_JSON=await (await fetch('rig3/girl_outfits.json')).text();
+  if(SH==='3')sheet3();else if(SH==='2')sheet2();else sheet1();
   window.ready=true;
 })();
 </script></body></html>

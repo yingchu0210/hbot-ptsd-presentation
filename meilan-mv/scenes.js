@@ -30,6 +30,8 @@ function mix(a,b,x){const p=s=>[1,3,5].map(i=>parseInt(s.slice(i,i+2),16));const
 /* ---------- 素材載入：把圖層先轉成點陣（加速）---------- */
 const RS=0.7, LAY={};
 const OUTFITS=['daily','hakka','apron','redtang','mint','stripe','dress'];
+const GIRL_OUTFITS=['tomato','sky','sun'];
+let CUR_GIRL='tomato';
 async function rasterURL(key,url,w,h){
   const img=new Image(); img.src=url; await img.decode();
   const o=document.createElement('canvas'); o.width=Math.round(w*RS); o.height=Math.round(h*RS);
@@ -39,12 +41,15 @@ async function loadAll(){
   const jobs=[rasterURL('head','rig3/head.png',1103,1426)];
   for(const k of OUTFITS) jobs.push(rasterURL('body_'+k,`rig3/body_${k}.png`,1103,1426));
   for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`arm${sd}_${h}`,`rig3/arm${sd}_${h}.svg`,340,760));
-  for(const [k,W_,H_,scarf] of [['dad',1056,1490,0],['girl',1116,1410,1]]){
-    jobs.push(rasterURL(k+'_body',`rig_family/${k}_body.svg`,W_,H_),rasterURL(k+'_head',`rig_family/${k}_head.svg`,W_,H_));
-    if(scarf) jobs.push(rasterURL(k+'_scarf',`rig_family/${k}_scarf.svg`,W_,H_));
+  for(const [k,W_,H_] of [['dad',1056,1490],['girl',1116,1410]]){
+    jobs.push(rasterURL(k+'_head',`rig_family/${k}_head.svg`,W_,H_));
     for(const e of ['smile','happy','laugh','shy','sad','wow']) jobs.push(rasterURL(`${k}_face_${e}`,`rig_family/${k}_face_${e}.svg`,W_,H_));
-    for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`${k}_arm${sd}_${h}`,`rig_family/${k}_arm${sd}_${h}.svg`,340,760));
+    if(k==='dad'){jobs.push(rasterURL('dad_body','rig_family/dad_body.svg',W_,H_));
+      for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`dad_arm${sd}_${h}`,`rig_family/dad_arm${sd}_${h}.svg`,340,760));}
   }
+  // 女兒的夏季短袖服裝（取代原本的羽絨外套＋圍巾）
+  for(const g of GIRL_OUTFITS){jobs.push(rasterURL(`girl_${g}_body`,`rig3/girl_${g}_body.png`,1116,1410));
+    for(const sd of ['L','R']) for(const h of ['fist','open','thumb']) jobs.push(rasterURL(`girl_${g}_arm${sd}_${h}`,`rig3/girl_${g}_arm${sd}_${h}.svg`,340,760));}
   await Promise.all(jobs);
   if(document.fonts){const all=SECS.map(x=>x.L.join('')).join('')+'獻給最愛的媽！開飯囉對啊真的是喔好～';await Promise.all([document.fonts.load(`40px ${FONT}`,all),document.fonts.load(`900 40px ${SERIF}`,'美蘭，我愛你獻給最愛的媽福！'),document.fonts.load(`900 40px ${SERIF}`,'嗓門超嘹亮')]).catch(()=>{});await document.fonts.ready}
 }
@@ -129,10 +134,10 @@ function pup(key,o){
   if(o.shadow!==false){c.fillStyle='rgba(60,40,20,.18)';c.beginPath();c.ellipse(o.x,o.y+4,170*s*Math.abs(o.sx||1),22*s,0,0,TAU);c.fill()}
   c.translate(o.x,o.y);c.scale(s*(o.flip?-1:1)*(o.sx||1),s*(o.sy||1));c.rotate((o.rot||0)*PI/180);c.translate(-D.feet[0],-D.feet[1]);
   const k=1/RS,draw=(n)=>c.drawImage(LAY[n],0,0,LAY[n].width*k,LAY[n].height*k);
-  draw(key+'_body');
+  const pre=key==='girl'?`girl_${o.outfit||CUR_GIRL}`:key;                    // 女兒：夏季短袖
+  draw(pre+'_body');
   for(const side of ['L','R']){const a=o[side]||[0,'fist'];c.save();c.translate(D.piv[side][0],D.piv[side][1]);c.rotate((side==='L'?a[0]:-a[0])*PI/180);
-    c.drawImage(LAY[`${key}_arm${side}_${a[1]}`],-170,-110,340,760);c.restore()}
-  if(D.scarf)draw(key+'_scarf');
+    c.drawImage(LAY[`${pre}_arm${side}_${a[1]}`],-170,-110,340,760);c.restore()}
   c.save();c.translate(D.neck[0],D.neck[1]);c.rotate((o.tilt||0)*PI/180);c.translate(-D.neck[0],-D.neck[1]);
   draw(key+'_head');draw(`${key}_face_${o.expr||'smile'}`);c.restore();
   c.restore();
@@ -548,22 +553,22 @@ SC.dance=function(t){
   hills(612,8,'#5A2748',t*.3);c.fillStyle='#43183A';c.fillRect(0,650,W,80);
   for(let i=0;i<12;i++){c.fillStyle=`rgba(255,230,160,${.07+.05*Math.sin(t*3+i)})`;c.fillRect(i*110,650,55,80)}
   // ====== 時間表：跳舞 → 女兒幫媽媽換衣服 → 拍手 → 再換一次 → 全家大跳 ======
-  const CH=[{t0:70.7,from:'mint',to:'hakka'},{t0:77.0,from:'hakka',to:'dress'}], CHD=4.8;
+  const CH=[], CHD=4.8;     // （換衣服橋段已取消，保留程式結構）
   let outfit='mint',chg=null;
   for(const c_ of CH){if(t>=c_.t0+2.6)outfit=c_.to;else if(t>=c_.t0-.5&&!chg)outfit=c_.from;if(t>=c_.t0-.6&&t<c_.t0+CHD)chg=c_}
-  if(!chg&&t>=CH[1].t0+CHD)outfit='dress';
+  
   const P0=[320,640,960],S=[960,320,640],P3=[380,640,900];
   let xs=P0.slice();
-  if(t>=81.8){const e=ease((t-81.8)/1.3);xs=P0.map((v,i)=>lerp(v,S[i],e))}
-  if(t>=85.6){const e=ease((t-85.6)/1.3);xs=S.map((v,i)=>lerp(v,P3[i],e))}
+  if(t>=77.0){const e=ease((t-77.0)/1.3);xs=P0.map((v,i)=>lerp(v,S[i],e))}
+  if(t>=83.2){const e=ease((t-83.2)/1.3);xs=S.map((v,i)=>lerp(v,P3[i],e))}
   const bx=GS(t,4)>0, ex1=bx?'laugh':'happy', ex2=bx?'happy':'laugh';
   const mo={x:xs[1],y:612+hopY(t,14),s:.44,expr:'laugh',tilt:GS(t,2)*8,outfit};
   const dd={x:xs[0],y:612+hopY(t,14),s:.40,expr:ex1,tilt:-GS(t,2)*7};
   const gg={x:xs[2],y:612+hopY(t,14),s:.37,expr:ex2,flip:true,tilt:GS(t,2)*7};
-  if(t<70.7){Object.assign(mo,danceArms(t,55,42,'open',2));Object.assign(dd,danceArms(t,45,40,'open',2,1.6));Object.assign(gg,danceArms(t,55,40,'open',2,.8));mo.x+=stepX(t,30,4);dd.x+=stepX(t,24,4);gg.x-=stepX(t,24,4)}
-  else if(t>=75.5&&t<77.0-.6){const cl=95+Math.abs(Math.sin(PI*beatPh(t)))*55;Object.assign(mo,{L:[cl,'open'],R:[cl,'open']});Object.assign(dd,{L:[cl-10,'open'],R:[cl-10,'open']});Object.assign(gg,{L:[cl,'open'],R:[cl,'open']});mo.y+=hopY(t,10);dd.y+=hopY(t,8);gg.y+=hopY(t,10)}
-  else if(t>=81.8&&t<85.6){const tw=(t-81.8)/1.2;if(tw>0&&tw<1)mo.sx=Math.cos(tw*TAU);Object.assign(mo,danceArms(t,120,30,'open',1));Object.assign(dd,{L:[50,'fist'],R:[90+GS(t,1)*40,'thumb']});Object.assign(gg,danceArms(t,100,40,'open',1,2))}
-  else if(t>=85.6){const up=148+Math.sin(t*9)*8;Object.assign(mo,{L:[up,'open'],R:[up,'open']});Object.assign(dd,{L:[up,'open'],R:[up,'open']});Object.assign(gg,{L:[up,'open'],R:[up,'open']});mo.y+=hopY(t,16);dd.y+=hopY(t,14);gg.y+=hopY(t,16)}
+  if(t<70.8){Object.assign(mo,danceArms(t,55,42,'open',2));Object.assign(dd,danceArms(t,45,40,'open',2,1.6));Object.assign(gg,danceArms(t,55,40,'open',2,.8));mo.x+=stepX(t,30,4);dd.x+=stepX(t,24,4);gg.x-=stepX(t,24,4)}
+  else if(t>=70.8&&t<77.0){const cl=95+Math.abs(Math.sin(PI*beatPh(t)))*55;Object.assign(mo,{L:[cl,'open'],R:[cl,'open']});Object.assign(dd,{L:[cl-10,'open'],R:[cl-10,'open']});Object.assign(gg,{L:[cl,'open'],R:[cl,'open']});mo.y+=hopY(t,10);dd.y+=hopY(t,8);gg.y+=hopY(t,10)}
+  else if(t>=77.0&&t<83.2){const tw=(t-77.0)/1.2;if(tw>0&&tw<1)mo.sx=Math.cos(tw*TAU);Object.assign(mo,danceArms(t,120,30,'open',1));Object.assign(dd,{L:[50,'fist'],R:[90+GS(t,1)*40,'thumb']});Object.assign(gg,danceArms(t,100,40,'open',1,2))}
+  else if(t>=83.2){const up=148+Math.sin(t*9)*8;Object.assign(mo,{L:[up,'open'],R:[up,'open']});Object.assign(dd,{L:[up,'open'],R:[up,'open']});Object.assign(gg,{L:[up,'open'],R:[up,'open']});mo.y+=hopY(t,16);dd.y+=hopY(t,14);gg.y+=hopY(t,16)}
   else Object.assign(mo,danceArms(t,60,35,'open',2));
   let overlay=null;
   if(chg){ // 女兒幫媽媽換衣服
@@ -590,7 +595,7 @@ SC.dance=function(t){
     if(u>3.4&&u<4.8){for(let i=0;i<10;i++){const a=((u-3.4)*.9+i/10)%1,an=i*TAU/10;sparkle(640+Math.cos(an)*(130+a*160),300+Math.sin(an)*(110+a*90),20*(1-a)+4,'#FFF6B0',t+i)}}
   }
   for(let i=0;i<10;i++){const a=((t*.4+i/10)%1);note(100+hash(i)*1080,650-a*620,1.2,[HOT,GOLD2,TEAL,'#FFFFFF'][i%4],Math.sin(t*2+i)*.3,i%3===0)}
-  confetti(t,t>=85.6?60:30);
+  confetti(t,t>=83.2?60:30);
 };
 SC.v1r=function(t){
   const T=SECS[SI('v1r')].t,L=LN(t,'v1r'),k=L.l;
@@ -687,8 +692,9 @@ function subtitle(t){
 /* ---------- 主繪製：換場 + 鏡頭 ---------- */
 const OUTFIT_BY={intro:'daily',v1:'hakka',v2:'apron',chorus:'stripe',bridge:'redtang',v1r:'dress',v2r:'apron',chorus2:'stripe',bridge2:'redtang',final:'dress',refrain:'redtang',outro:'daily',dance:'mint'};
 const EYES_BY={intro:'open',v1:'open',v2:'open',chorus:'arc',bridge:'arc',v1r:'open',v2r:'open',chorus2:'arc',bridge2:'arc',final:'arc',refrain:'arc',outro:'open',dance:'arc'};
+const GIRL_BY={intro:'tomato',v1:'tomato',v2:'tomato',chorus:'tomato',bridge:'sky',dance:'sun',v1r:'tomato',v2r:'tomato',chorus2:'sky',bridge2:'tomato',final:'sun',refrain:'sky',outro:'tomato'};
 function drawScene(i,t){
-  CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';CUR_T=t;
+  CUR_OUTFIT=OUTFIT_BY[SECS[i].k]||'daily';CUR_T=t;CUR_GIRL=GIRL_BY[SECS[i].k]||'tomato';
   CUR_EYES=EYES_BY[SECS[i].k]||'arc';if(SECS[i].k==='outro'&&t>SECS[i].t[3])CUR_EYES='arc';   // 結尾「看到梅蘭，就想到你」起換成笑眼
   c.save();
   const key=SECS[i].k,T=SECS[i].t;
